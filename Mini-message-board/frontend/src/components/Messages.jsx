@@ -56,7 +56,7 @@ function Messages() {
   return (
     <div className="flex flex-col gap-2 max-w-2xl">
       <div className="my-5">
-        <form action="" method="post" className="flex flex-row gap-2">
+        <form action="" className="flex flex-row gap-2">
           <div className="flex flex-row gap-2 items-start">
             <label htmlFor="user" className="text-gray-600">
               User:
