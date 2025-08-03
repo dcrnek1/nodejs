@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+const host = import.meta.env.VITE_HOST;
+
 function Messages() {
   const [messages, setMessages] = useState([]);
   const [formData, setFormData] = useState({});
@@ -11,38 +13,44 @@ function Messages() {
 
   function fetchMessages() {
     axios
-      .get("http://localhost:5000/messages")
+      .get(`${host}/messages`)
       .then((res) => setMessages(res.data))
       .catch((err) => console.error(err));
   }
 
   const handleFormChange = (event) => {
-    setFormData(prev => ({...prev, [event.target.name]: event.target.value, tstamp: new Date().toLocaleString('hr-HR')}))
-  }
+    setFormData((prev) => ({
+      ...prev,
+      [event.target.name]: event.target.value,
+      tstamp: new Date().toLocaleString("hr-HR"),
+    }));
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios.post('http://localhost:5000/messages', formData)
-    .then((res) => {
-      console.log(`${res.status} ${res.statusText}: ${res.data}`);
-      setFormData({});
-      fetchMessages();
-    })
-    .catch(err => {
-      console.log(`${err.message}: ${err.response.data}`);
-      console.log(err);
-    })
-  }
+    axios
+      .post(`${host}/messages`, formData)
+      .then((res) => {
+        console.log(`${res.status} ${res.statusText}: ${res.data}`);
+        setFormData({});
+        fetchMessages();
+      })
+      .catch((err) => {
+        console.log(`${err.message}: ${err.response.data}`);
+        console.log(err);
+      });
+  };
 
-  function handleDelete (index) {
-    axios.delete(`http://localhost:5000/messages/${index}`)
-    .then((res) => {
-      console.log(res);
-      fetchMessages();
-    })
-    .catch(err => {
-      console.log(err);
-    })
+  function handleDelete(index) {
+    axios
+      .delete(`${host}/messages/${index}`)
+      .then((res) => {
+        console.log(res);
+        fetchMessages();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   return (
@@ -76,7 +84,10 @@ function Messages() {
             />
           </div>
           <div>
-            <button onClick={handleSubmit} className="p-2 px-3 hover:bg-blue-400 bg-blue-500 rounded-lg text-gray-100 font-semibold text-sm">
+            <button
+              onClick={handleSubmit}
+              className="p-2 px-3 hover:bg-blue-400 bg-blue-500 rounded-lg text-gray-100 font-semibold text-sm"
+            >
               Submit
             </button>
           </div>
@@ -93,10 +104,13 @@ function Messages() {
               <div className="text-gray-500 text-xs">{message.tstamp}</div>
             </div>
             <div className="flex flex-row justify-between gap-1">
-              <div>
-                {message.content}
+              <div>{message.content}</div>
+              <div
+                className="text-red-400 cursor-pointer text-sm self-end"
+                onClick={() => handleDelete(index)}
+              >
+                Delete
               </div>
-              <div className="text-gray-500 text-sm self-end" onClick={() => handleDelete(index)}>Delete</div>
             </div>
           </div>
         );
