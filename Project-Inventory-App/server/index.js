@@ -5,9 +5,14 @@ const router = require('./routes/router');
 dotenv.config();
 
 const app = express();
+app.use('/uploads', (req, res, next) => {console.log("accessing image"); return next()}, express.static('./static/uploads', {
+  maxAge: '30d',
+  immutable: true,
+}));
 
 app.use(cors());
 app.use(express.json());
+
 
 app.use(router);
 
