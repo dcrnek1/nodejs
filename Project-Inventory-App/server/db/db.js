@@ -7,9 +7,9 @@ module.exports = async (text, params = []) => {
   }
 
   try {
-    const {rows} = await pool.query(text, params);
+    const result = await pool.query(text, params);
     console.log("Executed query:", text);
-    return rows;
+    return {rows: result.rows, result: result}
   } catch (error) {
     console.error("Database query error for query:", text, ", Error message:", error.message);
     throw error;
