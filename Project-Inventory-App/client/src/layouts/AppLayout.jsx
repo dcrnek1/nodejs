@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 
 export default function AppLayout() {
   return (
-    <div className="grid grid-cols-1 grid-rows-[auto_1fr_auto] min-h-svh">
+    <div className="grid grid-cols-1 grid-rows-[auto_1fr_auto] gap-2 min-h-svh">
       <Navigation />
       <main className=""><Outlet /></main>
       <Footer />

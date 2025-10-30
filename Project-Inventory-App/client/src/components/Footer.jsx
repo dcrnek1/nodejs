@@ -2,7 +2,7 @@ import { Link } from "react-router";
 
 export default function Footer() {
   return (
-    <div className="mb-(--mobile-navbar-height) px-2 py-8 sm:px-4 sm:mb-0 bg-gray-200 text-gray-500">
+    <div className="mb-(--mobile-navbar-height) px-2 py-8 sm:px-4 sm:mb-0 text-gray-500 border-t border-gray-100">
       <div className="max-w-8xl w-full mx-auto flex flex-col sm:flex-row justify-between gap-4">
         {/* App Info */}
         <div className="text-left">
