@@ -12,6 +12,7 @@ app.use('/uploads', (req, res, next) => {console.log("accessing image"); return 
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 
 app.use(router);
