@@ -1,7 +1,7 @@
 const db = require("../db/db");
-const fs = require('fs');
-const { matchedData } = require('express-validator');
-const { saveFileToDisk } = require('../middleware/multer');
+const fs = require("fs");
+const { matchedData } = require("express-validator");
+const { saveFileToDisk } = require("../middleware/multer");
 
 module.exports = {
   getAllCategories: async (req, res) => {
@@ -16,6 +16,7 @@ module.exports = {
       res.status(400).json({ error: error, message: "Database error." });
     }
   },
+
   deleteCategory: (req, res) => {
     const { id } = req.params;
     db("DELETE FROM category WHERE category_id = $1", [id])
@@ -28,49 +29,58 @@ module.exports = {
         res.status(500).json({ error: "Database error." });
       });
   },
-  createCategory: (req, res) => {
 
-    const {name} = matchedData(req);
+  createCategory: async (req, res) => {
+    // INSERT INTO category (name, image_path) VALUES ($1, $2)
+    const columns = [];
+    const parameters = [];
+    const values = [];
+    let paramCount = 1;
+
+    for (const key in matchedData(req)) {
+      columns.push(key);
+      values.push(matchedData(req)[key]);
+      parameters.push(`$${paramCount}`);
+      paramCount++;
+    }
 
     if (req.files?.image?.[0]) {
-      const imageBuffer = req.files.image[0]?.buffer;
-      const imageName = req.files.image[0]?.originalname;
+      const imageBuffer = req.files.image?.[0]?.buffer;
+      const imageName = req.files.image?.[0]?.originalname;
 
-      const imagePath = saveFileToDisk(imageBuffer, imageName);
+      try {
+        const imagePath = await saveFileToDisk(imageBuffer, imageName);
+        columns.push("image_path");
+        values.push(imagePath);
+        parameters.push(`$${paramCount}`);
+        paramCount++;
+      } catch (error) {
+        res
+          .status(400)
+          .json({
+            errors: [{ path: "image", msg: "Error uploading the file" }],
+          });
+      }
     }
-    console.log(name);
 
+    try {
+      const { rows } = await db(
+        `INSERT INTO category (${columns}) VALUES (${parameters}) RETURNING *`,
+        values
+      );
+      res.json(rows?.[0]);
+    } catch (error) {
+      console.log(error);
 
-    res.json({ message: "Entered create category" });
-    // const name = req.body ? req.body.name : undefined;
-    // if (name && typeof req.body.name === "string") {
-    //   const image_path = req.file
-    //     ? req.file.path.replace(/\\/g, "/")
-    //     : undefined;
-    //   db(
-    //     `INSERT INTO category (name${req.file ? ", image_path" : ""})
-    //             VALUES ($1${req.file ? ", $2" : ""}) RETURNING *`,
-    //     req.file ? [name, image_path] : [name]
-    //   )
-    //     .then(({ rows }) => {
-    //       res.json({
-    //         message: "Category succesfully created.",
-    //         category: rows[0],
-    //       });
-    //     })
-    //     .catch(() => {
-    //       res.status(404).json({ error: "Database error." });
-    //     });
-    // } else {
-    //   res.status(404).json({ error: "Creating category was not successful." });
-    // }
+      // TO-DO Implement deletion of file as well if failed query
+      res.status(400).json({error: error, message: "Error while saving category."});
+    }
   },
   updateCategory: (req, res) => {
+    // Refactor
     const { name } = req.body ? req.body : {};
     const { category_id } = req.params ? req.params : {};
-    const image_path = req.file
-      ? req.file.path.replace(/\\/g, "/")
-      : undefined;
+    const image_path = req.file ? req.file.path.replace(/\\/g, "/") : undefined;
 
     console.log(image_path);
 
@@ -80,9 +90,13 @@ module.exports = {
     db(updateQuery, [name, image_path ? image_path : null, category_id])
       .then(({ rows }) => {
         console.log(rows);
-        res.json({ message: "Succesfully updated category", category: rows[0] })
-      }).catch(() => {
-        res.status(404).json({ error: "Category not succesfully updated" });
+        res.json({
+          message: "Succesfully updated category",
+          category: rows[0],
+        });
       })
+      .catch(() => {
+        res.status(404).json({ error: "Category not succesfully updated" });
+      });
   },
 };

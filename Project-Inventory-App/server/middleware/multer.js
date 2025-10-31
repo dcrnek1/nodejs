@@ -2,28 +2,30 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-// Call middleware example
-// const upload = require('../middleware/multer');
-// upload([{name: 'image', maxCount: 1}], ['image/jpeg', 'image/png'])
-
-// Where the file will be uploaded, defining name and extension
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => cb(null, path.join('static', 'uploads')),
-//   filename: (req, file, cb) => {
-//     const ext = path.extname(file.originalname);
-//     cb(null, `${file.fieldname}-${Date.now()}${ext}`)
-//   },
-// })
-
-const saveFileToDisk = (fileBuffer, originalName) => {
+const saveFileToDisk = async (fileBuffer, originalName) => {
   const ext = path.extname(originalName);
-  const randomName = `${originalName}-${Date.now()}${ext}`
-  const uploadPath = path.join(__dirname, '..', 'static', 'uploads', randomName);
+  const randomName = `${path.basename(originalName, ext)}-${Date.now()}${ext}`;
+  const uploadPath = path.join(
+    __dirname,
+    "..",
+    "static",
+    "uploads",
+    randomName
+  );
 
-  fs.writeFileSync(uploadPath, fileBuffer);
-  return `/static/uploads/${randomName}`;
+  console.log(path.basename(originalName, path.extname(originalName)));
+
+  try {
+    await fs.writeFileSync(uploadPath, fileBuffer);
+    return `/static/uploads/${randomName}`;
+  } catch (error) {
+    return error;
+  }
 };
 
+const deleteFileFromDisk = async (filepath) => {
+  //TO-DO
+}
 
 const storage = multer.memoryStorage();
 
@@ -31,15 +33,16 @@ const storage = multer.memoryStorage();
 const filter = (allowedMimeTypes) => {
   return (req, file, cb) => {
     if (allowedMimeTypes && allowedMimeTypes.includes(file.mimetype)) {
-      cb(null, true)
+      cb(null, true);
     } else {
-      const err = new Error('File type not allowed');
-      err.code = 'INVALID_FILE_TYPE';
+      const err = new Error("File type not allowed.");
+      err.code = "INVALID_FILE_TYPE";
+      err.path = file?.fieldname;
+      err.msg = "File type not allowed.";
       cb(err);
     }
-  }
-}
-
+  };
+};
 
 // Implementation of error handling with files/storage
 const upload = (fieldsConfig, allowedMimeTypes) => {
@@ -50,20 +53,22 @@ const upload = (fieldsConfig, allowedMimeTypes) => {
     upload(req, res, (err) => {
       if (!err) return next();
 
-      if (err.code === 'INVALID_FILE_TYPE') {
-        console.log(err);
-        return res.status(400).json({ error: err, message: `Allowed files: ${allowedMimeTypes}` });
+      if (err.code === "INVALID_FILE_TYPE") {
+        return res
+          .status(400)
+          .json({ error: err, message: `Allowed files: ${allowedMimeTypes}` });
       }
 
-      if (err) {
-        console.log(err);
-        return res.status(400).json({ error: err, message: "Error with uploading file." });
+      if (err instanceof multer.MulterError) {
+        err.msg = err?.message;
+        return res
+          .status(400)
+          .json({ error: err, message: "Error with uploading file." });
       }
 
       next();
-    })
-  }
-}
-  
+    });
+  };
+};
 
-module.exports = {upload, saveFileToDisk};
+module.exports = { upload, saveFileToDisk };
