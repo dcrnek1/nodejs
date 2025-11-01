@@ -1,7 +1,7 @@
 const db = require("../db/db");
 const fs = require("fs");
 const { matchedData } = require("express-validator");
-const { saveFileToDisk } = require("../middleware/multer");
+const { saveFileToDisk, deleteFileFromDisk } = require("../middleware/multer");
 
 module.exports = {
   getAllCategories: async (req, res) => {
@@ -17,17 +17,28 @@ module.exports = {
     }
   },
 
-  deleteCategory: (req, res) => {
-    const { id } = req.params;
-    db("DELETE FROM category WHERE category_id = $1", [id])
-      .then(({ result }) => {
-        result.rowCount > 0
-          ? res.json({ message: "Succesfully deleted category." })
-          : res.status(404).json({ error: "Category not found." });
-      })
-      .catch(() => {
-        res.status(500).json({ error: "Database error." });
-      });
+  deleteCategory: async (req, res) => {
+    const { category_id } = req?.params;
+
+    try {
+      const { result, rows } = await db(
+        "DELETE FROM category WHERE category_id = $1 RETURNING *",
+        [category_id]
+      );
+      const imagePath = rows?.["0"]?.image_path;
+      if (result.rowCount > 0) {
+        try {
+          await deleteFileFromDisk(imagePath);
+        } catch (error) {
+          console.log(error);
+        }
+        res.json({ message: "Succesfully deleted category." });
+      } else {
+        res.status(404).json({ error: "Category not found." });
+      }
+    } catch (error) {
+      res.status(400).json({ message: "Category not deleted. Server error." });
+    }
   },
 
   createCategory: async (req, res) => {
@@ -47,33 +58,27 @@ module.exports = {
     if (req.files?.image?.[0]) {
       const imageBuffer = req.files.image?.[0]?.buffer;
       const imageName = req.files.image?.[0]?.originalname;
+      let imagePath = "";
 
       try {
-        const imagePath = await saveFileToDisk(imageBuffer, imageName);
+        imagePath = await saveFileToDisk(imageBuffer, imageName);
         columns.push("image_path");
         values.push(imagePath);
         parameters.push(`$${paramCount}`);
         paramCount++;
+
+        const { rows } = await db(
+          `INSERT INTO category (${columns}) VALUES (${parameters}) RETURNING *`,
+          values
+        );
+        res.json(rows?.[0]);
       } catch (error) {
-        res
-          .status(400)
-          .json({
-            errors: [{ path: "image", msg: "Error uploading the file" }],
-          });
+        console.log(error);
+        deleteFileFromDisk(imagePath);
+        res.status(400).json({
+          errors: [{ message: "Error saving category." }],
+        });
       }
-    }
-
-    try {
-      const { rows } = await db(
-        `INSERT INTO category (${columns}) VALUES (${parameters}) RETURNING *`,
-        values
-      );
-      res.json(rows?.[0]);
-    } catch (error) {
-      console.log(error);
-
-      // TO-DO Implement deletion of file as well if failed query
-      res.status(400).json({error: error, message: "Error while saving category."});
     }
   },
   updateCategory: (req, res) => {

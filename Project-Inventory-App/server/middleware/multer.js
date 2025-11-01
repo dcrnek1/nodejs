@@ -2,33 +2,35 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-const saveFileToDisk = async (fileBuffer, originalName) => {
+
+const saveFileToDisk = async (fileBuffer, originalName, filePath = ["static","uploads"]) => {
   const ext = path.extname(originalName);
   const randomName = `${path.basename(originalName, ext)}-${Date.now()}${ext}`;
+
   const uploadPath = path.join(
     __dirname,
     "..",
-    "static",
-    "uploads",
+    ...filePath,
     randomName
   );
 
-  console.log(path.basename(originalName, path.extname(originalName)));
-
   try {
     await fs.writeFileSync(uploadPath, fileBuffer);
-    return `/static/uploads/${randomName}`;
+    return `${path.posix.join(...filePath, randomName)}`;
   } catch (error) {
     return error;
   }
 };
 
-const deleteFileFromDisk = async (filepath) => {
-  //TO-DO
+const deleteFileFromDisk = async (filePath) => {
+  try {
+    await fs.promises.unlink(path.join(__dirname, "..", ...filePath.split('/')));
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 const storage = multer.memoryStorage();
-
 // Preventing upload of unsuported fileTypes
 const filter = (allowedMimeTypes) => {
   return (req, file, cb) => {
@@ -71,4 +73,4 @@ const upload = (fieldsConfig, allowedMimeTypes) => {
   };
 };
 
-module.exports = { upload, saveFileToDisk };
+module.exports = { upload, saveFileToDisk, deleteFileFromDisk };
