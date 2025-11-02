@@ -54,41 +54,46 @@ module.exports = {
       paramCount++;
     }
 
+    let imageBuffer = "";
+    let imageName = "";
+    let imagePath = "";
     if (req.files?.image?.[0]) {
-      const imageBuffer = req.files.image?.[0]?.buffer;
-      const imageName = req.files.image?.[0]?.originalname;
-      let imagePath = "";
+      imageBuffer = req.files.image?.[0]?.buffer;
+      imageName = req.files.image?.[0]?.originalname;
+    }
 
-      try {
+    try {
+      if (imageBuffer) {
         imagePath = await saveFileToDisk(imageBuffer, imageName);
         columns.push("image_path");
         values.push(imagePath);
         params.push(`$${paramCount}`);
         paramCount++;
-
-        const { rows } = await db(
-          `INSERT INTO category (${columns}) VALUES (${params}) RETURNING *`,
-          values
-        );
-        res.json(rows?.[0]);
-      } catch (error) {
-        console.log(error);
-        deleteFileFromDisk(imagePath);
-        res.status(400).json({
-          errors: [{ message: "Error saving category." }],
-        });
       }
+
+      const { rows } = await db(
+        `INSERT INTO category (${columns}) VALUES (${params}) RETURNING *`,
+        values
+      );
+      res.json(rows?.[0]);
+    } catch (error) {
+      console.log(error);
+      await deleteFileFromDisk(imagePath);
+      res.status(400).json({
+        errors: [{ message: "Error saving category." }],
+      });
     }
   },
+
   updateCategory: async (req, res) => {
     const { category_id } = req.params ? req.params : {};
     const newImage = req?.files?.image?.[0];
+    let currentImagePath = "";
+    let newImagePath = "";
 
-    let columns = "";
-    const params = [];
+    const columns = [];
     const values = [];
-    let paramsCount = 1;
-    const currentImagePath = "";
+    let paramsCounter = 1;
 
     try {
       const { rows } = await db(
@@ -96,50 +101,57 @@ module.exports = {
         [category_id]
       );
       currentImagePath = rows?.[0]?.image_path;
+      if (rows.length === 0)
+        return res.status(404).json({ error: "Non existant category." });
     } catch (error) {
       console.log(error);
+      return res.status(500).json({ error: "Database error." });
     }
 
     for (const key in matchedData(req)) {
-      columns += `${key} = $${paramsCount}`;
+      columns.push(`${key} = $${paramsCounter}`);
       values.push(matchedData(req)?.[key]);
-      params.push(`$${paramsCount}`);
-      paramsCount++;
+      paramsCounter++;
     }
 
-    let imagePath = '';
     try {
-      imagePath = await saveFileToDisk(
-        newImage.buffer,
-        newImage.originalname
-      );
-      columns += `, image_path = $${paramsCount} WHERE category_id = $${
-        paramsCount + 1
-      }`;
-      values.push(imagePath);
-      values.push(category_id);
-      paramsCount++;
-
-      const { rows } = await db(
-        `UPDATE category SET ${columns} RETURNING *`,
-        values
-      );
-
-      try {
-        deleteFileFromDisk(currentImagePath);
-      } catch (error) {
-        console.log(error);
+      if (newImage) {
+        newImagePath = await saveFileToDisk(
+          newImage.buffer,
+          newImage.originalname
+        );
+        columns.push(`image_path = $${paramsCounter}`);
+        values.push(newImagePath);
+        paramsCounter++;
       }
 
-      res.json("Succesfully updated category.");
+      if (columns.length !== 0) {
+        values.push(category_id);
+        const { rows } = await db(
+          `UPDATE category SET ${columns.join(
+            ", "
+          )} WHERE category_id = $${paramsCounter} RETURNING *`,
+          values
+        );
+
+        if (newImage) {
+          try {
+            await deleteFileFromDisk(currentImagePath);
+          } catch (error) {
+            console.log(error);
+          }
+        }
+
+        res.json(rows?.[0]);
+      }
     } catch (error) {
       console.log(error);
       try {
-        deleteFileFromDisk(imagePath);
+        deleteFileFromDisk(newImagePath);
       } catch (error) {
         console.log(error);
       }
-      res.status(400).json("Error while updating category.");
+      res.status(400).json({ error: "Error while updating category." });
     }
   },
 };
