@@ -42,16 +42,15 @@ module.exports = {
   },
 
   createCategory: async (req, res) => {
-    // INSERT INTO category (name, image_path) VALUES ($1, $2)
     const columns = [];
-    const parameters = [];
+    const params = [];
     const values = [];
     let paramCount = 1;
 
     for (const key in matchedData(req)) {
       columns.push(key);
       values.push(matchedData(req)[key]);
-      parameters.push(`$${paramCount}`);
+      params.push(`$${paramCount}`);
       paramCount++;
     }
 
@@ -64,11 +63,11 @@ module.exports = {
         imagePath = await saveFileToDisk(imageBuffer, imageName);
         columns.push("image_path");
         values.push(imagePath);
-        parameters.push(`$${paramCount}`);
+        params.push(`$${paramCount}`);
         paramCount++;
 
         const { rows } = await db(
-          `INSERT INTO category (${columns}) VALUES (${parameters}) RETURNING *`,
+          `INSERT INTO category (${columns}) VALUES (${params}) RETURNING *`,
           values
         );
         res.json(rows?.[0]);
@@ -81,27 +80,66 @@ module.exports = {
       }
     }
   },
-  updateCategory: (req, res) => {
-    // Refactor
-    const { name } = req.body ? req.body : {};
+  updateCategory: async (req, res) => {
     const { category_id } = req.params ? req.params : {};
-    const image_path = req.file ? req.file.path.replace(/\\/g, "/") : undefined;
+    const newImage = req?.files?.image?.[0];
 
-    console.log(image_path);
+    let columns = "";
+    const params = [];
+    const values = [];
+    let paramsCount = 1;
+    const currentImagePath = "";
 
-    const updateQuery = `UPDATE category SET
-    name = $1, image_path = $2 WHERE category_id = $3 RETURNING *`;
+    try {
+      const { rows } = await db(
+        `SELECT * FROM category WHERE category_id = $1 LIMIT 1`,
+        [category_id]
+      );
+      currentImagePath = rows?.[0]?.image_path;
+    } catch (error) {
+      console.log(error);
+    }
 
-    db(updateQuery, [name, image_path ? image_path : null, category_id])
-      .then(({ rows }) => {
-        console.log(rows);
-        res.json({
-          message: "Succesfully updated category",
-          category: rows[0],
-        });
-      })
-      .catch(() => {
-        res.status(404).json({ error: "Category not succesfully updated" });
-      });
+    for (const key in matchedData(req)) {
+      columns += `${key} = $${paramsCount}`;
+      values.push(matchedData(req)?.[key]);
+      params.push(`$${paramsCount}`);
+      paramsCount++;
+    }
+
+    let imagePath = '';
+    try {
+      imagePath = await saveFileToDisk(
+        newImage.buffer,
+        newImage.originalname
+      );
+      columns += `, image_path = $${paramsCount} WHERE category_id = $${
+        paramsCount + 1
+      }`;
+      values.push(imagePath);
+      values.push(category_id);
+      paramsCount++;
+
+      const { rows } = await db(
+        `UPDATE category SET ${columns} RETURNING *`,
+        values
+      );
+
+      try {
+        deleteFileFromDisk(currentImagePath);
+      } catch (error) {
+        console.log(error);
+      }
+
+      res.json("Succesfully updated category.");
+    } catch (error) {
+      console.log(error);
+      try {
+        deleteFileFromDisk(imagePath);
+      } catch (error) {
+        console.log(error);
+      }
+      res.status(400).json("Error while updating category.");
+    }
   },
 };
