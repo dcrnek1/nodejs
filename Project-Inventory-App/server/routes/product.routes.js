@@ -1,8 +1,30 @@
 const express = require('express');
 const productController = require('../controllers/product.controller');
+const {body, validationResult} = require('express-validator');
+const { upload } = require('../middleware/multer');
 const router = express.Router();
 
+const validationErrorCheck = (req, res, next) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      next();
+    }
+
+const validateCreate = [
+    body('name').trim().notEmpty().withMessage('Name can not be empty.')
+    .isAlphanumeric('en-US', {ignore: ' '}).withMessage(`Name can contain letters and numbers only.`),
+    body('description').trim().optional(),
+    body('stock').trim().optional().isInt({min: 0}),
+    body('categories').optional().isArray({min: 0}).withMessage('Categories must be an array'),
+    body('categories.*').isInt({gt: 0}).withMessage('Each category ID must be a positive integer.'),
+    validationErrorCheck,
+]
+
 router.get('/', productController.getAllProducts)
-router.delete('/:id', productController.deleteProduct)
+router.get('/:product_id', productController.getProductById)
+router.post('/', upload([{name: 'image', maxCount: 1, minCount: 1}], ['image/jpeg', 'image/png']), validateCreate, productController.createProduct)
+router.delete('/:product_id', productController.deleteProduct)
 
 module.exports = router;

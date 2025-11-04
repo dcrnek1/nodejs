@@ -4,6 +4,23 @@ const { matchedData } = require("express-validator");
 const { saveFileToDisk, deleteFileFromDisk } = require("../middleware/multer");
 
 module.exports = {
+  getCategoryById: async (req, res) => {
+    const category_id = req?.params?.category_id;
+    try {
+      const { rows } = await db(
+        `select * from category where category_id = $1 limit 1`,
+        [category_id]
+      );
+      if (rows.length > 0) {
+        res.json(rows?.[0]);
+      } else {
+        res.status(404).json({ message: "Category not found." });
+      }
+    } catch (error) {
+      res.status(400).json({ error: error, message: "Database error." });
+    }
+  },
+
   getAllCategories: async (req, res) => {
     try {
       const { rows } = await db(`select c.*, count(*) as product_count
@@ -20,24 +37,24 @@ module.exports = {
   deleteCategory: async (req, res) => {
     const { category_id } = req?.params;
 
-    try {
-      const { result, rows } = await db(
-        "DELETE FROM category WHERE category_id = $1 RETURNING *",
-        [category_id]
-      );
-      const imagePath = rows?.["0"]?.image_path;
-      if (result.rowCount > 0) {
+    const { result, rows } = await db(
+      "DELETE FROM category WHERE category_id = $1 RETURNING *",
+      [category_id],
+      res
+    );
+    const imagePath = rows?.["0"]?.image_path;
+    if (result.rowCount > 0) {
+      if (imagePath) {
         try {
           await deleteFileFromDisk(imagePath);
         } catch (error) {
           console.log(error);
         }
-        res.json({ message: "Succesfully deleted category." });
-      } else {
-        res.status(404).json({ error: "Category not found." });
       }
-    } catch (error) {
-      res.status(400).json({ message: "Category not deleted. Server error." });
+
+      res.json({ message: "Succesfully deleted category." });
+    } else {
+      res.status(404).json({ error: "Category not found." });
     }
   },
 
@@ -73,7 +90,8 @@ module.exports = {
 
       const { rows } = await db(
         `INSERT INTO category (${columns}) VALUES (${params}) RETURNING *`,
-        values
+        values,
+        res
       );
       res.json(rows?.[0]);
     } catch (error) {
@@ -95,18 +113,14 @@ module.exports = {
     const values = [];
     let paramsCounter = 1;
 
-    try {
-      const { rows } = await db(
-        `SELECT * FROM category WHERE category_id = $1 LIMIT 1`,
-        [category_id]
-      );
-      currentImagePath = rows?.[0]?.image_path;
-      if (rows.length === 0)
-        return res.status(404).json({ error: "Non existant category." });
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({ error: "Database error." });
-    }
+    const { rows } = await db(
+      `SELECT * FROM category WHERE category_id = $1 LIMIT 1`,
+      [category_id],
+      res
+    );
+    currentImagePath = rows?.[0]?.image_path;
+    if (rows.length === 0)
+      return res.status(404).json({ error: "Non existant category." });
 
     for (const key in matchedData(req)) {
       columns.push(`${key} = $${paramsCounter}`);

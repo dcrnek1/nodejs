@@ -1,6 +1,6 @@
 const pool = require("./pool");
 
-module.exports = async (text, params = []) => {
+module.exports = async (text, params = [], res = null) => {
   if (!text || typeof text !== 'string') {
     console.log("Query text must be a non-empty string");
     throw new Error("Query text must be a non-empty string");
@@ -12,6 +12,7 @@ module.exports = async (text, params = []) => {
     return {rows: result.rows, result: result}
   } catch (error) {
     console.error("Database query error for query:", text, ", Error message:", error.message);
+    if (res) res.status(500).json({error: error, message: "Internal server error."});
     throw error;
   }
 };

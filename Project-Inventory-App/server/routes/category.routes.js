@@ -20,6 +20,7 @@ const validateCreate = [
 ]
 
 router.get('/', categoryController.getAllCategories)
+router.get('/:category_id', categoryController.getCategoryById)
 router.delete('/:category_id', categoryController.deleteCategory)
 router.post('/', upload([{name: 'image', maxCount: 1}], ['image/jpeg', 'image/png']), validateCreate, 
              categoryController.createCategory)
