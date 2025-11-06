@@ -27,13 +27,15 @@
     --mobile-navbar-height: 3.5rem;
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   body {
-    @apply text-gray-800;
+    @apply text-gray-800 dark:text-white;
   }
 
   a {
-    @apply text-blue-800;
+    @apply text-blue-800 dark:text-sky-500;
   }
 
   .max-w-8xl {
