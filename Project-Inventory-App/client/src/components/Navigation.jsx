@@ -4,7 +4,7 @@ import ThemeToggle from "./ThemeToggle";
 
 export default function Navigation() {
   return (
-    <navigation className="max-w-8xl w-full mx-auto">
+    <navigation className="w-full mx-auto">
       {/* Mobile header */}
       <div className="px-2 py-3 text-2xl sm:hidden font-bold flex flex-row justify-between border-b-1 dark:border-b-1 border-gray-950/10 dark:border-white/10 items-center">
         <div>Inventory App</div>
@@ -51,57 +51,62 @@ export default function Navigation() {
       </div>
 
       {/* Desktop navigation */}
-      <div className="hidden sm:flex flex-row p-2 py-3 w-full border-b-1 border-gray-200 dark:border-b-1 dark:border-white/5 items-center">
-        <div className="sm:flex flex-row flex-1 gap-15 items-center">
-          <div className="text-2xl font-bold">Inventory App</div>
-          <div></div>
-          <div className="flex gap-8">
-            <NavLink to="/" className="text-gray-900 dark:text-gray-50">
-              {({ isActive }) => (
-                <span
-                  className={
-                    isActive
-                      ? "dark:text-white text-gray-950"
-                      : "dark:text-gray-400 text-gray-500"
-                  }
-                >
-                  Home
-                </span>
-              )}
-            </NavLink>
-            <NavLink
-              to="/categories"
-              className="text-gray-900 dark:text-gray-50"
-            >
-              {({ isActive }) => (
-                <span
-                  className={
-                    isActive
-                      ? "dark:text-white text-gray-950"
-                      : "dark:text-gray-400 text-gray-500"
-                  }
-                >
-                  Categories
-                </span>
-              )}
-            </NavLink>
-            <NavLink to="/products" className="text-gray-900 dark:text-gray-50">
-              {({ isActive }) => (
-                <span
-                  className={
-                    isActive
-                      ? "dark:text-white text-gray-950"
-                      : "dark:text-gray-400 text-gray-500"
-                  }
-                >
-                  Products
-                </span>
-              )}
-            </NavLink>
+      <div className="border-b-1 border-gray-200 dark:border-b-1 dark:border-white/5 ">
+        <div className="hidden sm:flex flex-row p-2 py-3 w-full items-center max-w-8xl mx-auto">
+          <div className="sm:flex flex-row flex-1 gap-15 items-center">
+            <div className="text-2xl font-bold">Inventory App</div>
+            <div></div>
+            <div className="flex gap-8 text-sm">
+              <NavLink to="/" className="text-gray-900 dark:text-gray-50">
+                {({ isActive }) => (
+                  <span
+                    className={
+                      isActive
+                        ? "dark:text-white text-gray-950"
+                        : "dark:text-gray-400 text-gray-500"
+                    }
+                  >
+                    Home
+                  </span>
+                )}
+              </NavLink>
+              <NavLink
+                to="/categories"
+                className="text-gray-900 dark:text-gray-50"
+              >
+                {({ isActive }) => (
+                  <span
+                    className={
+                      isActive
+                        ? "dark:text-white text-gray-950"
+                        : "dark:text-gray-400 text-gray-500"
+                    }
+                  >
+                    Categories
+                  </span>
+                )}
+              </NavLink>
+              <NavLink
+                to="/products"
+                className="text-gray-900 dark:text-gray-50"
+              >
+                {({ isActive }) => (
+                  <span
+                    className={
+                      isActive
+                        ? "dark:text-white text-gray-950"
+                        : "dark:text-gray-400 text-gray-500"
+                    }
+                  >
+                    Products
+                  </span>
+                )}
+              </NavLink>
+            </div>
           </div>
-        </div>
-        <div>
-          <ThemeToggle />
+          <div>
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </navigation>
