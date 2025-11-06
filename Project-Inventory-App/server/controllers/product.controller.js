@@ -127,5 +127,35 @@ module.exports = {
     }
   },
 
+  updateProduct: async (req, res, next) => {
+    // Get product id of product we want to update
+    const product_id = req?.params?.product_id;
+
+    //If that product doesnt exist return res 404 not found
+    let existingProduct = await db(`SELECT * from product WHERE product_id = $1`, [product_id]).catch((err) => res.status(500).json({error: err, message: "Internal server error"}));
+    existingProduct = product?.rows?.[0];
+    if (!existingProduct) return res.status(404).json({message: "Product not found."});
+
+    //Get sent image and Save it if uploaded
+    const newImagePath = req?.files?.image?.[0] ? await saveFileToDisk(req?.files?.image?.[0].buffer, req?.files?.image?.[0].originalname).catch((err) => res.status(500).json({error: err, message: "Internal server error"})) : false;
+    //Data for updating
+    const newData = matchedData(req);
+    const newCategories = newData?.categories;
+    //Build query for updateing PRODUCT values
+    //Execute query for update
+      //If succeeds then 
+        // remove from disk existingProduct.image_path
+      //If fails
+        // remove from disk newImagePath if it exists
+
+    // If categories are sent
+    // delete existing categories
+    // Build query for inserting new categories
+    // execute new categories
+      //If succeeds thats it
+
+    res.json({message: "test"});
+  },
+
   deleteProduct: (req, res) => {},
 };
