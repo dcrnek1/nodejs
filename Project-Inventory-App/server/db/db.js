@@ -1,6 +1,6 @@
 const pool = require("./pool");
 
-module.exports = async (text, params = [], res = null) => {
+const db = async (text, params = [], res = null) => {
   if (!text || typeof text !== 'string') {
     console.log("Query text must be a non-empty string");
     throw new Error("Query text must be a non-empty string");
@@ -8,7 +8,6 @@ module.exports = async (text, params = [], res = null) => {
 
   try {
     const result = await pool.query(text, params);
-    console.log("Executed query:", text);
     return {rows: result.rows, result: result}
   } catch (error) {
     console.error("Database query error for query:", text, ", Error message:", error.message);
@@ -16,3 +15,24 @@ module.exports = async (text, params = [], res = null) => {
     throw error;
   }
 };
+
+db.transaction = async function (callback) {
+  const client = await pool.connect(); // get a dedicated connectio
+
+  try {
+    await client.query("BEGIN"); // start transaction
+    const result = await callback(client); // run your callback, pass in the client
+    await client.query("COMMIT"); // commit if all went well
+    return result;
+  } catch (err) {
+    await client.query("ROLLBACK"); // rollback on any error
+    console.error("Transaction rolled back due to error:", err.message);
+    throw err;
+  } finally {
+    client.release(); // release client back to pool
+  }
+};
+
+
+
+module.exports = db;

@@ -22,10 +22,20 @@ const validateCreate = [
     validationErrorCheck,
 ]
 
+const validateUpdate = [
+    body('name').trim().optional()
+    .isAlphanumeric('en-US', {ignore: ' '}).withMessage(`Name can contain letters and numbers only.`),
+    body('description').trim().optional(),
+    body('stock').trim().optional().isInt({min: 0}),
+    body('categories').optional().isArray({min: 0}).withMessage('Categories must be an array'),
+    body('categories.*').isInt({gt: 0}).withMessage('Each category ID must be a positive integer.'),
+    validationErrorCheck,
+]
+
 router.get('/', productController.getAllProducts)
 router.get('/:product_id', productController.getProductById)
 router.post('/', upload([{name: 'image', maxCount: 1}], ['image/jpeg', 'image/png']), validateCreate, productController.createProduct)
-router.put('/:product_id', upload([{name: 'image', maxCount: 1}], ['image/jpeg', 'image/png']), validateCreate, productController.updateProduct)
+router.put('/:product_id', upload([{name: 'image', maxCount: 1}], ['image/jpeg', 'image/png']), validateUpdate, productController.updateProduct)
 router.delete('/:product_id', productController.deleteProduct)
 
 module.exports = router;
