@@ -41,16 +41,16 @@ export default function ThemeToggle() {
 
   if (!mounted) return null;
 
-  const iconProps = { size: 18, weight: "regular" };
+  const iconProps = { size: 15, weight: "regular" };
   const baseBtn =
-    "flex items-center gap-2 p-2 sm:p-1 rounded-full text-sm font-medium";
+    "flex items-center gap-2 p-1 sm:p-1 rounded-full text-sm font-medium";
   const active =
-    "bg-white dark:bg-gray-700 ring-1 ring-gray-950/15 text-gray-900 dark:text-gray-50 dark:ring-1 dark:ring-gray-500";
+    "bg-primary-inverted/40 ring-1 ring-primary/30 text-primary";
   const inactive =
-    "text-gray-500 hover:bg-gray-100 dark:text-gray-50 dark:hover:bg-gray-800 dark:ring-1 dark:ring-gray-500/0";
+    "text-secondary hover:bg-primary/10 dark:ring-1 dark:ring-gray-500/0";
 
   return (
-    <div className="flex items-center bg-gray-950/5 dark:bg-white/10 p-1 gap-1 sm:gap-2 rounded-full">
+    <div className="flex items-center bg-primary/5 p-1 gap-1 sm:gap-2 rounded-full">
       <button
         onClick={() => setThemeMode("light")}
         className={`${baseBtn} ${

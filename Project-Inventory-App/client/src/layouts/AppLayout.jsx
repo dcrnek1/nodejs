@@ -5,10 +5,22 @@ import { Toaster } from "../components/ui/sonner";
 
 export default function AppLayout() {
   return (
-    <div className="grid grid-cols-1 grid-rows-[auto_1fr_auto] gap-2 min-h-svh bg-bgPrimary text-textPrimary">
+    <div className="grid grid-cols-1 grid-rows-[auto_1fr_auto] min-h-svh bg-main text-primary">
       <Navigation />
-      <main className=""><Outlet />
-        <Toaster />
+      <main className="bg-subtle py-3">
+        <Outlet />
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            classNames: {
+              toast: "!bg-sonner-bg !border-solid-border !text-primary !shadow-sm",
+              description: "!text-tertiary",
+              closeButton: "!bg-subtle !text-primary !border-none",
+            },
+          }}
+          swipeDirections="top-right"
+          visibleToasts={9}
+        />
       </main>
       <Footer />
     </div>

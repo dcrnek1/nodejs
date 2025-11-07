@@ -5,15 +5,13 @@ const Toaster = ({ ...props }) => {
 
     return (
         <Sonner
-            className="text-red"
             icons={{
-                success: <CheckCircleIcon size={20} />,
-                info: <InfoIcon size={20} />,
-                warning: <WarningIcon size={20} />,
-                error: <XCircleIcon size={20} />,
+                success: <CheckCircleIcon weight="duotone" size={21} className="text-success" />,
+                info: <InfoIcon weight="duotone" size={20} className="text-info" />,
+                warning: <WarningIcon weight="duotone" size={20} className="text-warning" />,
+                error: <XCircleIcon weight="duotone" size={20} className="text-error" />,
                 loading: <CircleNotchIcon size={20} className="animate-spin" />,
             }}
-            position="top-right"
             {...props}
         />
     )

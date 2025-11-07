@@ -17,11 +17,30 @@
   src: url("./assets/fonts/Inter/Inter-VariableFont_opsz\,wght.ttf");
 }
 
-
-
 @layer base {
   .max-w-8xl {
     max-width: 1440px;
+  }
+
+  h1 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    line-height: 1;
+  }
+
+  h4 {
+    font-size: var(--text-sm);
+    padding-bottom: 1rem;
+    color: var(--color-tertiary);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  p {
+    text-align: justify;
+    line-height: 1.2;
+    color: var(--color-secondary);
+    padding-bottom: 2rem;
   }
 }
 
@@ -30,27 +49,55 @@
   --font-inter: "Inter", sans-serif;
   --default-font-family: "Nunito", sans-serif;
 
-  --color-primary: var(--color-indigo-500);
-  
-  --color-bgPrimary: var(--color-white);
-  --color-textPrimary: var(--color-gray-950);
-  --color-textFaded: var(--color-gray-500);
-  --color-textFaded2: var(--color-gray-400);
+  /* Links */
   --color-textLink: var(--color-sky-500);
-  --color-borderFaded: var(--color-gray-200);
+  /* Sonner */
+  --color-sonner-bg: var(--color-white);
+  --color-sonnerClose: var(--color-gray-100);
+  --color-sonnerBorder: var(--color-gray-200);
+  /* Action results */
+  --color-success: var(--color-green-500);
+  --color-error: var(--color-red-500);
+  --color-warning: var(--color-yellow-500);
+  --color-info: var(--color-sky-500);
+
+  --color-main: #fafafa;
+  --color-subtle: #fff;
+  --color-el-hover-bg: #f0f0f0;
+  --color-transparent-border: #e0e0e0;
+  --color-solid-border: #ebebeb;
+  --color-primary: #18181b;
+  --color-primary-inverted: #f3f3f5;
+  --color-secondary: #52525b;
+  --color-tertiary: #a1a1aa;
+  --color-disabled: #c1c1c7;
 
   --mobile-navbar-height: 3.5rem;
 }
 
-@variant dark {
-  --color-primary: var(--color-indigo-500);
-  
-  --color-bgPrimary: var(--color-gray-950);
-  --color-textPrimary: var(--color-white);
-  --color-textFaded: var(--color-gray-400);
-  --color-textFaded2: var(--color-gray-500);
+@variant dark {  
+  /* Links */
   --color-textLink: var(--color-sky-500);
-  --color-borderFaded: var(--color-gray-800)
-}
+  /* Borders */
+  --color-borderFaded: var(--color-gray-800);
+  /* Sonner */
+  --color-sonner-bg: var(--color-neutral-900);
+  --color-sonnerClose: var(--color-slate-700);
+  --color-sonnerBorder: var(--color-gray-800);
+  /* Action results */
+  --color-success: var(--color-green-700);
+  --color-error: var(--color-rose-500);
+  --color-warning: var(--color-amber-400);
+  --color-info: var(--color-sky-500);
 
-;
+  --color-main: #171716;
+  --color-subtle: #1a1a19;
+  --color-el-hover-bg: #363636;
+  --color-transparent-border: #3a3a3a;
+  --color-solid-border: #2e2e2d;
+  --color-primary: #f3f3f5;
+  --color-primary-inverted: #18181b;
+  --color-secondary: #c1c1c6;
+  --color-tertiary: #74747b;
+  --color-disabled: #5a5a5e;
+}
