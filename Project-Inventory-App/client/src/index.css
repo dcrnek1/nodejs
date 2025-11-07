@@ -1,9 +1,6 @@
 @import "tailwindcss";
 
-@layer theme, base, components, utilities;
-@import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/preflight.css" layer(base);
-@import "tailwindcss/utilities.css" layer(utilities);
+@custom-variant dark (&:where(.dark, .dark *));
 
 @font-face {
   font-family: "Nunito";
@@ -20,25 +17,40 @@
   src: url("./assets/fonts/Inter/Inter-VariableFont_opsz\,wght.ttf");
 }
 
-@theme {
-    --font-roboto: "Roboto", sans-serif;
-    --font-inter: "Inter", sans-serif;
-    --default-font-family: "Nunito", sans-serif;
-    --mobile-navbar-height: 3.5rem;
-}
 
-@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
-  body {
-    @apply text-gray-800 dark:text-white;
-  }
-
-  a {
-    @apply text-blue-800 dark:text-sky-500;
-  }
-
   .max-w-8xl {
     max-width: 1440px;
   }
 }
+
+@theme {
+  --font-roboto: "Roboto", sans-serif;
+  --font-inter: "Inter", sans-serif;
+  --default-font-family: "Nunito", sans-serif;
+
+  --color-primary: var(--color-indigo-500);
+  
+  --color-bgPrimary: var(--color-white);
+  --color-textPrimary: var(--color-gray-950);
+  --color-textFaded: var(--color-gray-500);
+  --color-textFaded2: var(--color-gray-400);
+  --color-textLink: var(--color-sky-500);
+  --color-borderFaded: var(--color-gray-200);
+
+  --mobile-navbar-height: 3.5rem;
+}
+
+@variant dark {
+  --color-primary: var(--color-indigo-500);
+  
+  --color-bgPrimary: var(--color-gray-950);
+  --color-textPrimary: var(--color-white);
+  --color-textFaded: var(--color-gray-400);
+  --color-textFaded2: var(--color-gray-500);
+  --color-textLink: var(--color-sky-500);
+  --color-borderFaded: var(--color-gray-800)
+}
+
+;
