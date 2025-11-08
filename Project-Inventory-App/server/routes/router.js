@@ -4,7 +4,7 @@ const productsRouter = require('./product.routes');
 const categoriesRouter = require('./category.routes');
 
 
-router.use('api/products', productsRouter);
-router.use('api/categories', categoriesRouter);
+router.use('/products', productsRouter);
+router.use('/categories', categoriesRouter);
 
 module.exports = router;
