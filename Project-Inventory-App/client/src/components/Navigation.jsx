@@ -4,7 +4,7 @@ import ThemeToggle from "./ThemeToggle";
 
 export default function Navigation() {
   return (
-    <navigation className="w-full mx-auto">
+    <div className="w-full mx-auto">
       {/* Mobile header */}
       <div className="px-2 py-3 text-2xl sm:hidden font-bold flex flex-row justify-between border-b border-solid-border items-center">
         <div className="text-2xl font-inter font-bold">App. <span className="text-xs font-light">by Dario</span></div>
@@ -62,8 +62,8 @@ export default function Navigation() {
                   <span
                     className={
                       isActive
-                        ? "text-primary bg-el-hover-bg px-2 py-1 rounded-full"
-                        : "text-secondary px-2 py-1 hover:bg-el-hover-bg rounded-full"
+                        ? "text-primary bg-el-hover-bg px-2 py-1.5 rounded-full"
+                        : "text-tertiary px-2 py-1 hover:bg-el-hover-bg hover:text-primary rounded-full"
                     }
                   >
                     Home
@@ -78,7 +78,7 @@ export default function Navigation() {
                     className={
                       isActive
                         ? "text-primary bg-el-hover-bg px-2 py-1 rounded-full"
-                        : "text-secondary px-2 py-1 hover:bg-el-hover-bg rounded-full"
+                        : "text-tertiary px-2 py-1 hover:bg-el-hover-bg hover:text-primary rounded-full"
                     }
                   >
                     Categories
@@ -93,7 +93,7 @@ export default function Navigation() {
                     className={
                       isActive
                         ? "text-primary bg-el-hover-bg px-2 py-1 rounded-full"
-                        : "text-secondary px-2 py-1 hover:bg-el-hover-bg rounded-full"
+                        : "text-tertiary px-2 py-1 hover:bg-el-hover-bg hover:text-primary rounded-full"
                     }
                   >
                     Products
@@ -107,6 +107,6 @@ export default function Navigation() {
           </div>
         </div>
       </div>
-    </navigation>
+    </div>
   );
 }

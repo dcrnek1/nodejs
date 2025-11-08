@@ -1,7 +1,7 @@
 import { Link } from "react-router";
-import ThemeToggle from "./ThemeToggle";
 
 export default function Footer() {
+
   return (
     <div className="mb-(--mobile-navbar-height) px-2 py-8 sm:mb-0 text-tertiary border-t border-solid-border">
       <div className="max-w-8xl w-full mx-auto flex flex-col sm:flex-row justify-between gap-4">
