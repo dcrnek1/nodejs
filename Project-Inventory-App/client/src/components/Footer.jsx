@@ -3,16 +3,16 @@ import { Link } from "react-router";
 export default function Footer() {
 
   return (
-    <div className="mb-(--mobile-navbar-height) px-2 py-8 sm:mb-0 text-tertiary border-t border-solid-border">
+    <div className="mb-(--mobile-navbar-height) padding-x py-8 sm:mb-0 text-tertiary border-t border-solid-border">
       <div className="max-w-8xl w-full mx-auto flex flex-col sm:flex-row justify-between gap-4">
         {/* App Info */}
-        <div className="text-left flex flex-col justify-between">
-          <h2 className="text-lg font-bold text-secondary">
+        <div className="text-left flex flex-col">
+          <h2 className="text-lg font-bold text-secondary flex-1">
             Inventory App
           </h2>
-          <p className="text-sm">
+          <div className="text-sm">
             Manage your stock efficiently and effortlessly.
-          </p>
+          </div>
         </div>
 
         {/* Links / General Info */}

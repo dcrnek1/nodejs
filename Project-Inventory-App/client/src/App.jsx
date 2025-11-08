@@ -1,85 +1,32 @@
-import { toast } from "sonner";
-
 function App() {
   return (
-    <div className="px-2 max-w-8xl w-full mx-auto">
-      <button
-        onClick={() =>
-          toast.success("This is title", {
-            duration: Infinity,
-            description: "This is description of a success toast.",
-          })
-        }
-      >
-        Success
-      </button>
-      <br></br><button
-        onClick={() =>
-          toast.error("This is title", {
-            duration: Infinity,
-            description: "This is description of a success toast.",
-          })
-        }
-      >
-        error
-      </button>
-      <br></br>
-      <button
-        onClick={() =>
-          toast.info("This is title", {
-            duration: Infinity,
-            description: "This is description of a success toast.",
-          })
-        }
-      >
-        info
-      </button>
-      <br></br>
-      <button
-        onClick={() =>
-          toast.warning("This is title", {
-            duration: Infinity,
-            description: "This is description of a success toast.",
-          })
-        }
-      >
-        warning
-      </button>
-      <br></br>
-      <button
-        onClick={() =>
-          toast.loading("This is title", {
-            duration: Infinity,
-            description: "This is description of a success toast.",
-          })
-        }
-      >
-        Loading
-      </button>
-      <br></br>
-      <button
-        className="toast-button"
-        onClick={() => {
-          const myPromise = new Promise((resolve) => {
-            setTimeout(() => {
-              resolve({ name: "My toast" });
-            }, 3000);
-          });
+    <div className="pb-8 max-w-8xl text-primary mx-auto">
+      {/* Main Content */}
+      <section className="padding-x py-6 bg-subtle flex flex-col gap-6">
+        <div className="flex flex-wrap justify-between items-center border-b border-solid-border pb-6">
+          <h1 className="text-nowrap">Dashboard Overview</h1>
+        </div>
 
-          toast.promise(myPromise, {
-            loading: "Loading...",
-            success: (data) => {
-              return {
-                message: `${data.name} toast has been added`,
-                description: "Custom description for the success state",
-              };
-            },
-            error: "Error",
-          });
-        }}
-      >
-        Promise
-      </button>
+        {/* Example dashboard cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            { title: "Total Products", value: "1,248" },
+            { title: "Low Stock", value: "23" },
+            { title: "Categories", value: "14" },
+          ].map((card) => (
+            <div
+              key={card.title}
+              className="bg-el-bg border border-solid-border rounded-2xl p-6 hover:bg-elhover transition"
+            >
+              <p className="text-tertiary text-sm">{card.title}</p>
+              <p className="text-3xl font-semibold text-primary mt-2">
+                {card.value}
+              </p>
+            </div>
+          ))}
+        </div>
+        <button className="primary ml-auto">+ Add Item</button>
+      </section>
     </div>
   );
 }

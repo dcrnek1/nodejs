@@ -6,7 +6,7 @@ export default function Navigation() {
   return (
     <div className="w-full mx-auto">
       {/* Mobile header */}
-      <div className="px-2 py-3 text-2xl sm:hidden font-bold flex flex-row justify-between border-b border-solid-border items-center">
+      <div className="padding-x py-3 text-2xl sm:hidden font-bold flex flex-row justify-between border-b border-solid-border items-center">
         <div className="text-2xl font-inter font-bold">App. <span className="text-xs font-light">by Dario</span></div>
         <ThemeToggle />
       </div>
@@ -52,7 +52,7 @@ export default function Navigation() {
 
       {/* Desktop navigation */}
       <div className="hidden sm:flex border-b border-solid-border">
-        <div className="hidden sm:flex flex-row p-2 py-3 w-full items-center max-w-8xl mx-auto">
+        <div className="hidden sm:flex flex-row padding-x py-3 w-full items-center max-w-8xl mx-auto">
           <div className="sm:flex flex-row flex-1 gap-15 items-center">
             <div className="text-2xl font-inter font-bold">App. <span className="text-xs font-light">by Dario</span></div>
             <div></div>

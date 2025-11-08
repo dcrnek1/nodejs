@@ -7,13 +7,14 @@ export default function AppLayout() {
   return (
     <div className="grid grid-cols-1 grid-rows-[auto_1fr_auto] min-h-svh bg-main text-primary">
       <Navigation />
-      <main className="bg-subtle py-3">
+      <main className="bg-subtle">
         <Outlet />
         <Toaster
           position="top-center"
           toastOptions={{
             classNames: {
-              toast: "!bg-sonner-bg !border-solid-border !text-primary !shadow-sm",
+              toast:
+                "!bg-sonner-bg !border-solid-border !text-primary !shadow-sm",
               description: "!text-tertiary",
               closeButton: "!bg-subtle !text-primary !border-none",
             },
