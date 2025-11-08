@@ -1,7 +1,7 @@
 import { Outlet } from "react-router";
 import Navigation from "../components/Navigation";
 import Footer from "../components/Footer";
-import { Toaster } from "../components/ui/sonner";
+import { Toaster } from "../components/ui/Sonner";
 
 export default function AppLayout() {
   return (
