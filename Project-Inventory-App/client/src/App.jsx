@@ -16,7 +16,7 @@ function App() {
           ].map((card) => (
             <div
               key={card.title}
-              className="bg-el-bg border border-solid-border rounded-2xl p-6 hover:bg-el-hover-bg transition"
+              className="bg-el-bg border border-solid-border rounded-2xl p-6 hover:bg-el-hover-bg hover:transition"
             >
               <p className="text-tertiary text-sm">{card.title}</p>
               <p className="text-3xl font-semibold text-primary mt-2">
