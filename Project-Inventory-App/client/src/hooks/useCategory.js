@@ -7,7 +7,7 @@ export const useCategories = () => {
     staleTime: 1 * 60 * 1000,
     queryFn: async () => {
       const { data } = await axios.get(
-        `${import.meta.env.VITE_API_URL}/categories`
+        `https://${import.meta.env.VITE_API_URL}/categories`
       );
       return data;
     },
