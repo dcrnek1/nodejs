@@ -26,6 +26,7 @@ function App() {
           ))}
         </div>
         <button className="primary ml-auto">+ Add Item</button>
+        <div>{ `${import.meta.env.VITE_API_URL}/categories`}</div>
       </section>
     </div>
   );
