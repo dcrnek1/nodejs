@@ -33,12 +33,12 @@ export default function CategoryPage() {
           categories.data.map((category, key) => (
             <div
               key={key}
-              className="bg-el-bg rounded-md border border-solid-border p-2 "
+              className="bg-el-bg rounded-md border border-solid-border p-2 min-h-25"
             >
               <div className="flex flex-col h-full justify-between relative">
                 <h1 className="text-lg text-primary">{category.name}</h1>
                 <div className="text-secondary">
-                  {category.product_count} Products
+                  {category.product_count} products
                 </div>
                 <div className="absolute bottom-0 right-0 flex flex-row gap-1">
                   <div

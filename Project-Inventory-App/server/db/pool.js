@@ -1,6 +1,7 @@
 const {Pool} = require("pg");
-const dotenv = require('dotenv');
-dotenv.config();
+const dotenv = require("dotenv");
+const path = require("path");
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 module.exports = new Pool({
   host: process.env.DB_HOST,
