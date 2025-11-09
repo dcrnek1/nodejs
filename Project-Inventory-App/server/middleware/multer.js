@@ -18,7 +18,7 @@ const saveFileToDisk = async (fileBuffer, originalName, filePath = ["static","up
     await fs.writeFileSync(uploadPath, fileBuffer);
     return `${path.posix.join(...filePath, randomName)}`;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 

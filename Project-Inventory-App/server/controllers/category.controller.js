@@ -81,7 +81,14 @@ module.exports = {
 
     try {
       if (imageBuffer) {
-        imagePath = await saveFileToDisk(imageBuffer, imageName);
+        try {
+          imagePath = await saveFileToDisk(imageBuffer, imageName);
+        } catch (error) {
+          console.log(error);
+          return res
+            .status(500)
+            .json({ error: error, message: "Error saving file" });
+        }
         columns.push("image_path");
         values.push(imagePath);
         params.push(`$${paramCount}`);
@@ -130,10 +137,18 @@ module.exports = {
 
     try {
       if (newImage) {
-        newImagePath = await saveFileToDisk(
-          newImage.buffer,
-          newImage.originalname
-        );
+        try {
+          newImagePath = await saveFileToDisk(
+            newImage.buffer,
+            newImage.originalname
+          );
+        } catch (error) {
+          console.log(error);
+          return res
+            .status(500)
+            .json({ error: error, message: "Error saving file" });
+        }
+
         columns.push(`image_path = $${paramsCounter}`);
         values.push(newImagePath);
         paramsCounter++;

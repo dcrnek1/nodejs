@@ -181,9 +181,12 @@ module.exports = {
       ? await saveFileToDisk(
           req?.files?.image?.[0].buffer,
           req?.files?.image?.[0].originalname
-        ).catch((err) =>
-          res.status(500).json({ error: err, message: "Internal server error" })
-        )
+        ).catch((err) => {
+          console.log(err);
+          res
+            .status(500)
+            .json({ error: err, message: "Internal server error" });
+        })
       : false;
     //Data for updating
     const newData = matchedData(req);
@@ -311,7 +314,7 @@ module.exports = {
         );
 
         if (existingImagePath) await deleteFileFromDisk(existingImagePath);
-        
+
         deletedProductResult.rowCount === 0
           ? res.status(404).json({ message: "Product not found." })
           : res.json({ message: "Product succesfully deleted." });
