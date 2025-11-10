@@ -14,7 +14,9 @@ import { useState } from "react";
 
 export function CategoryDetailsDialog({ children, category }) {
   const [isOpen, setIsOpen] = useState(false);
-  const products = useProductsByCategoryId(category.category_id, {enabled: isOpen});
+  const products = useProductsByCategoryId(category.category_id, {
+    enabled: isOpen,
+  });
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -27,15 +29,25 @@ export function CategoryDetailsDialog({ children, category }) {
               : "Category is empty."}
           </DialogDescription>
         </DialogHeader>
-        <div className="flex flex-col items-left gap-2">
-          {/* Loading products */}
-          {products.isLoading && <>Fetching product list...</>}
-          {/* Error loading products */}
+        <div
+          className={`flex flex-col items-left gap-2 overflow-hidden transition-[max-height] duration-300 ease-out`}
+          style={{
+            maxHeight: products.isSuccess
+              ? `${products.data.length * 2.5}rem`
+              : "0",
+          }}
+        >
           {products.isError && <>Error fetching product list :(</>}
-          {/* Products List */}
-          {products.isSuccess && products?.data?.length > 0 && products.data.map((product, index) => (
-            <div key={index} className="flex flex-row gap-1 items-center text-textLink/90 cursor-pointer">{product.name} <LinkSimpleHorizontalIcon size={15} /></div>
-        ))}
+          {products.isSuccess &&
+            products?.data?.length > 0 &&
+            products.data.map((product, index) => (
+              <div
+                key={index}
+                className="flex flex-row gap-1 items-center text-textLink/90 cursor-pointer"
+              >
+                {product.name} <LinkSimpleHorizontalIcon size={15} />
+              </div>
+            ))}
         </div>
         <DialogFooter className="sm:justify-end">
           <DialogClose asChild></DialogClose>
