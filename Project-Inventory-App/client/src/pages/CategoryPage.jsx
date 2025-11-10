@@ -31,7 +31,7 @@ export default function CategoryPage() {
         <div>
           <button 
           onClick={() => order === 'asc' ? setOrder('desc') : setOrder('asc')}
-          className="flex flex-row gap-1 items-center text-tertiary hover:text-primary primary bg-primary/5 hover:transition active:transition hover:bg-primary/10 active:bg-primary/10">
+          className="cursor-pointer flex flex-row gap-1 items-center text-tertiary hover:text-primary primary bg-primary/5 hover:transition active:transition hover:bg-primary/10 active:bg-primary/10">
             <CaretDownIcon className={`  transition-transform duration-250 ${order === 'asc' && 'rotate-180'}`} /> <span className="w-11">{order === 'asc' ? 'Asc' : 'Desc'}</span>
           </button>
         </div>
@@ -49,7 +49,7 @@ export default function CategoryPage() {
         {/* Add new button */}
         {categories.isSuccess && (
           <div
-            className={`bg-el-bg hover:bg-el-hover-bg active:bg-el-hover-bg rounded-md border border-solid-border p-2
+            className={`cursor-pointer bg-el-bg hover:bg-el-hover-bg active:bg-el-hover-bg rounded-md border border-solid-border p-2
            transition-[translate,opacity] duration-500 ease-out will-change-[opacity,translate] ${
              cardsVisible
                ? "opacity-100 translate-y-0"

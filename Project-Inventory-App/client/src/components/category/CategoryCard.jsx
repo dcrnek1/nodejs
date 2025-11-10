@@ -9,7 +9,7 @@ function CategoryCard({ category }) {
 
   return (
     <div
-      className={` rounded-md border border-solid-border p-2 min-h-25 h-full hover:bg-el-bg active:bg-el-bg}`}
+      className={`cursor-pointer rounded-md border border-solid-border p-2 min-h-25 h-full hover:bg-el-bg active:bg-el-bg}`}
     >
       <div className="flex flex-col gap-2 h-full justify-between relative">
         <h1 className="text-lg text-primary line-clamp-2">{category.name}</h1>
