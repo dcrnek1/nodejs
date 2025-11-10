@@ -23,7 +23,10 @@ export default function CategoryPage() {
 
   useEffect(() => {
     if (categories.isSuccess) {
-      setCardsVisible(true);
+      const timer = setTimeout(() => {
+        setCardsVisible(true);
+        return () => clearTimeout(timer);
+      });
     }
   }, [categories.isSuccess]);
 
@@ -62,8 +65,10 @@ export default function CategoryPage() {
             <div
               key={index}
               className={`bg-el-bg rounded-md border border-solid-border p-2 min-h-25 
-                transition-[translate,opacity] duration-500 ease-out ${
-                  cardsVisible || !categories.isFetchedAfterMount ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                transition-[translate,opacity] duration-500 ease-out will-change-[opacity,translate] ${
+                  cardsVisible || !categories.isFetchedAfterMount
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-4"
                 }`}
               style={{ transitionDelay: `${index * 50}ms` }}
             >
