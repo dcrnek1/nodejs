@@ -11,7 +11,7 @@ import { useEffect } from "react";
 
 export default function CategoryPage() {
   const categories = useCategories();
-  const [cardsVisible, setCardsVisible] = useState();
+  const [cardsVisible, setCardsVisible] = useState(false);
 
   const handleEdit = (name) => {
     toast.info(`Editing category ${name}.`);
@@ -22,8 +22,6 @@ export default function CategoryPage() {
   };
 
   useEffect(() => {
-    
-  console.log(typeof successOnLoad);
     if (categories.isSuccess) {
       setCardsVisible(true);
     }
@@ -64,10 +62,10 @@ export default function CategoryPage() {
             <div
               key={index}
               className={`bg-el-bg rounded-md border border-solid-border p-2 min-h-25 
-                transition duration-500 ${
-                  cardsVisible || !categories.isFetchedAfterMount ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+                transition-[translate,opacity] duration-500 ease-out ${
+                  cardsVisible || !categories.isFetchedAfterMount ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
-              style={{ transitionDelay: `${index * 30}ms` }}
+              style={{ transitionDelay: `${index * 50}ms` }}
             >
               <div className="flex flex-col h-full justify-between relative">
                 <h1 className="text-lg text-primary">{category.name}</h1>
