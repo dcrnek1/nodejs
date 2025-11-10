@@ -5,9 +5,13 @@ import {
 } from "@phosphor-icons/react";
 import { useCategories } from "../hooks/useCategory";
 import { toast } from "sonner";
+import { Skeleton } from "../components/ui/Skeleton";
+import { useState } from "react";
+import { useEffect } from "react";
 
 export default function CategoryPage() {
   const categories = useCategories();
+  const [cardsVisible, setCardsVisible] = useState();
 
   const handleEdit = (name) => {
     toast.info(`Editing category ${name}.`);
@@ -17,23 +21,53 @@ export default function CategoryPage() {
     toast.error(`Deleting category ${name}.`);
   };
 
+  useEffect(() => {
+    
+  console.log(typeof successOnLoad);
+    if (categories.isSuccess) {
+      setCardsVisible(true);
+    }
+  }, [categories.isSuccess]);
+
   return (
-    <div className="max-w-8xl mx-auto padding-x py-6">
+    <div className="max-w-8xl mx-auto min-h-full padding-x py-6">
       {/* Header */}
       <div className="flex flex-wrap justify-between items-center border-b border-solid-border pb-6 mb-6">
         <h1 className="text-nowrap">Category list</h1>
       </div>
 
-      {categories.isPending && <div>Loading...</div>}
       {categories.isError && <div>Error fetching categories...</div>}
 
       {/* Category cards */}
       <div className="grid gap-4 grid-cols-2 sm:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] pb-6">
-        {categories.isSuccess &&
-          categories.data.map((category, key) => (
+        {/* Skeleton */}
+        {categories.isPending &&
+          Array.from({ length: 9 }).map((_, index) => (
             <div
-              key={key}
-              className="bg-el-bg rounded-md border border-solid-border p-2 min-h-25"
+              key={index}
+              className={`rounded-md p-2 min-h-25 flex flex-col gap-3`}
+            >
+              <Skeleton className="w-full h-7" />
+              <Skeleton className="h-4 w-[30%]" />
+              <div className="flex flex-row justify-between">
+                <Skeleton className="h-4 w-[50%]" />
+                <div className="flex gap-2">
+                  <Skeleton className="h-4 w-5" />
+                  <Skeleton className="h-4 w-5" />
+                </div>
+              </div>
+            </div>
+          ))}
+        {/* Cards */}
+        {categories.isSuccess &&
+          categories.data.map((category, index) => (
+            <div
+              key={index}
+              className={`bg-el-bg rounded-md border border-solid-border p-2 min-h-25 
+                transition duration-500 ${
+                  cardsVisible || !categories.isFetchedAfterMount ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+                }`}
+              style={{ transitionDelay: `${index * 30}ms` }}
             >
               <div className="flex flex-col h-full justify-between relative">
                 <h1 className="text-lg text-primary">{category.name}</h1>
