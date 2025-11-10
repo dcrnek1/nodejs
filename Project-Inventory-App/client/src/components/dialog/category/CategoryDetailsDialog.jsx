@@ -33,7 +33,7 @@ export function CategoryDetailsDialog({ children, category }) {
           className={`flex flex-col items-left gap-2 overflow-hidden transition-[max-height] duration-300 ease-out`}
           style={{
             maxHeight: products.isSuccess
-              ? `${products.data.length * 2.5}rem`
+              ? `${products.data.length * 4}rem`
               : "0",
           }}
         >
