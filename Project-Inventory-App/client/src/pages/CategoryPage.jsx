@@ -11,7 +11,8 @@ import { useEffect } from "react";
 
 export default function CategoryPage() {
   const categories = useCategories();
-  const [cardsVisible, setCardsVisible] = useState(false);
+  const [cardsVisible, setCardsVisible] = useState(true);
+  console.log("CardsVisible at paint time", cardsVisible, Date.now());
 
   const handleEdit = (name) => {
     toast.info(`Editing category ${name}.`);
@@ -22,11 +23,20 @@ export default function CategoryPage() {
   };
 
   useEffect(() => {
+    if (categories.isPending) {
+      console.log("IsPending changed cardsVisible to false at", Date.now());
+      setCardsVisible(false);
+    }
+  }, [categories.isPending]);
+
+  useEffect(() => {
     if (categories.isSuccess) {
+      console.log("effect triggered at", Date.now());
       const timer = setTimeout(() => {
+        console.log("Timeout triggered at", Date.now());
         setCardsVisible(true);
-        return () => clearTimeout(timer);
-      });
+      }, 10);
+      return () => clearTimeout(timer);
     }
   }, [categories.isSuccess]);
 
@@ -66,7 +76,7 @@ export default function CategoryPage() {
               key={index}
               className={`bg-el-bg rounded-md border border-solid-border p-2 min-h-25 
                 transition-[translate,opacity] duration-500 ease-out will-change-[opacity,translate] ${
-                  cardsVisible || !categories.isFetchedAfterMount
+                  cardsVisible
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-4"
                 }`}
