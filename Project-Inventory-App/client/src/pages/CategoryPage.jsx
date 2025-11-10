@@ -1,47 +1,40 @@
-import {
-  FolderSimplePlusIcon,
-  NotePencilIcon,
-  TrashSimpleIcon,
-} from "@phosphor-icons/react";
+import { CaretDownIcon, CaretUpIcon, FolderSimplePlusIcon } from "@phosphor-icons/react";
 import { useCategories } from "../hooks/useCategory";
-import { toast } from "sonner";
-import { Skeleton } from "../components/ui/Skeleton";
 import { useState } from "react";
 import { useEffect } from "react";
 import { CategoryDetailsDialog } from "../components/dialog/category/CategoryDetailsDialog";
+import { CategoryCard, CategorySkeleton } from "../components/category/CategoryCard";
 
 export default function CategoryPage() {
-  const categories = useCategories();
   const [cardsVisible, setCardsVisible] = useState(true);
-
-  const handleEdit = (name) => {
-    toast.info(`Editing category ${name}.`);
-  };
-
-  const handleDelete = (name) => {
-    toast.error(`Deleting category ${name}.`);
-  };
+  const [order, setOrder] = useState('desc')
+  const categories = useCategories(order);
 
   useEffect(() => {
     if (categories.isPending) {
       setCardsVisible(false);
     }
-  }, [categories.isPending]);
 
-  useEffect(() => {
     if (categories.isSuccess) {
       const timer = setTimeout(() => {
         setCardsVisible(true);
       }, 10);
       return () => clearTimeout(timer);
     }
-  }, [categories.isSuccess]);
+  }, [categories.isPending, categories.isSuccess]);
 
   return (
     <div className="max-w-8xl mx-auto min-h-full padding-x py-6">
       {/* Header */}
       <div className="flex flex-wrap justify-between items-center border-b border-solid-border pb-6 mb-6">
         <h1 className="text-nowrap">Category list</h1>
+        <div>
+          <button 
+          onClick={() => order === 'asc' ? setOrder('desc') : setOrder('asc')}
+          className="flex flex-row gap-1 items-center text-tertiary hover:text-primary primary bg-primary/5 hover:transition active:transition hover:bg-primary/10 active:bg-primary/10">
+            <CaretDownIcon className={`  transition-transform duration-250 ${order === 'asc' && 'rotate-180'}`} /> <span className="w-11">{order === 'asc' ? 'Asc' : 'Desc'}</span>
+          </button>
+        </div>
       </div>
 
       {categories.isError && <div>Error fetching categories...</div>}
@@ -51,20 +44,7 @@ export default function CategoryPage() {
         {/* Skeleton */}
         {categories.isPending &&
           Array.from({ length: 9 }).map((_, index) => (
-            <div
-              key={index}
-              className={`rounded-md p-2 min-h-25 flex flex-col gap-3`}
-            >
-              <Skeleton className="w-full h-7" />
-              <Skeleton className="h-4 w-[30%]" />
-              <div className="flex flex-row justify-between">
-                <Skeleton className="h-4 w-[50%]" />
-                <div className="flex gap-2">
-                  <Skeleton className="h-4 w-5" />
-                  <Skeleton className="h-4 w-5" />
-                </div>
-              </div>
-            </div>
+            <CategorySkeleton key={index} />
           ))}
         {/* Add new button */}
         {categories.isSuccess && (
@@ -86,9 +66,9 @@ export default function CategoryPage() {
         {/* Cards */}
         {categories.isSuccess &&
           categories.data.map((category, index) => (
-            <CategoryDetailsDialog key={index}>
+            <CategoryDetailsDialog key={index} category={category}>
               <div
-                className={` rounded-md border border-solid-border p-2 min-h-25 hover:bg-el-bg active:bg-el-bg
+                className={`
                 transition-[translate,opacity] duration-500 ease-out will-change-[opacity,translate] ${
                   cardsVisible
                     ? "opacity-100 translate-y-0"
@@ -96,28 +76,12 @@ export default function CategoryPage() {
                 }`}
                 style={{ transitionDelay: `${index * 50}ms` }}
               >
-                <div className="flex flex-col gap-2 h-full justify-between relative">
-                  <h1 className="text-lg text-primary line-clamp-2">
-                    {category.name}
-                  </h1>
-                  <div className="text-secondary">
-                    {category.product_count} products
-                  </div>
-                  <div className="absolute bottom-0 right-0 flex flex-row gap-1">
-                    <div
-                      onClick={(e) => {e.stopPropagation(); handleEdit(category.name)}}
-                      className="p-1.5 bg-subtle border border-solid-border rounded-full hover:transition hover:bg-primary/10 active:transition active:bg-primary/10 text-sky-500/50"
-                    >
-                      <NotePencilIcon />
-                    </div>
-                    <div
-                      onClick={(e) => {e.stopPropagation(); handleDelete(category.name)}}
-                      className="p-1.5 bg-subtle border border-solid-border rounded-full hover:transition active:transition hover:bg-primary/10 active:bg-primary/10 text-error/60"
-                    >
-                      <TrashSimpleIcon />
-                    </div>
-                  </div>
-                </div>
+                <CategoryCard
+                  category={{
+                    name: category.name,
+                    product_count: category.product_count,
+                  }}
+                />
               </div>
             </CategoryDetailsDialog>
           ))}

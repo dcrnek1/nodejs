@@ -10,7 +10,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 
-export function CategoryDetailsDialog({children}) {
+export function CategoryDetailsDialog({children, category}) {
+  console.log(category.category_id)
   return (
     <Dialog>
       <DialogTrigger asChild>

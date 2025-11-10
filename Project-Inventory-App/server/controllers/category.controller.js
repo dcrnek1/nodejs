@@ -22,12 +22,13 @@ module.exports = {
   },
 
   getAllCategories: async (req, res) => {
+    const order = req?.query?.order;
     try {
       const { rows } = await db(`select c.*, count(cp.*) as product_count
             from category c
             left join category_product cp on cp.category_id = c.category_id
             group by c.category_id
-            order by product_count desc`);
+            order by product_count ${order === 'asc' ? 'asc' : 'desc'}`);
       res.json(rows);
     } catch (error) {
       res.status(400).json({ error: error, message: "Database error." });
