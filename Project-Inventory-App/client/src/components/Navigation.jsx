@@ -12,7 +12,7 @@ export default function Navigation() {
       </div>
       {/* Mobile navigation */}
       <div
-        className="fixed bottom-0 z-999 h-(--mobile-navbar-height) sm:hidden 
+        className="fixed z-49 bottom-0 h-(--mobile-navbar-height) sm:hidden 
       w-full flex flex-row items-center justify-around border-t border-solid-border bg-main/70 backdrop-blur-xs"
       >
         <NavLink to="/">
