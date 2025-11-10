@@ -1,4 +1,5 @@
 import {
+  FolderSimplePlusIcon,
   NotePencilIcon,
   PlusIcon,
   TrashSimpleIcon,
@@ -12,7 +13,6 @@ import { useEffect } from "react";
 export default function CategoryPage() {
   const categories = useCategories();
   const [cardsVisible, setCardsVisible] = useState(true);
-  console.log("CardsVisible at paint time", cardsVisible, Date.now());
 
   const handleEdit = (name) => {
     toast.info(`Editing category ${name}.`);
@@ -24,16 +24,14 @@ export default function CategoryPage() {
 
   useEffect(() => {
     if (categories.isPending) {
-      console.log("IsPending changed cardsVisible to false at", Date.now());
       setCardsVisible(false);
     }
   }, [categories.isPending]);
 
   useEffect(() => {
     if (categories.isSuccess) {
-      console.log("effect triggered at", Date.now());
+      console.log(categories.data);
       const timer = setTimeout(() => {
-        console.log("Timeout triggered at", Date.now());
         setCardsVisible(true);
       }, 10);
       return () => clearTimeout(timer);
@@ -69,12 +67,29 @@ export default function CategoryPage() {
               </div>
             </div>
           ))}
+        {/* Add new button */}
+        {categories.isSuccess && (
+          <div
+            className={`bg-el-bg hover:bg-el-hover-bg active:bg-el-hover-bg rounded-md border border-solid-border p-2
+           transition-[translate,opacity] duration-500 ease-out will-change-[opacity,translate] ${
+             cardsVisible
+               ? "opacity-100 translate-y-0"
+               : "opacity-0 translate-y-4"
+           }`}
+          >
+            <div
+              className={`flex flex-col h-full w-full justify-center items-center min-h-13`}
+            >
+              <FolderSimplePlusIcon  weight="regular" size={30} />
+            </div>
+          </div>
+        )}
         {/* Cards */}
         {categories.isSuccess &&
           categories.data.map((category, index) => (
             <div
               key={index}
-              className={`bg-el-bg rounded-md border border-solid-border p-2 min-h-25 
+              className={` rounded-md border border-solid-border p-2 min-h-25 hover:bg-el-bg active:bg-el-bg
                 transition-[translate,opacity] duration-500 ease-out will-change-[opacity,translate] ${
                   cardsVisible
                     ? "opacity-100 translate-y-0"
@@ -82,21 +97,21 @@ export default function CategoryPage() {
                 }`}
               style={{ transitionDelay: `${index * 50}ms` }}
             >
-              <div className="flex flex-col h-full justify-between relative">
-                <h1 className="text-lg text-primary">{category.name}</h1>
+              <div className="flex flex-col gap-2 h-full justify-between relative">
+                <h1 className="text-lg text-primary line-clamp-2">{category.name}</h1>
                 <div className="text-secondary">
                   {category.product_count} products
                 </div>
                 <div className="absolute bottom-0 right-0 flex flex-row gap-1">
                   <div
                     onClick={() => handleEdit(category.name)}
-                    className="p-1.5 bg-subtle border border-solid-border text-tertiary rounded-full hover:bg-primary/10 hover:text-sky-500/50"
+                    className="p-1.5 bg-subtle border border-solid-border rounded-full hover:transition hover:bg-primary/10 active:transition active:bg-primary/10 text-sky-500/50"
                   >
                     <NotePencilIcon />
                   </div>
                   <div
                     onClick={() => handleDelete(category.name)}
-                    className="p-1.5 bg-subtle border border-solid-border text-tertiary rounded-full hover:bg-primary/10 hover:text-error/50"
+                    className="p-1.5 bg-subtle border border-solid-border rounded-full hover:transition active:transition hover:bg-primary/10 active:bg-primary/10 text-error/60"
                   >
                     <TrashSimpleIcon />
                   </div>
@@ -104,15 +119,6 @@ export default function CategoryPage() {
               </div>
             </div>
           ))}
-
-        {/* Add new button */}
-        {categories.isSuccess && (
-          <div className="bg-el-bg hover:bg-el-hover-bg rounded-md border border-solid-border p-2">
-            <div className="flex flex-col h-full w-full justify-center items-center min-h-13">
-              <PlusIcon size={20} />
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

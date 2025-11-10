@@ -23,9 +23,9 @@ module.exports = {
 
   getAllCategories: async (req, res) => {
     try {
-      const { rows } = await db(`select c.*, count(*) as product_count
+      const { rows } = await db(`select c.*, count(cp.*) as product_count
             from category c
-            join category_product cp on cp.category_id = c.category_id
+            left join category_product cp on cp.category_id = c.category_id
             group by c.category_id
             order by product_count desc`);
       res.json(rows);

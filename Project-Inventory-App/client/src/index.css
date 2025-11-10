@@ -41,12 +41,12 @@
     line-height: 1.2;
     color: var(--color-secondary);
     padding-bottom: 2rem;
-    color: #f3f3f3
+    color: #f3f3f3;
   }
 
   button.primary {
     @apply px-3 py-2 sm:py-1.5 bg-primary/85 
-    text-primary-inverted hover:bg-primary/75 rounded-lg transition;
+    text-primary-inverted hover:bg-primary/75 active:bg-primary/75 rounded-lg hover:transition active:transition;
   }
 
   .padding-x {

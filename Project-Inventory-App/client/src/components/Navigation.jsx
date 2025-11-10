@@ -7,12 +7,12 @@ export default function Navigation() {
     <div className="w-full mx-auto">
       {/* Mobile header */}
       <div className="padding-x py-3 text-2xl sm:hidden font-bold flex flex-row justify-between border-b border-solid-border items-center">
-        <div className="text-2xl font-inter font-bold">App. <span className="text-xs font-light">by Dario</span></div>
+        <div className="text-2xl font-inter font-bold select-none">App. <span className="text-xs font-light">by Dario</span></div>
         <ThemeToggle />
       </div>
       {/* Mobile navigation */}
       <div
-        className="fixed bottom-0 h-(--mobile-navbar-height) sm:hidden 
+        className="fixed bottom-0 z-999 h-(--mobile-navbar-height) sm:hidden 
       w-full flex flex-row items-center justify-around border-t border-solid-border bg-main/70 backdrop-blur-xs"
       >
         <NavLink to="/">
@@ -54,7 +54,7 @@ export default function Navigation() {
       <div className="hidden sm:flex border-b border-solid-border">
         <div className="hidden sm:flex flex-row padding-x py-3 w-full items-center max-w-8xl mx-auto">
           <div className="sm:flex flex-row flex-1 gap-15 items-center">
-            <div className="text-2xl font-inter font-bold">App. <span className="text-xs font-light">by Dario</span></div>
+            <div className="text-2xl font-inter font-bold select-none">App. <span className="text-xs font-light">by Dario</span></div>
             <div></div>
             <div className="flex gap-3 text-sm">
               <NavLink to="/">
@@ -63,7 +63,7 @@ export default function Navigation() {
                     className={
                       isActive
                         ? "text-primary bg-el-hover-bg px-2 py-1.5 rounded-full"
-                        : "text-tertiary px-2 py-1 hover:bg-el-hover-bg hover:text-primary rounded-full"
+                        : "text-tertiary px-2 py-1 hover:bg-el-hover-bg hover:text-primary transition rounded-full"
                     }
                   >
                     Home
@@ -78,7 +78,7 @@ export default function Navigation() {
                     className={
                       isActive
                         ? "text-primary bg-el-hover-bg px-2 py-1 rounded-full"
-                        : "text-tertiary px-2 py-1 hover:bg-el-hover-bg hover:text-primary rounded-full"
+                        : "text-tertiary px-2 py-1 hover:bg-el-hover-bg hover:text-primary transition rounded-full"
                     }
                   >
                     Categories
@@ -93,7 +93,7 @@ export default function Navigation() {
                     className={
                       isActive
                         ? "text-primary bg-el-hover-bg px-2 py-1 rounded-full"
-                        : "text-tertiary px-2 py-1 hover:bg-el-hover-bg hover:text-primary rounded-full"
+                        : "text-tertiary px-2 py-1 hover:bg-el-hover-bg hover:text-primary transition rounded-full"
                     }
                   >
                     Products
