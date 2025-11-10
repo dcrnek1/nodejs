@@ -1,6 +1,7 @@
 import { TrashSimpleIcon } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { Skeleton } from "../ui/Skeleton";
+import { CategoryDetailsDialog } from "../dialog/category/CategoryDetailsDialog";
 
 function CategoryCard({ category }) {
   const handleDelete = (name) => {
@@ -9,23 +10,27 @@ function CategoryCard({ category }) {
 
   return (
     <div
-      className={`cursor-pointer rounded-md border border-solid-border p-2 min-h-25 h-full hover:bg-el-bg active:bg-el-bg}`}
+      className={`cursor-pointer rounded-md border border-solid-border/50 bg-main p-4 min-h-25 h-full hover:bg-el-hover-bg active:bg-el-bg}`}
     >
-      <div className="flex flex-col gap-2 h-full justify-between relative">
-        <h1 className="text-lg text-primary line-clamp-2">{category.name}</h1>
-        <div className="text-secondary">{category.product_count} products</div>
-        <div className="absolute bottom-0 right-0 flex flex-row gap-1">
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete(category.name);
-            }}
-            className="p-1.5 bg-subtle border border-solid-border rounded-full hover:transition active:transition hover:bg-primary/10 active:bg-primary/10 text-error/60"
-          >
-            <TrashSimpleIcon />
+      <CategoryDetailsDialog key={category.index} category={category}>
+        <div className="flex flex-col gap-2 h-full justify-between relative">
+          <h1 className="text-lg text-primary line-clamp-2">{category.name}</h1>
+          <div className="text-secondary">
+            {category.product_count} products
+          </div>
+          <div className="absolute bottom-0 right-0 flex flex-row gap-1">
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDelete(category.name);
+              }}
+              className="p-1.5 bg-subtle border border-solid-border rounded-full hover:transition active:transition hover:bg-primary/10 active:bg-primary/10 text-secondary"
+            >
+              <TrashSimpleIcon />
+            </div>
           </div>
         </div>
-      </div>
+      </CategoryDetailsDialog>
     </div>
   );
 }

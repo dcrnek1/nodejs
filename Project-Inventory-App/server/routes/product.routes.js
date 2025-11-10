@@ -33,6 +33,7 @@ const validateUpdate = [
 ]
 
 router.get('/', productController.getAllProducts)
+router.get('/category/:category_id', productController.getAllProductsByCategory)
 router.get('/:product_id', productController.getProductById)
 router.post('/', upload([{name: 'image', maxCount: 1}], ['image/jpeg', 'image/png']), validateCreate, productController.createProduct)
 router.put('/:product_id', upload([{name: 'image', maxCount: 1}], ['image/jpeg', 'image/png']), validateUpdate, productController.updateProduct)

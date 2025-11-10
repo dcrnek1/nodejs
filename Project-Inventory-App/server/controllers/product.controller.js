@@ -63,7 +63,37 @@ module.exports = {
 
     rows?.length > 0
       ? res.json(rows?.[0])
-      : res.status(404).json({ message: "Product not found" });
+      : res.status(404).json({ message: "Product not found." });
+  },
+
+  getAllProductsByCategory: async (req, res) => {
+    const category_id = req?.params?.category_id;
+    const { rows } = await db(
+      `SELECT
+            p.*,
+            COALESCE(
+                json_agg(
+                json_build_object('category_id', c.category_id, 'name', c.name)
+                ) FILTER (WHERE c.category_id IS NOT NULL),
+                '[]'
+            ) AS categories
+        FROM product p
+        LEFT JOIN category_product cp ON cp.product_id = p.product_id
+        LEFT JOIN category c ON c.category_id = cp.category_id
+        WHERE EXISTS (
+            SELECT 1
+            FROM category_product cp2
+            WHERE cp2.product_id = p.product_id
+              AND cp2.category_id = $1
+        )
+        GROUP BY p.product_id
+        ORDER BY p.product_id`,
+      [category_id]
+    );
+
+    rows?.length > 0
+      ? res.json(rows)
+      : res.status(204).json({message: "test"});
   },
 
   createProduct: async (req, res) => {

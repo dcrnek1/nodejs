@@ -15,9 +15,9 @@ function App() {
             { title: "Categories", value: "18", path: "/categories" },
             { title: "Products", value: "23", path: "/products" },
           ].map((card) => (
-            <NavLink to={card.path}>
+            <NavLink to={card.path} 
+                key={card.title}>
               <div
-                key={card.title}
                 className="bg-el-bg border border-solid-border rounded-2xl p-6 hover:bg-el-hover-bg hover:transition active:bg-el-hover-bg active:transition"
               >
                 <p className="text-tertiary text-sm">{card.title}</p>

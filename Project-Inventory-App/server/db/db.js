@@ -12,7 +12,6 @@ const db = async (text, params = [], res = null) => {
   } catch (error) {
     console.error("Database query error for query:", text, ", Error message:", error.message);
     if (res) res.status(500).json({error: error, message: "Internal server error."});
-    throw error;
   }
 };
 

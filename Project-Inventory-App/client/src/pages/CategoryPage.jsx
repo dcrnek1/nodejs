@@ -66,8 +66,8 @@ export default function CategoryPage() {
         {/* Cards */}
         {categories.isSuccess &&
           categories.data.map((category, index) => (
-            <CategoryDetailsDialog key={index} category={category}>
               <div
+              key={index}
                 className={`
                 transition-[translate,opacity] duration-500 ease-out will-change-[opacity,translate] ${
                   cardsVisible
@@ -77,13 +77,9 @@ export default function CategoryPage() {
                 style={{ transitionDelay: `${index * 50}ms` }}
               >
                 <CategoryCard
-                  category={{
-                    name: category.name,
-                    product_count: category.product_count,
-                  }}
+                  category={category}
                 />
               </div>
-            </CategoryDetailsDialog>
           ))}
       </div>
     </div>
