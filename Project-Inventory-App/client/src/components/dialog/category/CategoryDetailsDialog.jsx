@@ -39,9 +39,9 @@ export function CategoryDetailsDialog({ children, category }) {
     }
   }, [isOpen, isEditing])
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen} >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-xl">
+      <DialogContent className="sm:max-w-xl" onOpenAutoFocus={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle className="text-left">{category.name}</DialogTitle>
           <DialogDescription className="cursor-default">
@@ -87,7 +87,7 @@ export function CategoryDetailsDialog({ children, category }) {
               <form className="flex flex-row gap-4 w-full flex-wrap">
                 <div className="flex flex-col items-start gap-1 flex-2 min-w-40">
                   <label htmlFor="name" className="text-secondary text-xs pl-1">Category name:</label>
-                  <input className="primary w-full" name="name" placeholder="Enter new category name..." type="text" value={formData.name} onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))} onOpenAutoFocus={(e) => e.preventDefault()} />
+                  <input className="primary w-full" name="name" placeholder="Enter new category name..." type="text" value={formData.name} onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))} />
                 </div>
                 <div className="flex flex-col items-start gap-1 flex-3 basis-full sm:basis-180">
                   <label htmlFor="name" className="text-secondary text-xs pl-1">Test multiselect:</label>
