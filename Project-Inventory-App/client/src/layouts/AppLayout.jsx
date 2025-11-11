@@ -11,6 +11,7 @@ export default function AppLayout() {
         <Outlet />
         <Toaster
           position="top-center"
+          duration="8000"
           toastOptions={{
             classNames: {
               toast:

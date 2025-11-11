@@ -44,6 +44,7 @@ module.exports = {
   },
 
   getAllProducts: async (req, res) => {
+    console.log("Accessing route /products, getAllProducts().");
     const { rows } = await db(
       `SELECT
             p.*,
@@ -62,8 +63,8 @@ module.exports = {
     );
 
     rows?.length > 0
-      ? res.json(rows?.[0])
-      : res.status(404).json({ message: "Product not found." });
+      ? res.json(rows)
+      : res.status(404).json({ message: "Products not found." });
   },
 
   getAllProductsByCategory: async (req, res) => {
@@ -93,7 +94,7 @@ module.exports = {
 
     rows?.length > 0
       ? res.json(rows)
-      : res.status(204).json({message: "test"});
+      : res.status(204).json({message: "No products found."});
   },
 
   createProduct: async (req, res) => {

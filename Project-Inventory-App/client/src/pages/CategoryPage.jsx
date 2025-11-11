@@ -67,7 +67,7 @@ export default function CategoryPage() {
         {categories.isSuccess &&
           categories.data.map((category, index) => (
               <div
-              key={index}
+              key={category.category_id}
                 className={`
                 transition-[translate,opacity] duration-500 ease-out will-change-[opacity,translate] ${
                   cardsVisible

@@ -8,7 +8,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useProductsByCategoryId } from "../../../hooks/useProduct";
+import {
+  useProducts,
+  useProductsByCategoryId,
+} from "../../../hooks/useProduct";
 import { InfoIcon, LinkSimpleHorizontalIcon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import {
@@ -20,18 +23,32 @@ import {
   MultiSelectValue,
 } from "@/components/ui/multi-select";
 import { PopoverComp } from "@/components/PopoverComp";
-import { toast } from "sonner";
+import { useUpdateCategory } from "@/hooks/useCategory";
 
 export function CategoryDetailsDialog({ children, category }) {
   const [isOpen, setIsOpen] = useState(false);
-  const products = useProductsByCategoryId(category.category_id, {
-    enabled: isOpen,
-  });
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: category.name,
     product_ids: [],
   });
+  const products = useProductsByCategoryId(category.category_id, {
+    enabled: isOpen,
+  });
+  const allProducts = useProducts({
+    enabled: isEditing,
+  });
+  const updateCategory = useUpdateCategory();
+
+  useEffect(() => {
+    setFormData(() => ({
+      name: category.name,
+      product_ids:
+        products?.data?.length > 0
+          ? products?.data?.map((product) => product.product_id)
+          : [],
+    }));
+  }, []);
 
   useEffect(() => {
     if (!isOpen) {
@@ -39,16 +56,6 @@ export function CategoryDetailsDialog({ children, category }) {
         setIsEditing(false);
       }, 100);
       return () => clearTimeout(timer);
-    }
-
-    if (!isEditing) {
-      setFormData(() => ({
-        name: category.name,
-        product_ids:
-          products?.data?.length > 0
-            ? products?.data?.map((product) => product.product_id)
-            : [],
-      }));
     }
 
     if (isEditing) {
@@ -62,8 +69,16 @@ export function CategoryDetailsDialog({ children, category }) {
     }
   }, [isOpen, isEditing]);
 
-  const handleConfirmSave = () => {
-    toast.error("Provided password is incorrect.");
+  const handleConfirmSave = async () => {
+    try {
+      await updateCategory.mutateAsync({
+        category_id: category.category_id,
+        data: formData,
+      });
+      setIsEditing(false);
+    } catch {
+      return;
+    }
   };
 
   return (
@@ -146,7 +161,11 @@ export function CategoryDetailsDialog({ children, category }) {
                   <label htmlFor="name" className="text-secondary text-xs pl-1">
                     Test multiselect:
                   </label>
-                  <MultiSelect>
+                  <MultiSelect
+                    onValuesChange={(values) =>
+                      setFormData((prev) => ({ ...prev, product_ids: values }))
+                    }
+                  >
                     <MultiSelectTrigger className="w-full flex-3 flex-wrap bg-subtle">
                       <MultiSelectValue
                         overflowBehavior="no"
@@ -156,22 +175,16 @@ export function CategoryDetailsDialog({ children, category }) {
                     </MultiSelectTrigger>
                     <MultiSelectContent search={true}>
                       <MultiSelectGroup>
-                        <MultiSelectItem value="1">Product 1</MultiSelectItem>
-                        <MultiSelectItem value="2">Product 2</MultiSelectItem>
-                        <MultiSelectItem value="3">Product 3</MultiSelectItem>
-                        <MultiSelectItem value="4">Product 4</MultiSelectItem>
-                        <MultiSelectItem value="5">Product 5</MultiSelectItem>
-                        <MultiSelectItem value="6">Product 6</MultiSelectItem>
-                        <MultiSelectItem value="7">Product 7</MultiSelectItem>
-                        <MultiSelectItem value="8">Product 8</MultiSelectItem>
-                        <MultiSelectItem value="9">Product 9</MultiSelectItem>
-                        <MultiSelectItem value="10" disabled>
-                          Product 10
-                        </MultiSelectItem>
-                        <MultiSelectItem value="11">Product 11</MultiSelectItem>
-                        <MultiSelectItem value="12" disabled>
-                          Product 12
-                        </MultiSelectItem>
+                        {allProducts.isSuccess &&
+                          allProducts?.data?.length > 0 &&
+                          allProducts.data.map((product, key) => (
+                            <MultiSelectItem
+                              key={key}
+                              value={`${product.product_id}`}
+                            >
+                              {product.name}
+                            </MultiSelectItem>
+                          ))}
                       </MultiSelectGroup>
                     </MultiSelectContent>
                   </MultiSelect>
@@ -210,22 +223,22 @@ export function CategoryDetailsDialog({ children, category }) {
                   />
                   <div className="flex flex-row gap-2 items-end">
                     <button
-                    className="secondary w-fit"
-                    onClick={() => {
-                      setOpen(false);
-                    }}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    className="primary w-fit"
-                    onClick={() => {
-                      handleConfirmSave();
-                      setOpen(false);
-                    }}
-                  >
-                    Confirm
-                  </button>
+                      className="secondary w-fit"
+                      onClick={() => {
+                        setOpen(false);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="primary w-fit"
+                      onClick={() => {
+                        handleConfirmSave();
+                        setOpen(false);
+                      }}
+                    >
+                      Confirm
+                    </button>
                   </div>
                 </div>
               )}

@@ -12,7 +12,7 @@ function CategoryCard({ category }) {
     <div
       className={`cursor-pointer rounded-md border border-solid-border/50 bg-main p-4 min-h-25 h-full hover:bg-el-hover-bg active:bg-el-bg}`}
     >
-      <CategoryDetailsDialog key={category.index} category={category}>
+      <CategoryDetailsDialog key={category.category_id} category={category}>
         <div className="flex flex-col gap-2 h-full justify-between relative">
           <h1 className="text-lg text-primary line-clamp-2">{category.name}</h1>
           <div className="text-secondary">
