@@ -46,8 +46,17 @@
   }
 
   button.primary {
-    @apply px-3 py-2 sm:py-1.5 bg-primary/85 
+    @apply px-3 py-2 sm:py-1.5 bg-primary/85 cursor-pointer
     text-primary-inverted hover:bg-primary/75 active:bg-primary/75 rounded-lg hover:transition active:transition;
+  }
+
+    button.secondary {
+    @apply px-3 py-2 sm:py-1.5 bg-primary/10 cursor-pointer
+    text-secondary hover:bg-primary/25 active:bg-primary/25 rounded-lg hover:transition active:transition;
+  }
+
+  input[type=text].primary {
+    @apply border border-solid-border px-2 py-1 rounded-md bg-subtle placeholder:font-normal placeholder:text-sm
   }
 
   .padding-x {
