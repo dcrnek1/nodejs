@@ -12,6 +12,8 @@ import { useProductsByCategoryId } from "../../../hooks/useProduct";
 import { InfoIcon, LinkSimpleHorizontalIcon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { MultiSelect, MultiSelectContent, MultiSelectGroup, MultiSelectItem, MultiSelectTrigger, MultiSelectValue } from "@/components/ui/multi-select";
+import { PopoverComp } from "@/components/PopoverComp";
+import { toast } from "sonner";
 
 export function CategoryDetailsDialog({ children, category }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,6 +40,9 @@ export function CategoryDetailsDialog({ children, category }) {
       setFormData((prev) => ({ ...prev, product_ids: products?.data?.length > 0 ? products?.data?.map((product) => (product.product_id)) : [] }));
     }
   }, [isOpen, isEditing])
+
+  const handleConfirmSave = () => { toast.error("Provided password is incorrect.") }
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen} >
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -78,6 +83,7 @@ export function CategoryDetailsDialog({ children, category }) {
                 ))}
             </div>
             {/* Editing body */}
+          
             <div className={`flex flex-row flex-wrap gap-4 overflow-hidden transition-[max-height] duration-500 ease-in-out pt-0`}
               style={{
                 maxHeight: isEditing
@@ -93,7 +99,7 @@ export function CategoryDetailsDialog({ children, category }) {
                   <label htmlFor="name" className="text-secondary text-xs pl-1">Test multiselect:</label>
                   <MultiSelect>
                     <MultiSelectTrigger className="w-full flex-3 flex-wrap bg-subtle">
-                      <MultiSelectValue overflowBehavior="no"  className="w-full flex-3" placeholder="Select frameworks..." />
+                      <MultiSelectValue overflowBehavior="no" className="w-full flex-3" placeholder="Select frameworks..." />
                     </MultiSelectTrigger>
                     <MultiSelectContent search={true}>
                       <MultiSelectGroup>
@@ -122,7 +128,16 @@ export function CategoryDetailsDialog({ children, category }) {
           <DialogClose asChild></DialogClose>
           {!isEditing && <button className="primary" onClick={() => setIsEditing(!isEditing)}>Edit category</button>}
           {isEditing && <button className="secondary" onClick={() => setIsEditing(!isEditing)}>Cancel</button>}
-          {isEditing && <button className="primary">Save category</button>}
+          {isEditing &&
+            <PopoverComp
+              content={
+                <div className="flex flex-col gap-2 items-end">
+                  <input type="password" placeholder="Enter secret keyword..." className="primary" />
+                  <button className="primary w-fit" onClick={handleConfirmSave}>Confirm</button>
+                </div>
+              }>
+              <button className="primary">Update category</button>
+            </PopoverComp>}
         </DialogFooter>
       </DialogContent>
     </Dialog>
