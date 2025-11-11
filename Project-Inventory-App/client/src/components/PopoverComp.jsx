@@ -4,15 +4,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { useState } from "react";
 
 export function PopoverComp({children, content}) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         {children}
       </PopoverTrigger>
       <PopoverContent className="w-full">
-        {content}
+        {typeof content === "function" ? content({ setOpen }) : content}
       </PopoverContent>
     </Popover>
   )

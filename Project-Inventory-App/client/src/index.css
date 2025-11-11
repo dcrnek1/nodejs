@@ -92,7 +92,7 @@
   --color-secondary: #52525b;
   --color-tertiary: #a1a1aa;
   --color-disabled: #c1c1c7;
-  --color-featured: var(--color-rose-400);
+  --color-featured: var(--color-indigo-400);
 
   --mobile-navbar-height: 3.5rem;
 }

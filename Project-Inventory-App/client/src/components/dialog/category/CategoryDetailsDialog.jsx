@@ -11,7 +11,14 @@ import {
 import { useProductsByCategoryId } from "../../../hooks/useProduct";
 import { InfoIcon, LinkSimpleHorizontalIcon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
-import { MultiSelect, MultiSelectContent, MultiSelectGroup, MultiSelectItem, MultiSelectTrigger, MultiSelectValue } from "@/components/ui/multi-select";
+import {
+  MultiSelect,
+  MultiSelectContent,
+  MultiSelectGroup,
+  MultiSelectItem,
+  MultiSelectTrigger,
+  MultiSelectValue,
+} from "@/components/ui/multi-select";
 import { PopoverComp } from "@/components/PopoverComp";
 import { toast } from "sonner";
 
@@ -21,53 +28,78 @@ export function CategoryDetailsDialog({ children, category }) {
     enabled: isOpen,
   });
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({ name: category.name, product_ids: [] });
+  const [formData, setFormData] = useState({
+    name: category.name,
+    product_ids: [],
+  });
 
   useEffect(() => {
     if (!isOpen) {
       const timer = setTimeout(() => {
         setIsEditing(false);
-      }, 100)
+      }, 100);
       return () => clearTimeout(timer);
     }
 
     if (!isEditing) {
-      setFormData(() => ({ name: category.name, product_ids: products?.data?.length > 0 ? products?.data?.map((product) => (product.product_id)) : [] }))
+      setFormData(() => ({
+        name: category.name,
+        product_ids:
+          products?.data?.length > 0
+            ? products?.data?.map((product) => product.product_id)
+            : [],
+      }));
     }
-
 
     if (isEditing) {
-      setFormData((prev) => ({ ...prev, product_ids: products?.data?.length > 0 ? products?.data?.map((product) => (product.product_id)) : [] }));
+      setFormData((prev) => ({
+        ...prev,
+        product_ids:
+          products?.data?.length > 0
+            ? products?.data?.map((product) => product.product_id)
+            : [],
+      }));
     }
-  }, [isOpen, isEditing])
+  }, [isOpen, isEditing]);
 
-  const handleConfirmSave = () => { toast.error("Provided password is incorrect.") }
+  const handleConfirmSave = () => {
+    toast.error("Provided password is incorrect.");
+  };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen} >
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-xl" onOpenAutoFocus={(e) => e.preventDefault()}>
+      <DialogContent
+        className="sm:max-w-xl"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle className="text-left">{category.name}</DialogTitle>
           <DialogDescription className="cursor-default">
             {/* Description */}
-            {!isEditing && <span>
-              {category?.product_count > 0
-                ? `Category contains ${category.product_count} products.`
-                : "Category is empty."}
-            </span>}
-            {isEditing && <span className="flex flex-row gap-1 items-baseline">
-              <InfoIcon className="text-info relative top-0.5" />You're editing this category.
-            </span>}
+            {!isEditing && (
+              <span>
+                {category?.product_count > 0
+                  ? `Category contains ${category.product_count} products.`
+                  : "Category is empty."}
+              </span>
+            )}
+            {isEditing && (
+              <span className="flex flex-row gap-1 items-baseline">
+                <InfoIcon className="text-info relative top-0.5" />
+                You're editing this category.
+              </span>
+            )}
           </DialogDescription>
           <div>
             {/* Products list */}
             <div
               className={`flex flex-col items-left gap-2 overflow-hidden transition-[max-height] duration-500 ease-in-out`}
               style={{
-                maxHeight: products.isSuccess && !isEditing
-                  ? `${products.data.length * 4}rem`
-                  : "0rem",
+                maxHeight:
+                  products.isSuccess && !isEditing
+                    ? `${products.data.length * 4}rem`
+                    : "0rem",
               }}
             >
               {products.isError && <>Error fetching product list :(</>}
@@ -78,28 +110,49 @@ export function CategoryDetailsDialog({ children, category }) {
                     key={index}
                     className="text-textLink/85 hover:text-textLink cursor-pointer flex flex-row items-baseline gap-1 nowrap"
                   >
-                    <LinkSimpleHorizontalIcon size={15} className="relative top-0.5" /> <span className="text-left">{product.name} </span>
+                    <LinkSimpleHorizontalIcon
+                      size={15}
+                      className="relative top-0.5"
+                    />{" "}
+                    <span className="text-left">{product.name} </span>
                   </div>
                 ))}
             </div>
             {/* Editing body */}
-          
-            <div className={`flex flex-row flex-wrap gap-4 overflow-hidden transition-[max-height] duration-500 ease-in-out pt-0`}
+
+            <div
+              className={`flex flex-row flex-wrap gap-4 overflow-hidden transition-[max-height] duration-500 ease-in-out pt-0`}
               style={{
-                maxHeight: isEditing
-                  ? `20rem`
-                  : "0rem",
-              }}>
+                maxHeight: isEditing ? `20rem` : "0rem",
+              }}
+            >
               <form className="flex flex-row gap-4 w-full flex-wrap">
                 <div className="flex flex-col items-start gap-1 flex-2 min-w-40">
-                  <label htmlFor="name" className="text-secondary text-xs pl-1">Category name:</label>
-                  <input className="primary w-full" name="name" placeholder="Enter new category name..." type="text" value={formData.name} onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))} />
+                  <label htmlFor="name" className="text-secondary text-xs pl-1">
+                    Category name:
+                  </label>
+                  <input
+                    className="primary w-full"
+                    name="name"
+                    placeholder="Enter new category name..."
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, name: e.target.value }))
+                    }
+                  />
                 </div>
                 <div className="flex flex-col items-start gap-1 flex-3 basis-full sm:basis-180">
-                  <label htmlFor="name" className="text-secondary text-xs pl-1">Test multiselect:</label>
+                  <label htmlFor="name" className="text-secondary text-xs pl-1">
+                    Test multiselect:
+                  </label>
                   <MultiSelect>
                     <MultiSelectTrigger className="w-full flex-3 flex-wrap bg-subtle">
-                      <MultiSelectValue overflowBehavior="no" className="w-full flex-3" placeholder="Select frameworks..." />
+                      <MultiSelectValue
+                        overflowBehavior="no"
+                        className="w-full flex-3"
+                        placeholder="Select frameworks..."
+                      />
                     </MultiSelectTrigger>
                     <MultiSelectContent search={true}>
                       <MultiSelectGroup>
@@ -112,9 +165,13 @@ export function CategoryDetailsDialog({ children, category }) {
                         <MultiSelectItem value="7">Product 7</MultiSelectItem>
                         <MultiSelectItem value="8">Product 8</MultiSelectItem>
                         <MultiSelectItem value="9">Product 9</MultiSelectItem>
-                        <MultiSelectItem value="10" disabled>Product 10</MultiSelectItem>
+                        <MultiSelectItem value="10" disabled>
+                          Product 10
+                        </MultiSelectItem>
                         <MultiSelectItem value="11">Product 11</MultiSelectItem>
-                        <MultiSelectItem value="12" disabled>Product 12</MultiSelectItem>
+                        <MultiSelectItem value="12" disabled>
+                          Product 12
+                        </MultiSelectItem>
                       </MultiSelectGroup>
                     </MultiSelectContent>
                   </MultiSelect>
@@ -126,18 +183,56 @@ export function CategoryDetailsDialog({ children, category }) {
 
         <DialogFooter className="sm:justify-end">
           <DialogClose asChild></DialogClose>
-          {!isEditing && <button className="primary" onClick={() => setIsEditing(!isEditing)}>Edit category</button>}
-          {isEditing && <button className="secondary" onClick={() => setIsEditing(!isEditing)}>Cancel</button>}
-          {isEditing &&
+          {!isEditing && (
+            <button
+              className="primary"
+              onClick={() => setIsEditing(!isEditing)}
+            >
+              Edit category
+            </button>
+          )}
+          {isEditing && (
+            <button
+              className="secondary"
+              onClick={() => setIsEditing(!isEditing)}
+            >
+              Cancel
+            </button>
+          )}
+          {isEditing && (
             <PopoverComp
-              content={
-                <div className="flex flex-col gap-2 items-end">
-                  <input type="password" placeholder="Enter secret keyword..." className="primary" />
-                  <button className="primary w-fit" onClick={handleConfirmSave}>Confirm</button>
+              content={({ setOpen }) => (
+                <div className="flex flex-col gap-4 items-end">
+                  <input
+                    type="password"
+                    placeholder="Enter secret keyword..."
+                    className="primary"
+                  />
+                  <div className="flex flex-row gap-2 items-end">
+                    <button
+                    className="secondary w-fit"
+                    onClick={() => {
+                      setOpen(false);
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="primary w-fit"
+                    onClick={() => {
+                      handleConfirmSave();
+                      setOpen(false);
+                    }}
+                  >
+                    Confirm
+                  </button>
+                  </div>
                 </div>
-              }>
+              )}
+            >
               <button className="primary">Update category</button>
-            </PopoverComp>}
+            </PopoverComp>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
