@@ -214,13 +214,10 @@ export function CategoryDetailsDialog({ children, category }) {
           )}
           {isEditing && (
             <PopoverComp
+            align="end"
               content={({ setOpen }) => (
                 <div className="flex flex-col gap-4 items-end">
-                  <input
-                    type="password"
-                    placeholder="Enter secret keyword..."
-                    className="primary"
-                  />
+                  
                   <div className="flex flex-row gap-2 items-end">
                     <button
                       className="secondary w-fit"
