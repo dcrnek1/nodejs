@@ -18,17 +18,17 @@ function CategoryCard({ category }) {
           <div className="text-secondary">
             {category.product_count} products
           </div>
-          <div className="absolute bottom-0 right-0 flex flex-row gap-1">
-            <div
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDelete(category.name);
-              }}
-              className="p-1.5 bg-subtle border border-solid-border rounded-full hover:transition active:transition hover:bg-primary/10 active:bg-primary/10 text-secondary"
-            >
-              <TrashSimpleIcon />
+            <div className="absolute bottom-0 right-0 flex flex-row gap-1">
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(category.name);
+                }}
+                className="p-1.5 no-scale bg-subtle border border-solid-border rounded-full hover:transition active:transition hover:bg-primary/10 active:bg-primary/10 text-secondary"
+              >
+                <TrashSimpleIcon />
+              </div>
             </div>
-          </div>
         </div>
       </CategoryDetailsDialog>
     </div>

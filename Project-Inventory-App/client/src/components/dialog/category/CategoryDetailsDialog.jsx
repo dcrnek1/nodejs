@@ -13,7 +13,7 @@ import {
   useProductsByCategoryId,
 } from "../../../hooks/useProduct";
 import { InfoIcon, LinkSimpleHorizontalIcon } from "@phosphor-icons/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   MultiSelect,
   MultiSelectContent,
@@ -24,6 +24,14 @@ import {
 } from "@/components/ui/multi-select";
 import { PopoverComp } from "@/components/PopoverComp";
 import { useUpdateCategory } from "@/hooks/useCategory";
+// eslint-disable-next-line no-unused-vars
+import {
+  AnimatePresence,
+  LayoutGroup,
+  motion,
+  MotionConfig,
+} from "motion/react";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 export function CategoryDetailsDialog({ children, category }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,6 +47,16 @@ export function CategoryDetailsDialog({ children, category }) {
     enabled: isEditing,
   });
   const updateCategory = useUpdateCategory();
+
+  //added for change animation
+  const [contentHeight, setContentHeight] = useState(0);
+  const contentRef = useRef(null);
+
+  useEffect(() => {
+    if (contentRef.current && !products.isFetching) {
+      setContentHeight(contentRef.current.scrollHeight);
+    }
+  }, [isEditing, isOpen, products]);
 
   useEffect(() => {
     setFormData(() => ({
@@ -82,169 +100,240 @@ export function CategoryDetailsDialog({ children, category }) {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent
-        className="sm:max-w-xl"
-        onOpenAutoFocus={(e) => e.preventDefault()}
-      >
-        <DialogHeader>
-          <DialogTitle className="text-left">{category.name}</DialogTitle>
-          <DialogDescription className="cursor-default">
-            {/* Description */}
-            {!isEditing && (
-              <span>
-                {category?.product_count > 0
-                  ? `Category contains ${category.product_count} products.`
-                  : "Category is empty."}
-              </span>
-            )}
-            {isEditing && (
-              <span className="flex flex-row gap-1 items-baseline">
-                <InfoIcon className="text-info relative top-0.5" />
-                You're editing this category.
-              </span>
-            )}
-          </DialogDescription>
-          <div>
-            {/* Products list */}
-            <div
-              className={`flex flex-col items-left gap-2 overflow-hidden transition-[max-height] duration-500 ease-in-out`}
-              style={{
-                maxHeight:
-                  products.isSuccess && !isEditing
-                    ? `${products.data.length * 4}rem`
-                    : "0rem",
-              }}
-            >
-              {products.isError && <>Error fetching product list :(</>}
-              {products.isSuccess &&
-                products?.data?.length > 0 &&
-                products.data.map((product, index) => (
-                  <div
-                    key={index}
-                    className="text-textLink/85 hover:text-textLink cursor-pointer flex flex-row items-baseline gap-1 nowrap"
-                  >
-                    <LinkSimpleHorizontalIcon
-                      size={15}
-                      className="relative top-0.5"
-                    />{" "}
-                    <span className="text-left">{product.name} </span>
-                  </div>
-                ))}
-            </div>
-            {/* Editing body */}
+    <MotionConfig transition={{ duration: 0.1 }}>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogTrigger asChild>{children}</DialogTrigger>
+        <DialogContent
+          className="sm:max-w-xl overflow-hidden"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
+          <motion.div
+            animate={{ height: contentHeight, opacity: 100 }}
+            initial={{ opacity: 0 }}
+            transition={{
+              duration: 0.5,
+              type: "spring",
+              stiffness: 1000,
+              damping: 50,
+            }}
+            className="overflow-hidden"
+          >
+            <div ref={contentRef} className="overflow-hidden">
+              <DialogHeader className="overflow-hidden">
+                <DialogTitle className="text-left">{category.name}</DialogTitle>
+                <DialogDescription className="cursor-default">
+                  {/* Description */}
+                  {!isEditing && (
+                    <span>
+                      {category?.product_count > 0
+                        ? `Category contains ${category.product_count} products.`
+                        : "Category is empty."}
+                    </span>
+                  )}
+                  {isEditing && (
+                    <span className="flex flex-row gap-1 items-baseline">
+                      <InfoIcon className="text-info relative top-0.5" />
+                      You're editing this category.
+                    </span>
+                  )}
+                </DialogDescription>
+                {/* Products list */}
+                <AnimatePresence mode="popLayout">
+                  {!isEditing ? (
 
-            <div
-              className={`flex flex-row flex-wrap gap-4 overflow-hidden transition-[max-height] duration-500 ease-in-out pt-0`}
-              style={{
-                maxHeight: isEditing ? `20rem` : "0rem",
-              }}
-            >
-              <form className="flex flex-row gap-4 w-full flex-wrap">
-                <div className="flex flex-col items-start gap-1 flex-2 min-w-40">
-                  <label htmlFor="name" className="text-secondary text-xs pl-1">
-                    Category name:
-                  </label>
-                  <input
-                    className="primary w-full"
-                    name="name"
-                    placeholder="Enter new category name..."
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData((prev) => ({ ...prev, name: e.target.value }))
-                    }
-                  />
-                </div>
-                <div className="flex flex-col items-start gap-1 flex-3 basis-full sm:basis-180">
-                  <label htmlFor="name" className="text-secondary text-xs pl-1">
-                    Test multiselect:
-                  </label>
-                  <MultiSelect
-                    onValuesChange={(values) =>
-                      setFormData((prev) => ({ ...prev, product_ids: values }))
-                    }
-                  >
-                    <MultiSelectTrigger className="w-full flex-3 flex-wrap bg-subtle">
-                      <MultiSelectValue
-                        overflowBehavior="no"
-                        className="w-full flex-3"
-                        placeholder="Select frameworks..."
-                      />
-                    </MultiSelectTrigger>
-                    <MultiSelectContent search={true}>
-                      <MultiSelectGroup>
-                        {allProducts.isSuccess &&
-                          allProducts?.data?.length > 0 &&
-                          allProducts.data.map((product, key) => (
-                            <MultiSelectItem
-                              key={key}
-                              value={`${product.product_id}`}
+                    <div
+                      className={`flex flex-col items-left gap-2 overflow-hidden`}
+                    >
+                      {products.isError && (
+                        <motion.div
+                          key={`products_load_error_${category.category_id}`}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0, position: "absolute" }}
+                        >
+                          Error fetching product list :(
+                        </motion.div>
+                      )}
+                      {products.isFetching && (
+                        <motion.div
+                          key={`products_skeleton_${category.category_id}`}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0, position: "absolute" }}
+                        >
+                          <div className="flex flex-col gap-4">
+                            <div className="flex flex-row gap-2">
+                              <Skeleton className="w-5 h-4 bg-primary/5" />
+                              <Skeleton className="w-[50%] h-4 bg-primary/5" />
+                            </div>
+                            <div className="flex flex-row gap-2">
+                              <Skeleton className="w-5 h-4 bg-primary/5" />
+                              <Skeleton className="w-[25%] h-4 bg-primary/5" />
+                            </div>
+                            <div className="flex flex-row gap-2">
+                              <Skeleton className="w-5 h-4 bg-primary/5" />
+                              <Skeleton className="w-[35%] h-4 bg-primary/5" />
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                      {products.isSuccess &&
+                        products?.data?.length > 0 &&
+                        !isEditing &&
+                        products.data.map((product, index) => (
+                          <motion.div
+                            key={`products_${product.product_id}`}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                          exit={{ opacity: 0, position: "absolute" }}
+                            className="overflow-hidden"
+                          >
+                            <div
+                              key={index}
+                              className="text-textLink/85 hover:text-textLink cursor-pointer flex flex-row items-baseline gap-1 nowrap"
                             >
-                              {product.name}
-                            </MultiSelectItem>
-                          ))}
-                      </MultiSelectGroup>
-                    </MultiSelectContent>
-                  </MultiSelect>
-                </div>
-              </form>
-            </div>
-          </div>
-        </DialogHeader>
+                              <LinkSimpleHorizontalIcon
+                                size={15}
+                                className="relative top-0.5"
+                              />{" "}
+                              <span className="text-left">{product.name} </span>
+                            </div>
+                          </motion.div>
+                        ))}
+                    </div>
+                  ) : (
+                    /* Editing body */
 
-        <DialogFooter className="sm:justify-end">
-          <DialogClose asChild></DialogClose>
-          {!isEditing && (
-            <button
-              className="primary"
-              onClick={() => setIsEditing(!isEditing)}
-            >
-              Edit category
-            </button>
-          )}
-          {isEditing && (
-            <button
-              className="secondary"
-              onClick={() => setIsEditing(!isEditing)}
-            >
-              Cancel
-            </button>
-          )}
-          {isEditing && (
-            <PopoverComp
-            align="end"
-              content={({ setOpen }) => (
-                <div className="flex flex-col gap-4 items-end">
-                  
-                  <div className="flex flex-row gap-2 items-end">
-                    <button
-                      className="secondary w-fit"
-                      onClick={() => {
-                        setOpen(false);
-                      }}
+                    <motion.div
+                      key={`editing_section_${category.category_id}`}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                          exit={{ opacity: 0, position: "absolute" }}
+                      className="overflow-hidden"
                     >
-                      Cancel
-                    </button>
-                    <button
-                      className="primary w-fit"
-                      onClick={() => {
-                        handleConfirmSave();
-                        setOpen(false);
-                      }}
-                    >
-                      Confirm
-                    </button>
-                  </div>
-                </div>
-              )}
-            >
-              <button className="primary">Update category</button>
-            </PopoverComp>
-          )}
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+                      <div
+                        className={`flex flex-row flex-wrap gap-4 overflow-hidden`}
+                      >
+                        <form className="flex flex-row gap-4 w-full flex-wrap">
+                          <div className="flex flex-col items-start gap-1 flex-2 min-w-40">
+                            <label
+                              htmlFor="name"
+                              className="text-secondary text-xs pl-1"
+                            >
+                              Category name:
+                            </label>
+                            <input
+                              className="primary w-full"
+                              name="name"
+                              placeholder="Enter new category name..."
+                              type="text"
+                              value={formData.name}
+                              onChange={(e) =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  name: e.target.value,
+                                }))
+                              }
+                            />
+                          </div>
+                          <div className="flex flex-col items-start gap-1 flex-3 basis-full sm:basis-180">
+                            <label
+                              htmlFor="name"
+                              className="text-secondary text-xs pl-1"
+                            >
+                              Test multiselect:
+                            </label>
+                            <MultiSelect
+                              onValuesChange={(values) =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  product_ids: values,
+                                }))
+                              }
+                            >
+                              <MultiSelectTrigger className="w-full flex-3 flex-wrap bg-subtle">
+                                <MultiSelectValue
+                                  overflowBehavior="no"
+                                  className="w-full flex-3"
+                                  placeholder="Select frameworks..."
+                                />
+                              </MultiSelectTrigger>
+                              <MultiSelectContent search={true}>
+                                <MultiSelectGroup>
+                                  {allProducts.isSuccess &&
+                                    allProducts?.data?.length > 0 &&
+                                    allProducts.data.map((product, key) => (
+                                      <MultiSelectItem
+                                        key={key}
+                                        value={`${product.product_id}`}
+                                      >
+                                        {product.name}
+                                      </MultiSelectItem>
+                                    ))}
+                                </MultiSelectGroup>
+                              </MultiSelectContent>
+                            </MultiSelect>
+                          </div>
+                        </form>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </DialogHeader>
+
+              <DialogFooter className="sm:justify-end mt-4">
+                <DialogClose asChild></DialogClose>
+                {!isEditing && (
+                  <button
+                    className="primary"
+                    onClick={() => setIsEditing(!isEditing)}
+                  >
+                    Edit category
+                  </button>
+                )}
+                {isEditing && (
+                  <button
+                    className="secondary"
+                    onClick={() => setIsEditing(!isEditing)}
+                  >
+                    Cancel
+                  </button>
+                )}
+                {isEditing && (
+                  <PopoverComp
+                    align="end"
+                    content={({ setOpen }) => (
+                      <div className="flex flex-col gap-4 items-end">
+                        <div className="flex flex-row gap-2 items-end">
+                          <button
+                            className="secondary w-fit"
+                            onClick={() => {
+                              setOpen(false);
+                            }}
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            className="primary w-fit"
+                            onClick={() => {
+                              handleConfirmSave();
+                              setOpen(false);
+                            }}
+                          >
+                            Confirm
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  >
+                    <button className="primary">Update category</button>
+                  </PopoverComp>
+                )}
+              </DialogFooter>
+            </div>
+          </motion.div>
+        </DialogContent>
+      </Dialog>
+    </MotionConfig>
   );
 }
