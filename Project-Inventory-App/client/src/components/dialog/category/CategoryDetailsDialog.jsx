@@ -13,7 +13,7 @@ import {
   useProductsByCategoryId,
 } from "../../../hooks/useProduct";
 import { InfoIcon, LinkSimpleHorizontalIcon } from "@phosphor-icons/react";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MultiSelect,
   MultiSelectContent,
@@ -24,10 +24,9 @@ import {
 } from "@/components/ui/multi-select";
 import { PopoverComp } from "@/components/PopoverComp";
 import { useUpdateCategory } from "@/hooks/useCategory";
-// eslint-disable-next-line no-unused-vars
 import {
   AnimatePresence,
-  LayoutGroup,
+  // eslint-disable-next-line no-unused-vars
   motion,
   MotionConfig,
 } from "motion/react";
