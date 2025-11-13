@@ -28,7 +28,7 @@ module.exports = {
             from category c
             left join category_product cp on cp.category_id = c.category_id
             group by c.category_id
-            order by product_count ${order === 'asc' ? 'asc' : 'desc'}`);
+            order by product_count ${order === "asc" ? "asc" : "desc"}`);
       res.json(rows);
     } catch (error) {
       res.status(400).json({ error: error, message: "Database error." });
@@ -131,6 +131,7 @@ module.exports = {
       return res.status(404).json({ error: "Non existant category." });
 
     for (const key in matchedData(req)) {
+      if (key === "product_ids") continue;
       columns.push(`${key} = $${paramsCounter}`);
       values.push(matchedData(req)?.[key]);
       paramsCounter++;
@@ -173,6 +174,28 @@ module.exports = {
         }
 
         res.json(rows?.[0]);
+      }
+
+      if (matchedData(req)?.product_ids) {
+        const product_ids = matchedData(req).product_ids;
+        await db.transaction(async (client) => {
+          await client.query(
+            `DELETE FROM category_product WHERE category_id = $1`,
+            [category_id]
+          );
+
+          product_ids.map(async (product_id) => {
+            await client.query(
+              `INSERT INTO category_product (category_id, product_id) 
+              VALUES ($1, $2)`,
+              [category_id, product_id]
+            );
+          });
+        });
+      } else {
+        await db(`DELETE FROM category_product WHERE category_id = $1`, [
+          category_id,
+        ]);
       }
     } catch (error) {
       console.log(error);

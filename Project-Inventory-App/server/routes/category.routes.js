@@ -16,6 +16,8 @@ const validationErrorCheck = (req, res, next) => {
 const validateCreate = [
     body('name').trim().notEmpty().withMessage('Name can not be empty.')
     .isAlphanumeric('en-US', {ignore: ' '}).withMessage(`Name can contain letters and numbers only.`),
+    body('product_ids').optional().isArray({min: 0}).withMessage('Products must be of type array'),
+    body('product_ids.*').isInt({gt: 0}).withMessage('Each product ID must be a positive integer.'),
     validationErrorCheck,
 ]
 

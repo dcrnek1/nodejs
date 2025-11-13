@@ -55,6 +55,10 @@
     text-secondary hover:bg-primary/25 active:bg-primary/25 rounded-lg hover:transition active:transition;
   }
 
+  button[disabled] {
+    @apply opacity-50 transition-all
+  }
+
   input.primary[type=text], input.primary[type=password] {
     @apply border border-solid-border px-2 py-1 rounded-md bg-subtle placeholder:font-normal placeholder:text-sm
   }
