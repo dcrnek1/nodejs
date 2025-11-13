@@ -56,7 +56,7 @@ export function CategoryDetailsDialog({ children, category }) {
           ? products?.data?.map((product) => product.product_id)
           : [],
     }));
-  }, [allProducts.data]);
+  }, [products.data]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -104,9 +104,7 @@ export function CategoryDetailsDialog({ children, category }) {
           onOpenAutoFocus={(e) => e.preventDefault()}
         >
           <DialogHeader className="overflow-hidden relative">
-            <DialogTitle className="text-left">
-              {category.name}
-            </DialogTitle>
+            <DialogTitle className="text-left">{category.name}</DialogTitle>
             <DialogDescription className="cursor-default">
               {/* Description */}
               {!isEditing && (
@@ -132,6 +130,7 @@ export function CategoryDetailsDialog({ children, category }) {
                       key={`products_load_error_${category.category_id}`}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
                     >
                       Error fetching product list :(
                     </motion.div>
@@ -141,6 +140,7 @@ export function CategoryDetailsDialog({ children, category }) {
                       key={`products_skeleton_${category.category_id}`}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
                     >
                       <div className="flex flex-col gap-4">
                         <div className="flex flex-row gap-2">
@@ -166,6 +166,7 @@ export function CategoryDetailsDialog({ children, category }) {
                         key={`products_${product.product_id}`}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
                         className="overflow-hidden"
                       >
                         <div
@@ -193,67 +194,67 @@ export function CategoryDetailsDialog({ children, category }) {
                   <div
                     className={`flex flex-row flex-wrap gap-4 overflow-hidden`}
                   >
-                      <div className="flex flex-col items-start gap-1 flex-2 min-w-40">
-                        <label
-                          htmlFor="name"
-                          className="text-secondary text-xs pl-1"
-                        >
-                          Category name:
-                        </label>
-                        <input
-                          className="primary w-full"
-                          name="name"
-                          placeholder="Enter new category name..."
-                          type="text"
-                          value={formData.name}
-                          onChange={(e) =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              name: e.target.value,
-                            }))
-                          }
-                        />
-                      </div>
-                      <div className="flex flex-col items-start gap-1 flex-3 basis-full sm:basis-180">
-                        <label
-                          htmlFor="name"
-                          className="text-secondary text-xs pl-1"
-                        >
-                          Test multiselect:
-                        </label>
-                        <MultiSelect
+                    <div className="flex flex-col items-start gap-1 flex-2 min-w-40">
+                      <label
+                        htmlFor="name"
+                        className="text-secondary text-xs pl-1"
+                      >
+                        Category name:
+                      </label>
+                      <input
+                        className="primary w-full"
+                        name="name"
+                        placeholder="Enter new category name..."
+                        type="text"
+                        value={formData.name}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            name: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                    <div className="flex flex-col items-start gap-1 flex-3 basis-full sm:basis-180">
+                      <label
+                        htmlFor="name"
+                        className="text-secondary text-xs pl-1"
+                      >
+                        Test multiselect:
+                      </label>
+                      <MultiSelect
                         value={formData.product_ids.map(String)}
                         defaultValues={formData.product_ids.map(String)}
-                          onValuesChange={(values) =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              product_ids: values,
-                            }))
-                          }
-                        >
-                          <MultiSelectTrigger className="w-full flex-3 flex-wrap bg-subtle">
-                            <MultiSelectValue
-                              overflowBehavior="no"
-                              className="w-full flex-3"
-                              placeholder="Select frameworks..."
-                            />
-                          </MultiSelectTrigger>
-                          <MultiSelectContent search={true}>
-                            <MultiSelectGroup>
-                              {allProducts.isSuccess &&
-                                allProducts?.data?.length > 0 &&
-                                allProducts.data.map((product, key) => (
-                                  <MultiSelectItem
-                                    key={key}
-                                    value={`${product.product_id}`}
-                                  >
-                                    {product.name}
-                                  </MultiSelectItem>
-                                ))}
-                            </MultiSelectGroup>
-                          </MultiSelectContent>
-                        </MultiSelect>
-                      </div>
+                        onValuesChange={(values) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            product_ids: values,
+                          }))
+                        }
+                      >
+                        <MultiSelectTrigger className="w-full flex-3 flex-wrap bg-subtle">
+                          <MultiSelectValue
+                            overflowBehavior="no"
+                            className="w-full flex-3"
+                            placeholder="Select frameworks..."
+                          />
+                        </MultiSelectTrigger>
+                        <MultiSelectContent search={true}>
+                          <MultiSelectGroup>
+                            {allProducts.isSuccess &&
+                              allProducts?.data?.length > 0 &&
+                              allProducts.data.map((product, key) => (
+                                <MultiSelectItem
+                                  key={key}
+                                  value={`${product.product_id}`}
+                                >
+                                  {product.name}
+                                </MultiSelectItem>
+                              ))}
+                          </MultiSelectGroup>
+                        </MultiSelectContent>
+                      </MultiSelect>
+                    </div>
                   </div>
                 </motion.div>
               )}
@@ -279,36 +280,36 @@ export function CategoryDetailsDialog({ children, category }) {
               </button>
             )}
             {isEditing && (
-                <PopoverComp
-                  align="end"
-                  content={({ setOpen }) => (
-                    <div className="flex flex-col gap-4 items-end">
-                      <div className="flex flex-row gap-2 items-end">
-                        <button
-                          className="secondary w-fit"
-                          onClick={() => {
-                            setOpen(false);
-                          }}
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          className="primary w-fit"
-                          onClick={() => {
-                            handleConfirmSave();
-                            setOpen(false);
-                          }}
-                        >
-                          Confirm
-                        </button>
-                      </div>
+              <PopoverComp
+                align="end"
+                content={({ setOpen }) => (
+                  <div className="flex flex-col gap-4 items-end">
+                    <div className="flex flex-row gap-2 items-end">
+                      <button
+                        className="secondary w-fit"
+                        onClick={() => {
+                          setOpen(false);
+                        }}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="primary w-fit"
+                        onClick={() => {
+                          handleConfirmSave();
+                          setOpen(false);
+                        }}
+                      >
+                        Confirm
+                      </button>
                     </div>
-                  )}
-                >
-                  <button className="primary" disabled={isSaving}>
-                    Update category
-                  </button>
-                </PopoverComp>
+                  </div>
+                )}
+              >
+                <button className="primary" disabled={isSaving}>
+                  Update category
+                </button>
+              </PopoverComp>
             )}
           </DialogFooter>
         </DialogContent>
