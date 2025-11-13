@@ -95,7 +95,7 @@ export function CategoryDetailsDialog({ children, category }) {
   return (
     <MotionConfig
       transition={{ duration: 0.2 }}
-      className="overflow-hidden relative"
+      className="overflow-hidden"
     >
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>{children}</DialogTrigger>
@@ -123,6 +123,7 @@ export function CategoryDetailsDialog({ children, category }) {
             </DialogDescription>
             {/* Products list */}
             <AnimatePresence mode="popLayout">
+              <div className="overflow-auto max-h-[calc(100vh/1.8)]">
               {!isEditing ? (
                 <div className={`flex flex-col items-left gap-2`}>
                   {products.isError && (
@@ -258,6 +259,7 @@ export function CategoryDetailsDialog({ children, category }) {
                   </div>
                 </motion.div>
               )}
+              </div>
             </AnimatePresence>
           </DialogHeader>
 
