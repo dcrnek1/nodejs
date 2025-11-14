@@ -131,7 +131,6 @@ export function CategoryDetailsDialog({ children, category }) {
                       key={`products_load_error_${category.category_id}`}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
                     >
                       Error fetching product list :(
                     </motion.div>
@@ -141,7 +140,6 @@ export function CategoryDetailsDialog({ children, category }) {
                       key={`products_skeleton_${category.category_id}`}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
                     >
                       <div className="flex flex-col gap-4">
                         <div className="flex flex-row gap-2">
@@ -167,7 +165,6 @@ export function CategoryDetailsDialog({ children, category }) {
                         key={`products_${product.product_id}`}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
                         className="overflow-hidden"
                       >
                         <div
