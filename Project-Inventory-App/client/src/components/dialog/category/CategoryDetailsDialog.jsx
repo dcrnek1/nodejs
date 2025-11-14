@@ -106,7 +106,8 @@ export function CategoryDetailsDialog({ children, category }) {
             layout
             transition={{
               type: "tween",
-              duration: 0.1,
+
+              duration: 0.08,
             }}
           >
             <DialogHeader className="overflow-hidden relative">
