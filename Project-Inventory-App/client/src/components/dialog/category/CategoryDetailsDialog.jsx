@@ -48,7 +48,7 @@ export function CategoryDetailsDialog({ children, category }) {
   });
   const updateCategory = useUpdateCategory();
   const [isSaving, setIsSaving] = useState(false);
-  const showProductsSkeleton = useDelayedLoading(products.isFetching, 100);
+  const showProductsSkeleton = useDelayedLoading(products.isPending, 100);
 
   useEffect(() => {
     setFormData(() => ({
@@ -95,7 +95,7 @@ export function CategoryDetailsDialog({ children, category }) {
   };
 
   return (
-    <MotionConfig transition={{ duration: 2 }} className="overflow-hidden">
+    <MotionConfig transition={{ duration: 0.2 }} className="overflow-hidden">
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent
@@ -145,14 +145,6 @@ export function CategoryDetailsDialog({ children, category }) {
                           <div className="flex flex-row gap-2">
                             <Skeleton className="w-5 h-4 bg-primary/5" />
                             <Skeleton className="w-[50%] h-4 bg-primary/5" />
-                          </div>
-                          <div className="flex flex-row gap-2">
-                            <Skeleton className="w-5 h-4 bg-primary/5" />
-                            <Skeleton className="w-[25%] h-4 bg-primary/5" />
-                          </div>
-                          <div className="flex flex-row gap-2">
-                            <Skeleton className="w-5 h-4 bg-primary/5" />
-                            <Skeleton className="w-[35%] h-4 bg-primary/5" />
                           </div>
                         </div>
                       </motion.div>
