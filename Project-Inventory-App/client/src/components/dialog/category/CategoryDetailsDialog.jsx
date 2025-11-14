@@ -31,6 +31,7 @@ import {
   MotionConfig,
 } from "motion/react";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { useDelayedLoading } from "@/lib/utils";
 
 export function CategoryDetailsDialog({ children, category }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,6 +48,7 @@ export function CategoryDetailsDialog({ children, category }) {
   });
   const updateCategory = useUpdateCategory();
   const [isSaving, setIsSaving] = useState(false);
+  const showProductsSkeleton = useDelayedLoading(products.isFetching, 100);
 
   useEffect(() => {
     setFormData(() => ({
@@ -93,10 +95,7 @@ export function CategoryDetailsDialog({ children, category }) {
   };
 
   return (
-    <MotionConfig
-      transition={{ duration: 0.2 }}
-      className="overflow-hidden"
-    >
+    <MotionConfig transition={{ duration: 2 }} className="overflow-hidden">
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent
@@ -124,138 +123,139 @@ export function CategoryDetailsDialog({ children, category }) {
             {/* Products list */}
             <AnimatePresence mode="popLayout">
               <div className="overflow-auto max-h-[calc(100vh/1.8)]">
-              {!isEditing ? (
-                <div className={`flex flex-col items-left gap-2`}>
-                  {products.isError && (
-                    <motion.div
-                      key={`products_load_error_${category.category_id}`}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                    >
-                      Error fetching product list :(
-                    </motion.div>
-                  )}
-                  {products.isFetching && !products.data && (
-                    <motion.div
-                      key={`products_skeleton_${category.category_id}`}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                    >
-                      <div className="flex flex-col gap-4">
-                        <div className="flex flex-row gap-2">
-                          <Skeleton className="w-5 h-4 bg-primary/5" />
-                          <Skeleton className="w-[50%] h-4 bg-primary/5" />
-                        </div>
-                        <div className="flex flex-row gap-2">
-                          <Skeleton className="w-5 h-4 bg-primary/5" />
-                          <Skeleton className="w-[25%] h-4 bg-primary/5" />
-                        </div>
-                        <div className="flex flex-row gap-2">
-                          <Skeleton className="w-5 h-4 bg-primary/5" />
-                          <Skeleton className="w-[35%] h-4 bg-primary/5" />
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                  {products.isSuccess &&
-                    products?.data?.length > 0 &&
-                    !isEditing &&
-                    products.data.map((product, index) => (
+                {!isEditing ? (
+                  <div className={`flex flex-col items-left gap-2`}>
+                    {products.isError && (
                       <motion.div
-                        key={`products_${product.product_id}`}
+                        key={`products_load_error_${category.category_id}`}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="overflow-hidden"
                       >
-                        <div
-                          key={index}
-                          className="text-textLink/85 hover:text-textLink cursor-pointer flex flex-row items-baseline gap-1 nowrap"
-                        >
-                          <LinkSimpleHorizontalIcon
-                            size={15}
-                            className="relative top-0.5"
-                          />{" "}
-                          <span className="text-left">{product.name} </span>
+                        Error fetching product list :(
+                      </motion.div>
+                    )}
+                    {showProductsSkeleton && (
+                      <motion.div
+                        key={`products_skeleton_${category.category_id}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        <div className="flex flex-col gap-4">
+                          <div className="flex flex-row gap-2">
+                            <Skeleton className="w-5 h-4 bg-primary/5" />
+                            <Skeleton className="w-[50%] h-4 bg-primary/5" />
+                          </div>
+                          <div className="flex flex-row gap-2">
+                            <Skeleton className="w-5 h-4 bg-primary/5" />
+                            <Skeleton className="w-[25%] h-4 bg-primary/5" />
+                          </div>
+                          <div className="flex flex-row gap-2">
+                            <Skeleton className="w-5 h-4 bg-primary/5" />
+                            <Skeleton className="w-[35%] h-4 bg-primary/5" />
+                          </div>
                         </div>
                       </motion.div>
-                    ))}
-                </div>
-              ) : (
-                /* Editing body */
-
-                <motion.div
-                  key={`editing_section_${category.category_id}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="overflow-hidden"
-                >
-                  <div
-                    className={`flex flex-row flex-wrap gap-4 overflow-hidden`}
-                  >
-                    <div className="flex flex-col items-start gap-1 flex-2 min-w-40">
-                      <label
-                        htmlFor="name"
-                        className="text-secondary text-xs pl-1"
-                      >
-                        Category name:
-                      </label>
-                      <input
-                        className="primary w-full"
-                        name="name"
-                        placeholder="Enter new category name..."
-                        type="text"
-                        value={formData.name}
-                        onChange={(e) =>
-                          setFormData((prev) => ({
-                            ...prev,
-                            name: e.target.value,
-                          }))
-                        }
-                      />
-                    </div>
-                    <div className="flex flex-col items-start gap-1 flex-3 basis-full sm:basis-180">
-                      <label
-                        htmlFor="name"
-                        className="text-secondary text-xs pl-1"
-                      >
-                        Test multiselect:
-                      </label>
-                      <MultiSelect
-                        value={formData.product_ids.map(String)}
-                        defaultValues={formData.product_ids.map(String)}
-                        onValuesChange={(values) =>
-                          setFormData((prev) => ({
-                            ...prev,
-                            product_ids: values,
-                          }))
-                        }
-                      >
-                        <MultiSelectTrigger className="w-full flex-3 flex-wrap bg-subtle">
-                          <MultiSelectValue
-                            overflowBehavior="no"
-                            className="w-full flex-3"
-                            placeholder="Select frameworks..."
-                          />
-                        </MultiSelectTrigger>
-                        <MultiSelectContent search={true}>
-                          <MultiSelectGroup>
-                            {allProducts.isSuccess &&
-                              allProducts?.data?.length > 0 &&
-                              allProducts.data.map((product, key) => (
-                                <MultiSelectItem
-                                  key={key}
-                                  value={`${product.product_id}`}
-                                >
-                                  {product.name}
-                                </MultiSelectItem>
-                              ))}
-                          </MultiSelectGroup>
-                        </MultiSelectContent>
-                      </MultiSelect>
-                    </div>
+                    )}
+                    {products.isSuccess &&
+                      products?.data?.length > 0 &&
+                      !isEditing &&
+                      products.data.map((product, index) => (
+                        <motion.div
+                          key={`products_${product.product_id}`}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="overflow-hidden"
+                        >
+                          <div
+                            key={index}
+                            className="text-textLink/85 hover:text-textLink cursor-pointer flex flex-row items-baseline gap-1 nowrap"
+                          >
+                            <LinkSimpleHorizontalIcon
+                              size={15}
+                              className="relative top-0.5"
+                            />{" "}
+                            <span className="text-left">{product.name} </span>
+                          </div>
+                        </motion.div>
+                      ))}
                   </div>
-                </motion.div>
-              )}
+                ) : (
+                  /* Editing body */
+
+                  <motion.div
+                    key={`editing_section_${category.category_id}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="overflow-hidden"
+                  >
+                    <div
+                      className={`flex flex-row flex-wrap gap-4 overflow-hidden`}
+                    >
+                      <div className="flex flex-col items-start gap-1 flex-2 min-w-40">
+                        <label
+                          htmlFor="name"
+                          className="text-secondary text-xs pl-1"
+                        >
+                          Category name:
+                        </label>
+                        <input
+                          className="primary w-full"
+                          name="name"
+                          placeholder="Enter new category name..."
+                          type="text"
+                          value={formData.name}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              name: e.target.value,
+                            }))
+                          }
+                        />
+                      </div>
+                      <div className="flex flex-col items-start gap-1 flex-3 basis-full sm:basis-180">
+                        <label
+                          htmlFor="name"
+                          className="text-secondary text-xs pl-1"
+                        >
+                          Test multiselect:
+                        </label>
+                        <MultiSelect
+                          value={formData.product_ids.map(String)}
+                          defaultValues={formData.product_ids.map(String)}
+                          onValuesChange={(values) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              product_ids: values,
+                            }))
+                          }
+                        >
+                          <MultiSelectTrigger className="w-full flex-3 flex-wrap bg-subtle">
+                            <MultiSelectValue
+                              overflowBehavior="no"
+                              className="w-full flex-3"
+                              placeholder="Select frameworks..."
+                            />
+                          </MultiSelectTrigger>
+                          <MultiSelectContent search={true}>
+                            <MultiSelectGroup>
+                              {allProducts.isSuccess &&
+                                allProducts?.data?.length > 0 &&
+                                allProducts.data.map((product, key) => (
+                                  <MultiSelectItem
+                                    key={key}
+                                    value={`${product.product_id}`}
+                                  >
+                                    {product.name}
+                                  </MultiSelectItem>
+                                ))}
+                            </MultiSelectGroup>
+                          </MultiSelectContent>
+                        </MultiSelect>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
               </div>
             </AnimatePresence>
           </DialogHeader>
