@@ -48,7 +48,7 @@ export function CategoryDetailsDialog({ children, category }) {
   });
   const updateCategory = useUpdateCategory();
   const [isSaving, setIsSaving] = useState(false);
-  const showProductsSkeleton = useDelayedLoading(products.isPending, 100);
+  const showProductsSkeleton = useDelayedLoading(products.isPending, 500);
 
   useEffect(() => {
     setFormData(() => ({
