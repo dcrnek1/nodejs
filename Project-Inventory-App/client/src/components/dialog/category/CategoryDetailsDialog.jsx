@@ -105,9 +105,9 @@ export function CategoryDetailsDialog({ children, category }) {
           <motion.div
             layout
             transition={{
-              type: "tween",
+              type: "spring",
 
-              duration: 0.08,
+              duration: 0.2,
             }}
           >
             <DialogHeader className="overflow-hidden relative">
@@ -241,9 +241,9 @@ export function CategoryDetailsDialog({ children, category }) {
                               <MultiSelectGroup>
                                 {allProducts.isSuccess &&
                                   allProducts?.data?.length > 0 &&
-                                  allProducts.data.map((product, key) => (
+                                  allProducts.data.map((product) => (
                                     <MultiSelectItem
-                                      key={key}
+                                      key={product.product_id}
                                       value={`${product.product_id}`}
                                     >
                                       {product.name}
