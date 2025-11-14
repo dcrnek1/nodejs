@@ -99,7 +99,7 @@ export function CategoryDetailsDialog({ children, category }) {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent
-          className="sm:max-w-xl"
+          className="sm:max-w-xl min-h-[200px]"
           onOpenAutoFocus={(e) => e.preventDefault()}
         >
           <motion.div
