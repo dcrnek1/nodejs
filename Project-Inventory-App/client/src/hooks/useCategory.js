@@ -1,5 +1,4 @@
 import {
-  QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
@@ -31,6 +30,30 @@ export const useUpdateCategory = () => {
     mutationFn: async ({ category_id, data }) => {
       const response = await axios.put(
         `${import.meta.env.VITE_API_URL}/categories/update/${category_id}`,
+        data
+      );
+      return response.data;
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries(["categories", 'desc']);
+      queryClient.invalidateQueries({ queryKey: ["products", "category"] });
+      toast.success("Succesfully updated category.");
+    },
+    onError: (error) => {
+      toast.error("Error updating category.", {
+        description: error?.response?.data?.errors?.[0]?.msg,
+      });
+    },
+  });
+};
+
+export const useCreateCategory = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ data }) => {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/categories`,
         data
       );
       return response.data;

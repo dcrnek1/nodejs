@@ -23,37 +23,36 @@ export default function CategoryPage() {
 
   return (
     <MotionConfig
-      transition={{ duration: categories.isFetchedAfterMount ? 0.3 : 0 }}
+      transition={{ duration: categories.isFetchedAfterMount ? 0.2 : 0 }}
     >
-      <LayoutGroup>
-        <div className="max-w-8xl mx-auto min-h-full padding-x py-6">
-          {/* Header */}
-          <div className="flex flex-wrap justify-between items-center border-b border-solid-border pb-6 mb-6">
-            <h1 className="text-nowrap">Category list</h1>
-            <div>
-              <button
-                onClick={() =>
-                  order === "asc" ? setOrder("desc") : setOrder("asc")
-                }
-                className="cursor-pointer flex flex-row gap-1 items-center text-tertiary hover:text-primary primary bg-primary/5 hover:transition active:transition hover:bg-primary/10 active:bg-primary/10"
-              >
-                <CaretDownIcon
-                  className={`  transition-transform duration-250 ${
-                    order === "asc" && "rotate-180"
-                  }`}
-                />{" "}
-                <span className="w-11">{order === "asc" ? "Asc" : "Desc"}</span>
-              </button>
-            </div>
+      <div className="max-w-8xl mx-auto min-h-full padding-x py-6">
+        {/* Header */}
+        <div className="flex flex-wrap justify-between items-center border-b border-solid-border pb-6 mb-6">
+          <h1 className="text-nowrap">Category list</h1>
+          <div>
+            <button
+              onClick={() =>
+                order === "asc" ? setOrder("desc") : setOrder("asc")
+              }
+              className="cursor-pointer flex flex-row gap-1 items-center text-tertiary hover:text-primary primary bg-primary/5 hover:transition active:transition hover:bg-primary/10 active:bg-primary/10"
+            >
+              <CaretDownIcon
+                className={`  transition-transform duration-250 ${
+                  order === "asc" && "rotate-180"
+                }`}
+              />{" "}
+              <span className="w-11">{order === "asc" ? "Asc" : "Desc"}</span>
+            </button>
           </div>
+        </div>
 
-          {categories.isError && <div>Error fetching categories...</div>}
+        {categories.isError && <div>Error fetching categories...</div>}
 
-          {/* Category cards */}
-          <div className="grid gap-4 grid-cols-2 sm:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] pb-6">
-            {/* Skeleton */}
+        {/* Category cards */}
+            <div className="grid gap-4 grid-cols-2 sm:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] pb-6">
+              {/* Skeleton */}
 
-            <AnimatePresence mode="popLayout">
+          <AnimatePresence mode="popLayout">
               {categories.isPending &&
                 Array.from({ length: 9 }).map((_, index) => (
                   <motion.div
@@ -82,6 +81,7 @@ export default function CategoryPage() {
                 </motion.div>
               )}
               {/* Cards */}
+
               {categories.isSuccess &&
                 categories.data.map((category) => (
                   <motion.div
@@ -91,23 +91,12 @@ export default function CategoryPage() {
                     exit={{ opacity: 0 }}
                     whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
                   >
-                    <motion.div
-                      layout
-                      transition={{
-                        type: "spring",
-                        damping: 100,
-                        stiffness: 1000,
-                      }}
-                      className="h-full"
-                    >
-                      <CategoryCard category={category} />
-                    </motion.div>
+                    <CategoryCard category={category} />
                   </motion.div>
                 ))}
-            </AnimatePresence>
-          </div>
-        </div>
-      </LayoutGroup>
+                </AnimatePresence>
+            </div>
+      </div>
     </MotionConfig>
   );
 }
