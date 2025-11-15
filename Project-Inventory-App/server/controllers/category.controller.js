@@ -2,6 +2,7 @@ const db = require("../db/db");
 const fs = require("fs");
 const { matchedData } = require("express-validator");
 const { saveFileToDisk, deleteFileFromDisk } = require("../middleware/multer");
+const { match } = require("assert");
 
 module.exports = {
   getCategoryById: async (req, res) => {
@@ -66,6 +67,7 @@ module.exports = {
     let paramCount = 1;
 
     for (const key in matchedData(req)) {
+      if (key === 'product_ids') continue;
       columns.push(key);
       values.push(matchedData(req)[key]);
       params.push(`$${paramCount}`);
@@ -101,7 +103,22 @@ module.exports = {
         values,
         res
       );
-      res.json(rows?.[0]);
+      const createdCategory = rows?.[0];
+
+      if (matchedData(req)?.product_ids) {
+        const product_ids = matchedData(req).product_ids;
+        await db.transaction(async (client) => {
+          product_ids.map(async (product_id) => {
+            await client.query(
+              `INSERT INTO category_product (category_id, product_id) 
+              VALUES ($1, $2)`,
+              [createdCategory.category_id, product_id]
+            );
+          });
+        });
+      }
+      
+      res.json(rows?.[0])
     } catch (error) {
       console.log(error);
       await deleteFileFromDisk(imagePath);

@@ -36,7 +36,7 @@ export const useUpdateCategory = () => {
     },
 
     onSuccess: () => {
-      queryClient.invalidateQueries(["categories", 'desc']);
+      queryClient.invalidateQueries({queryKey: ["categories"]});
       queryClient.invalidateQueries({ queryKey: ["products", "category"] });
       toast.success("Succesfully updated category.");
     },
@@ -51,7 +51,7 @@ export const useUpdateCategory = () => {
 export const useCreateCategory = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ data }) => {
+    mutationFn: async (data) => {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/categories`,
         data
@@ -60,12 +60,34 @@ export const useCreateCategory = () => {
     },
 
     onSuccess: () => {
-      queryClient.invalidateQueries(["categories", 'desc']);
+      queryClient.invalidateQueries({queryKey: ["categories"]});
       queryClient.invalidateQueries({ queryKey: ["products", "category"] });
-      toast.success("Succesfully updated category.");
+      toast.success("Succesfully created category.");
     },
     onError: (error) => {
-      toast.error("Error updating category.", {
+      toast.error("Error creating category.", {
+        description: error?.response?.data?.errors?.[0]?.msg,
+      });
+    },
+  });
+};
+
+export const useDeleteCategory = (name) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (category_id) => {
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/categories/${category_id}`,
+      );
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ["categories"]});
+      queryClient.invalidateQueries({ queryKey: ["products", "category"] });
+      toast.success(`Succesfully deleted category ${name}.`);
+    },
+    onError: (error) => {
+      toast.error("Error deleting category.", {
         description: error?.response?.data?.errors?.[0]?.msg,
       });
     },

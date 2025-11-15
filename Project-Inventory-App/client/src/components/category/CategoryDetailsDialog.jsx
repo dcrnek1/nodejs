@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useProducts } from "../../../hooks/useProduct";
+import { useProducts } from "../../hooks/useProduct";
 import { InfoIcon, LinkSimpleHorizontalIcon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import {
@@ -94,7 +94,7 @@ export function CategoryDetailsDialog({ children, category, products }) {
   };
 
   return (
-    <MotionConfig transition={{ duration: 0.3 }} className="overflow-hidden">
+    <MotionConfig transition={{ duration: 0.3 }} className="">
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent
@@ -109,7 +109,7 @@ export function CategoryDetailsDialog({ children, category, products }) {
                 duration: 0.2,
               }}
             >
-              <DialogHeader className="overflow-hidden relative">
+              <DialogHeader className="relative scrollbar-dark">
                 <DialogTitle className="text-left">{category.name}</DialogTitle>
                 <DialogDescription className="cursor-default">
                   {/* Description */}
@@ -129,8 +129,8 @@ export function CategoryDetailsDialog({ children, category, products }) {
                 </DialogDescription>
                 {/* Products list */}
                 <AnimatePresence mode="popLayout">
-                  <div className="overflow-auto max-h-[calc(100vh/1.8)]">
-                    {!isEditing ? (
+                  {!isEditing ? (
+                    <div className="max-h-[calc(100vh/1.8)] overflow-auto">
                       <div className={`flex flex-col items-left gap-2`}>
                         {products.isError && (
                           <motion.div
@@ -181,83 +181,80 @@ export function CategoryDetailsDialog({ children, category, products }) {
                             </motion.div>
                           ))}
                       </div>
-                    ) : (
-                      /* Editing body */
+                    </div>
+                  ) : (
+                    /* Editing body */
 
-                      <motion.div
-                        key={`editing_section_${category.category_id}`}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="overflow-hidden"
-                      >
-                        <div
-                          className={`flex flex-row flex-wrap gap-4 overflow-hidden`}
-                        >
-                          <div className="flex flex-col items-start gap-1 flex-2 min-w-40">
-                            <label
-                              htmlFor="name"
-                              className="text-secondary text-xs pl-1"
-                            >
-                              Category name:
-                            </label>
-                            <input
-                              className="primary w-full"
-                              name="name"
-                              placeholder="Enter new category name..."
-                              type="text"
-                              value={formData.name}
-                              onChange={(e) =>
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  name: e.target.value,
-                                }))
-                              }
-                            />
-                          </div>
-                          <div className="flex flex-col items-start gap-1 flex-3 basis-full sm:basis-180">
-                            <label
-                              htmlFor="name"
-                              className="text-secondary text-xs pl-1"
-                            >
-                              Test multiselect:
-                            </label>
-                            <MultiSelect
-                              value={formData.product_ids.map(String)}
-                              defaultValues={formData.product_ids.map(String)}
-                              onValuesChange={(values) =>
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  product_ids: values,
-                                }))
-                              }
-                            >
-                              <MultiSelectTrigger className="w-full flex-3 flex-wrap bg-subtle">
-                                <MultiSelectValue
-                                  overflowBehavior="no"
-                                  className="w-full flex-3"
-                                  placeholder="Select frameworks..."
-                                />
-                              </MultiSelectTrigger>
-                              <MultiSelectContent search={true}>
-                                <MultiSelectGroup>
-                                  {allProducts.isSuccess &&
-                                    allProducts?.data?.length > 0 &&
-                                    allProducts.data.map((product) => (
-                                      <MultiSelectItem
-                                        key={product.product_id}
-                                        value={`${product.product_id}`}
-                                      >
-                                        {product.name}
-                                      </MultiSelectItem>
-                                    ))}
-                                </MultiSelectGroup>
-                              </MultiSelectContent>
-                            </MultiSelect>
-                          </div>
+                    <motion.div
+                      key={`editing_section_${category.category_id}`}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                    >
+                      <div className={`flex flex-row flex-wrap gap-4`}>
+                        <div className="flex flex-col items-start gap-1 flex-2 min-w-40">
+                          <label
+                            htmlFor="name"
+                            className="text-secondary text-xs pl-1"
+                          >
+                            Category name:
+                          </label>
+                          <input
+                            className="primary w-full"
+                            name="name"
+                            placeholder="Enter new category name..."
+                            type="text"
+                            value={formData.name}
+                            onChange={(e) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                name: e.target.value,
+                              }))
+                            }
+                          />
                         </div>
-                      </motion.div>
-                    )}
-                  </div>
+                        <div className="flex flex-col items-start gap-1 flex-3 basis-full sm:basis-180">
+                          <label
+                            htmlFor="name"
+                            className="text-secondary text-xs pl-1"
+                          >
+                            Linked products:
+                          </label>
+                          <MultiSelect
+                            value={formData.product_ids.map(String)}
+                            defaultValues={formData.product_ids.map(String)}
+                            onValuesChange={(values) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                product_ids: values,
+                              }))
+                            }
+                          >
+                            <MultiSelectTrigger className="w-full flex-3 flex-wrap !bg-subtle">
+                              <MultiSelectValue
+                                overflowBehavior="no"
+                                className="w-full flex-3"
+                                placeholder="Select frameworks..."
+                              />
+                            </MultiSelectTrigger>
+                            <MultiSelectContent search={true}>
+                              <MultiSelectGroup>
+                                {allProducts.isSuccess &&
+                                  allProducts?.data?.length > 0 &&
+                                  allProducts.data.map((product) => (
+                                    <MultiSelectItem
+                                      key={product.product_id}
+                                      value={`${product.product_id}`}
+                                    >
+                                      {product.name}
+                                    </MultiSelectItem>
+                                  ))}
+                              </MultiSelectGroup>
+                            </MultiSelectContent>
+                          </MultiSelect>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
                 </AnimatePresence>
               </DialogHeader>
 

@@ -11,7 +11,6 @@ export function useDelayedLoading(isFetching, isPending, delay = 100) {
 
   useEffect(() => {
     let timer;
-    console.log(isPending && isFetching);
     if (isFetching && isPending) {
       timer = setTimeout(() => {
         setVisible(true)

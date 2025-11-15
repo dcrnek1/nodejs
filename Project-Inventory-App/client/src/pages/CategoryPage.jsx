@@ -17,11 +17,16 @@ import {
   MotionConfig,
 } from "motion/react";
 import { useDelayedLoading } from "@/lib/utils";
+import CreateCategoryDialog from "@/components/category/CreateCategoryDialog";
 
 export default function CategoryPage() {
   const [order, setOrder] = useState("desc");
   const categories = useCategories(order);
-  const showSkeleton = useDelayedLoading(categories.isFetching, categories.isPending, 100);
+  const showSkeleton = useDelayedLoading(
+    categories.isFetching,
+    categories.isPending,
+    100
+  );
 
   return (
     <MotionConfig
@@ -51,53 +56,56 @@ export default function CategoryPage() {
         {categories.isError && <div>Error fetching categories...</div>}
 
         {/* Category cards */}
-            <div className="grid gap-4 grid-cols-2 sm:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] pb-6">
-              {/* Skeleton */}
+        <div className="grid gap-4 grid-cols-2 sm:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] pb-6">
+          {/* Skeleton */}
 
           <AnimatePresence mode="popLayout">
-              {categories.isPending && showSkeleton &&
-                Array.from({ length: 9 }).map((_, index) => (
-                  <motion.div
-                    key={`skeleton_${index}`}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <CategorySkeleton />
-                  </motion.div>
-                ))}
-              {/* Add new button */}
-              {categories.isSuccess && (
+            {categories.isPending &&
+              showSkeleton &&
+              Array.from({ length: 9 }).map((_, index) => (
                 <motion.div
-                  key={`add_new_button`}
+                  key={`skeleton_${index}`}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
                 >
+                  <CategorySkeleton />
+                </motion.div>
+              ))}
+            {/* Add new button */}
+            {categories.isSuccess && (
+              <motion.div
+                key={`add_new_button`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
+              >
+                <CreateCategoryDialog>
                   <div
                     className={`flex flex-col h-full w-full justify-center items-center min-h-13 cursor-pointer bg-el-bg hover:bg-el-hover-bg active:bg-el-hover-bg rounded-md border border-solid-border p-2`}
                   >
                     <FolderSimplePlusIcon weight="regular" size={30} />
                   </div>
-                </motion.div>
-              )}
-              {/* Cards */}
+                </CreateCategoryDialog>
+              </motion.div>
+            )}
+            {/* Cards */}
 
-              {categories.isSuccess &&
-                categories.data.map((category) => (
-                  <motion.div
-                    key={`card_${category.category_id}`}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
-                  >
-                    <CategoryCard category={category} />
-                  </motion.div>
-                ))}
-                </AnimatePresence>
-            </div>
+            {categories.isSuccess &&
+              categories.data.map((category) => (
+                <motion.div
+                  key={`card_${category.category_id}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  whileTap={{ scale: 0.99, transition: { duration: 0.1 } }}
+                >
+                  <CategoryCard category={category} />
+                </motion.div>
+              ))}
+          </AnimatePresence>
+        </div>
       </div>
     </MotionConfig>
   );
