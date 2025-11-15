@@ -16,10 +16,12 @@ import {
   motion,
   MotionConfig,
 } from "motion/react";
+import { useDelayedLoading } from "@/lib/utils";
 
 export default function CategoryPage() {
   const [order, setOrder] = useState("desc");
   const categories = useCategories(order);
+  const showSkeleton = useDelayedLoading(categories.isFetching, categories.isPending, 100);
 
   return (
     <MotionConfig
@@ -53,7 +55,7 @@ export default function CategoryPage() {
               {/* Skeleton */}
 
           <AnimatePresence mode="popLayout">
-              {categories.isPending &&
+              {categories.isPending && showSkeleton &&
                 Array.from({ length: 9 }).map((_, index) => (
                   <motion.div
                     key={`skeleton_${index}`}
