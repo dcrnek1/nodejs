@@ -33,22 +33,19 @@ import {
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useDelayedLoading } from "@/lib/utils";
 
-export function CategoryDetailsDialog({ children, category }) {
+export function CategoryDetailsDialog({ children, category, products }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: category.name,
     product_ids: [],
   });
-  const products = useProductsByCategoryId(category.category_id, {
-    enabled: isOpen,
-  });
   const allProducts = useProducts({
     enabled: isEditing,
   });
   const updateCategory = useUpdateCategory();
   const [isSaving, setIsSaving] = useState(false);
-  const showProductsSkeleton = useDelayedLoading(products.isFetching, 500);
+  const showProductsSkeleton = useDelayedLoading(products.isFetching, products.isPending, 1000);
 
   useEffect(() => {
     setFormData(() => ({
@@ -67,6 +64,7 @@ export function CategoryDetailsDialog({ children, category }) {
       }, 100);
       return () => clearTimeout(timer);
     }
+    
 
     if (isEditing) {
       setFormData((prev) => ({
@@ -95,18 +93,17 @@ export function CategoryDetailsDialog({ children, category }) {
   };
 
   return (
-    <MotionConfig transition={{ duration: 0.2 }} className="overflow-hidden">
+    <MotionConfig transition={{ duration: 0.3 }} className="overflow-hidden">
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent
-          className="sm:max-w-xl min-h-[200px]"
+          className="sm:max-w-xl"
           onOpenAutoFocus={(e) => e.preventDefault()}
         >
           <motion.div
             layout
             transition={{
               type: "spring",
-
               duration: 0.2,
             }}
           >
@@ -260,7 +257,7 @@ export function CategoryDetailsDialog({ children, category }) {
               </AnimatePresence>
             </DialogHeader>
 
-            <DialogFooter className="sm:justify-end mt-4">
+            <DialogFooter className="sm:justify-end mt-8">
               <DialogClose asChild></DialogClose>
               {!isEditing && (
                 <button
@@ -305,7 +302,7 @@ export function CategoryDetailsDialog({ children, category }) {
                     </div>
                   )}
                 >
-                  <button className="primary" disabled={isSaving}>
+                  <button className="primary" disabled={isSaving || !allProducts.isFetched}>
                     Update category
                   </button>
                 </PopoverComp>

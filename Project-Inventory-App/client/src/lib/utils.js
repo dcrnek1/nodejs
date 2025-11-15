@@ -6,13 +6,13 @@ export function cn(...inputs) {
   return twMerge(clsx(inputs))
 }
 
-export function useDelayedLoading(isLoading, delay = 100) {
+export function useDelayedLoading(isFetching, isPending, delay = 100) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     let timer;
-
-    if (isLoading) {
+    console.log(isPending && isFetching);
+    if (isFetching && isPending) {
       timer = setTimeout(() => {
         setVisible(true)
       }, delay)
@@ -20,6 +20,6 @@ export function useDelayedLoading(isLoading, delay = 100) {
       setVisible(false);
     }
     return () => clearTimeout(timer);
-  }, [isLoading, delay])
+  }, [isFetching, isPending, delay])
   return visible;
 }

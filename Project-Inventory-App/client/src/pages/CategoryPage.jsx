@@ -72,7 +72,7 @@ export default function CategoryPage() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  whileTap={{ scale: 0.95, transition: {duration: 0.1} }}
+                  whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
                 >
                   <div
                     className={`flex flex-col h-full w-full justify-center items-center min-h-13 cursor-pointer bg-el-bg hover:bg-el-hover-bg active:bg-el-hover-bg rounded-md border border-solid-border p-2`}
@@ -89,7 +89,7 @@ export default function CategoryPage() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                  whileTap={{ scale: 0.95, transition: {duration: 0.1} }}
+                    whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
                   >
                     <motion.div
                       layout
@@ -98,6 +98,7 @@ export default function CategoryPage() {
                         damping: 100,
                         stiffness: 1000,
                       }}
+                      className="h-full"
                     >
                       <CategoryCard category={category} />
                     </motion.div>
