@@ -1,7 +1,8 @@
 import {
   CaretDownIcon,
-  CaretUpIcon,
   FolderSimplePlusIcon,
+  SortAscendingIcon,
+  SortDescendingIcon,
 } from "@phosphor-icons/react";
 import { useCategories } from "../hooks/useCategory";
 import { useState } from "react";
@@ -11,13 +12,13 @@ import {
 } from "../components/category/CategoryCard";
 import {
   AnimatePresence,
-  LayoutGroup,
   // eslint-disable-next-line no-unused-vars
   motion,
   MotionConfig,
 } from "motion/react";
 import { useDelayedLoading } from "@/lib/utils";
 import CreateCategoryDialog from "@/components/category/CreateCategoryDialog";
+import SortPopover from "@/components/category/CategorySortDropdown";
 
 export default function CategoryPage() {
   const [order, setOrder] = useState("desc");
@@ -28,6 +29,30 @@ export default function CategoryPage() {
     100
   );
 
+  //Sort state
+   const [sort, setSort] = useState({
+    value: { column: "name", columnText: "Name", order: "desc", orderIcon:  <SortAscendingIcon size={15} />},
+    data: {
+      columns: [
+        { value: "name", text: "Name" },
+        { value: "product_count", text: "Product count" },
+        { value: "tstamp", text: "Updated" },
+      ],
+      orders: [
+        {
+          value: "desc",
+          text: "Descending",
+          icon: <SortAscendingIcon size={15} />,
+        },
+        {
+          value: "asc",
+          text: "Ascending",
+          icon: <SortDescendingIcon size={15} />,
+        },
+      ],
+    },
+  });
+
   return (
     <MotionConfig
       transition={{ duration: categories.isFetchedAfterMount ? 0.2 : 0 }}
@@ -36,7 +61,8 @@ export default function CategoryPage() {
         {/* Header */}
         <div className="flex flex-wrap justify-between items-center border-b border-solid-border pb-6 mb-6">
           <h1 className="text-nowrap">Category list</h1>
-          <div>
+          <div className="flex flex-row gap-4 items-center">
+            <SortPopover sort={sort} setSort={setSort} />
             <button
               onClick={() =>
                 order === "asc" ? setOrder("desc") : setOrder("asc")
