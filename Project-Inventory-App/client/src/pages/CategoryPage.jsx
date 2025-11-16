@@ -22,13 +22,6 @@ import SortPopover from "@/components/category/CategorySortDropdown";
 
 export default function CategoryPage() {
   const [order, setOrder] = useState("desc");
-  const categories = useCategories(order);
-  const showSkeleton = useDelayedLoading(
-    categories.isFetching,
-    categories.isPending,
-    100
-  );
-
   //Sort state
    const [sort, setSort] = useState({
     value: { column: "name", columnText: "Name", order: "desc", orderIcon:  <SortAscendingIcon size={15} />},
@@ -52,6 +45,12 @@ export default function CategoryPage() {
       ],
     },
   });
+  const categories = useCategories(sort.value.column, sort.value.order);
+  const showSkeleton = useDelayedLoading(
+    categories.isFetching,
+    categories.isPending,
+    100
+  );
 
   return (
     <MotionConfig
@@ -63,19 +62,6 @@ export default function CategoryPage() {
           <h1 className="text-nowrap">Category list</h1>
           <div className="flex flex-row gap-4 items-center">
             <SortPopover sort={sort} setSort={setSort} />
-            <button
-              onClick={() =>
-                order === "asc" ? setOrder("desc") : setOrder("asc")
-              }
-              className="cursor-pointer flex flex-row gap-1 items-center text-tertiary hover:text-primary primary bg-primary/5 hover:transition active:transition hover:bg-primary/10 active:bg-primary/10"
-            >
-              <CaretDownIcon
-                className={`  transition-transform duration-250 ${
-                  order === "asc" && "rotate-180"
-                }`}
-              />{" "}
-              <span className="w-11">{order === "asc" ? "Asc" : "Desc"}</span>
-            </button>
           </div>
         </div>
 

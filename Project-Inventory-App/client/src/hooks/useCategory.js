@@ -6,16 +6,17 @@ import {
 import axios from "axios";
 import { toast } from "sonner";
 
-export const useCategories = (order) => {
+export const useCategories = (column, order) => {
   return useQuery({
-    queryKey: ["categories", order],
+    queryKey: ["categories", column, order],
     staleTime: 1 * 60 * 1000,
     queryFn: async () => {
       const { data } = await axios.get(
         `${import.meta.env.VITE_API_URL}/categories`,
         {
           params: {
-            order: order === "asc" ? "asc" : "desc",
+            orderColumn: column,
+            order: order
           },
         }
       );

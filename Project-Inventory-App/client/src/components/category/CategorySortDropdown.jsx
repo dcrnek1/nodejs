@@ -20,13 +20,13 @@ export default function SortPopover({sort, setSort}) {
   const handleOrderClick = (e, value) => {
     e.preventDefault();
     setSort((prev) => ({ ...prev, value: { ...prev.value, order: value, orderIcon: value === 'asc' ? <SortDescendingIcon size={15} /> : <SortAscendingIcon size={15} /> } }));
-    console.log(value);
+    
   };
 
   const handleColumnClick = (e, value, text) => {
     e.preventDefault();
     setSort((prev) => ({ ...prev, value: { ...prev.value, column: value, columnText: text } }));
-    console.log(value);
+    
   };
 
   return (

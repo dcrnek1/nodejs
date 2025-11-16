@@ -23,13 +23,15 @@ module.exports = {
   },
 
   getAllCategories: async (req, res) => {
+    const orderColumn = req?.query?.orderColumn;
     const order = req?.query?.order;
+  
     try {
       const { rows } = await db(`select c.*, count(cp.*) as product_count
             from category c
             left join category_product cp on cp.category_id = c.category_id
             group by c.category_id
-            order by product_count ${order === "asc" ? "asc" : "desc"}`);
+            ORDER BY ${orderColumn ? orderColumn : 'product_count'} ${order ? order : 'desc'}`);
       res.json(rows);
     } catch (error) {
       res.status(400).json({ error: error, message: "Database error." });
@@ -134,9 +136,9 @@ module.exports = {
     let currentImagePath = "";
     let newImagePath = "";
 
-    const columns = [];
-    const values = [];
-    let paramsCounter = 1;
+    const columns = ['tstamp = $1'];
+    const values = ['NOW()'];
+    let paramsCounter = 2;
 
     const { rows } = await db(
       `SELECT * FROM category WHERE category_id = $1 LIMIT 1`,
