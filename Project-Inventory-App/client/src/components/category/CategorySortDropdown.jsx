@@ -7,38 +7,49 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import {
-  SortAscendingIcon,
-  SortDescendingIcon,
-} from "@phosphor-icons/react";
+import { SortAscendingIcon, SortDescendingIcon } from "@phosphor-icons/react";
 import {
   // eslint-disable-next-line no-unused-vars
   motion,
 } from "motion/react";
 
-export default function SortPopover({sort, setSort}) {
+export default function SortPopover({ sort, setSort }) {
   const handleOrderClick = (e, value) => {
     e.preventDefault();
-    setSort((prev) => ({ ...prev, value: { ...prev.value, order: value, orderIcon: value === 'asc' ? <SortDescendingIcon size={15} /> : <SortAscendingIcon size={15} /> } }));
-    
+    setSort((prev) => ({
+      ...prev,
+      value: {
+        ...prev.value,
+        order: value,
+        orderIcon:
+          value === "asc" ? (
+            <SortDescendingIcon size={15} />
+          ) : (
+            <SortAscendingIcon size={15} />
+          ),
+      },
+    }));
   };
 
   const handleColumnClick = (e, value, text) => {
     e.preventDefault();
-    setSort((prev) => ({ ...prev, value: { ...prev.value, column: value, columnText: text } }));
-    
+    setSort((prev) => ({
+      ...prev,
+      value: { ...prev.value, column: value, columnText: text },
+    }));
   };
 
   return (
-    <motion.div layout>
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <button className="secondary text-sm flex flex-row items-center gap-2">
-          {sort.value.orderIcon}
-          <span>{sort.value.columnText}</span>
-        </button>
+        <motion.div layout transition={{ duration: 0.1 }}>
+          <button className="secondary text-sm flex flex-row items-center gap-2">
+            {sort.value.orderIcon}
+            <span>{sort.value.columnText}</span>
+          </button>
+        </motion.div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent className="w-56" portaled={false} align="end">
         <DropdownMenuLabel>Sort by</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={sort.value.column}>
@@ -69,6 +80,5 @@ export default function SortPopover({sort, setSort}) {
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
-    </motion.div>
   );
 }
