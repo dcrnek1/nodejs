@@ -15,7 +15,6 @@ import {
 
 export default function SortPopover({ sort, setSort }) {
   const handleOrderClick = (e, value) => {
-    e.preventDefault();
     setSort((prev) => ({
       ...prev,
       value: {
@@ -32,7 +31,6 @@ export default function SortPopover({ sort, setSort }) {
   };
 
   const handleColumnClick = (e, value, text) => {
-    e.preventDefault();
     setSort((prev) => ({
       ...prev,
       value: { ...prev.value, column: value, columnText: text },
