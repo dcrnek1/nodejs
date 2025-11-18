@@ -19,8 +19,6 @@ export default function ProductsPage() {
     1000
   );
 
-  console.log(allProducts.data);
-
   return (
     <div className="max-w-8xl mx-auto min-h-full padding-x py-6">
       {/* Heading */}
@@ -41,7 +39,7 @@ export default function ProductsPage() {
         {allProducts.isSuccess &&
           allProducts.data.map((product) => (
             // {/* Card */}
-            <div className="rounded-md gap-4 border solid-border cursor-pointer">
+            <div className="rounded-md gap-4 border solid-border cursor-pointer" key={product.product_id}>
               <div className="flex flex-row gap-2">
                 {/* // Image */}
                 <div className="rounded-md">

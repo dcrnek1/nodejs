@@ -1,13 +1,22 @@
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
-export default function Image({ 
-  src, 
-  alt, 
-  fallback = "/fallback.png", 
-  className = "w-24 h-24" // default 96 × 96px
-}) {
-  const [loaded, setLoaded] = useState(false);
+export default function Image({
+  src,
+  alt,
+  fallback = "/fallback.png",
+  className = "w-24 h-24", // default 96 × 96px
+} = {}) {
   const [failed, setFailed] = useState(false);
+  const imgRef = useRef(null);
+
+  const isCached = useMemo(() => {
+    if (!src) return true;
+    const img = new window.Image();
+    img.src = src;
+    return img.complete;
+  }, [src]);
+
+  const [loaded, setLoaded] = useState(isCached);
 
   return (
     <div className={`relative overflow-hidden rounded-md ${className}`}>
@@ -17,6 +26,7 @@ export default function Image({
       )}
 
       <img
+        ref={imgRef}
         src={failed ? fallback : src}
         alt={alt}
         loading="lazy"
