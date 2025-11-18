@@ -1,15 +1,7 @@
 import Image from "@/components/Image";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { useAllProducts } from "@/hooks/useProduct";
 import { useDelayedLoading } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 export default function ProductsPage() {
   const allProducts = useAllProducts();
@@ -39,7 +31,10 @@ export default function ProductsPage() {
         {allProducts.isSuccess &&
           allProducts.data.map((product) => (
             // {/* Card */}
-            <div className="rounded-md gap-4 border solid-border cursor-pointer" key={product.product_id}>
+            <div
+              className="rounded-md gap-4 border solid-border cursor-pointer"
+              key={product.product_id}
+            >
               <div className="flex flex-row gap-2">
                 {/* // Image */}
                 <div className="rounded-md">
@@ -63,14 +58,24 @@ export default function ProductsPage() {
                       {product.name}
                     </h1>
                     {/* Description */}
-                    <p className="text-secondary font-light text-sm h-[calc(1.25rem*5)] leading-base line-clamp-5">
+                    <p className="text-secondary font-light text-sm h-[calc(1.25rem*4)] leading-base line-clamp-4">
                       {product.description}
                     </p>
                   </div>
 
                   {/* Stock and actions */}
-                  <div className="text-sm text-secondary text-right">
-                    <span className="font-semibold">Stock:</span> 0
+                  <div className="flex flex-row justify-between items-end">
+                    <div className="max-h-[calc(1.50rem*2)] overflow-hidden flex gap-1 flex-wrap">
+                      {product.categories &&
+                        product.categories.map((category) => (
+                          <Badge key={category.category_id} variant={"outline"}>{category.name}</Badge>
+                        ))}
+                    </div>
+                    <div className="ml-auto whitespace-nowrap">
+                      <span className="font-semibold text-sm text-secondary">
+                        Stock: 0
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
