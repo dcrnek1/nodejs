@@ -1,4 +1,4 @@
-import { FoldersIcon, HouseIcon, MonitorPlayIcon } from "@phosphor-icons/react";
+import { ArticleIcon, FoldersIcon, HouseIcon, MonitorPlayIcon } from "@phosphor-icons/react";
 import { NavLink } from "react-router";
 import ThemeToggle from "./ThemeToggle";
 
@@ -18,7 +18,7 @@ export default function Navigation() {
         <NavLink to="/">
           {({ isActive }) => {
             return (
-              <HouseIcon
+              <ArticleIcon
                 size={32}
                 weight={isActive ? "fill" : "light"}
                 className="text-primary"
@@ -30,17 +30,6 @@ export default function Navigation() {
           {({ isActive }) => {
             return (
               <FoldersIcon
-                size={32}
-                weight={isActive ? "fill" : "light"}
-                className="text-primary"
-              />
-            );
-          }}
-        </NavLink>
-        <NavLink to="/products">
-          {({ isActive }) => {
-            return (
-              <MonitorPlayIcon
                 size={32}
                 weight={isActive ? "fill" : "light"}
                 className="text-primary"
@@ -66,7 +55,7 @@ export default function Navigation() {
                         : "text-tertiary px-2 py-1 hover:bg-el-hover-bg hover:text-primary transition rounded-full"
                     }
                   >
-                    Home
+                    Products
                   </span>
                 )}
               </NavLink>
@@ -82,21 +71,6 @@ export default function Navigation() {
                     }
                   >
                     Categories
-                  </span>
-                )}
-              </NavLink>
-              <NavLink
-                to="/products"
-              >
-                {({ isActive }) => (
-                  <span
-                    className={
-                      isActive
-                        ? "text-primary bg-el-hover-bg px-2 py-1 rounded-full"
-                        : "text-tertiary px-2 py-1 hover:bg-el-hover-bg hover:text-primary transition rounded-full"
-                    }
-                  >
-                    Products
                   </span>
                 )}
               </NavLink>

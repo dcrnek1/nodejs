@@ -8,7 +8,7 @@ const routes = [
   {
   Component: AppLayout,
   children: [
-    {index: true, Component: App},
+    {index: true, Component: ProductsPage},
     {path: "/categories", Component: CategoriesPage},
     {path: "/products", Component: ProductsPage},
     {path: "*", Component: ErrorPage}
