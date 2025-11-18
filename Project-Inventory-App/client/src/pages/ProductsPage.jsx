@@ -37,32 +37,43 @@ export default function ProductsPage() {
       )}
 
       {/* Products table */}
-      <div className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] pb-6">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(400px,1fr))] pb-6">
         {allProducts.isSuccess &&
           allProducts.data.map((product) => (
             // {/* Card */}
-            <div className="rounded-md border solid-border flex flex-col gap-4 p-2 sm:p-4 bg-el-bg">
-              {/* // Image and title */}
-              <div className="flex flex-row gap-2 sm:gap-4">
-                <div className="min-h-15 min-w-15 h-15 w-15 rounded-md">
-                  {product.image_path && <Image src={`${import.meta.env.VITE_IMAGE_URL}${product.image_path}`} alt={product.name} className="rounded-md"/>}
-                  {!product.image_path && <div className="bg-primary/5 min-h-15 min-w-15 h-15 w-15 rounded-md"></div>}
+            <div className="rounded-md gap-4 border solid-border cursor-pointer">
+              <div className="flex flex-row gap-2">
+                {/* // Image */}
+                <div className="rounded-md">
+                  {product.image_path && (
+                    <Image
+                      src={`${import.meta.env.VITE_IMAGE_URL}${
+                        product.image_path
+                      }`}
+                      alt={product.name}
+                      className="rounded-md h-50 w-30"
+                    />
+                  )}
+                  {!product.image_path && (
+                    <div className="bg-primary/5 h-15 w-15 rounded-md"></div>
+                  )}
                 </div>
-
-                <div className="flex-1">
-                  <div className="text-base sm:text-lg text-primary leading-tight line-clamp-2">
-                    {product.name}
+                <div className="flex flex-col justify-between gap-2 p-2 pr-4">
+                  {/* Product title */}
+                  <div className="flex-1 flex flex-col gap-2">
+                    <h1 className="text-lg sm:text-lg text-primary leading-tight line-clamp-2">
+                      {product.name}
+                    </h1>
+                    {/* Description */}
+                    <p className="text-secondary font-light text-sm h-[calc(1.25rem*5)] leading-base line-clamp-5">
+                      {product.description}
+                    </p>
                   </div>
-                </div>
-              </div>
-              {/* Description */}
-              <p className="text-secondary font-light text-sm h-10 line-clamp-2">
-                {product.description}
-              </p>
-              {/* Stock and actions */}
-              <div className="flex flex-row gap-4 justify-between items-center">
-                <div className="text-sm text-secondary">
-                  <span className="font-semibold">Stock:</span> 0
+
+                  {/* Stock and actions */}
+                  <div className="text-sm text-secondary text-right">
+                    <span className="font-semibold">Stock:</span> 0
+                  </div>
                 </div>
               </div>
             </div>
