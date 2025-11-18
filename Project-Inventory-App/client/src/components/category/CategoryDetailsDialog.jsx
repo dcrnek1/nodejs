@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useProducts } from "../../hooks/useProduct";
+import { useAllProducts } from "../../hooks/useProduct";
 import { InfoIcon, LinkSimpleHorizontalIcon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import {
@@ -38,7 +38,7 @@ export function CategoryDetailsDialog({ children, category, products }) {
     name: category.name,
     product_ids: [],
   });
-  const allProducts = useProducts({
+  const allProducts = useAllProducts({
     enabled: isEditing,
   });
   const updateCategory = useUpdateCategory();
@@ -229,7 +229,7 @@ export function CategoryDetailsDialog({ children, category, products }) {
                               }))
                             }
                           >
-                            <MultiSelectTrigger className="w-full flex-3 flex-wrap !bg-subtle">
+                            <MultiSelectTrigger className="w-full flex-3 flex-wrap bg-subtle!">
                               <MultiSelectValue
                                 overflowBehavior="no"
                                 className="w-full flex-3"

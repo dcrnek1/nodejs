@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve uploaded images
 app.use(
-  "/uploads",
+  "/static/uploads",
   (req, res, next) => {
     console.log("accessing image");
     next();

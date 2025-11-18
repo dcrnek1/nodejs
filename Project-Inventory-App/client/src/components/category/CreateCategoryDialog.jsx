@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { useProducts } from "@/hooks/useProduct";
+import { useAllProducts } from "@/hooks/useProduct";
 import {
   MultiSelect,
   MultiSelectContent,
@@ -22,7 +22,7 @@ import { useCreateCategory } from "@/hooks/useCategory";
 export default function CreateCategoryDialog({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "" });
-  const allProducts = useProducts();
+  const allProducts = useAllProducts();
   const createCategory = useCreateCategory();
 
   const handleSave = async () => {
@@ -71,7 +71,7 @@ export default function CreateCategoryDialog({ children }) {
                 }))
               }
             >
-              <MultiSelectTrigger className="w-full flex-3 flex-wrap !bg-subtle">
+              <MultiSelectTrigger className="w-full flex-3 flex-wrap bg-subtle!">
                 <MultiSelectValue
                   overflowBehavior="no"
                   className="w-full flex-3"

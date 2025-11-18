@@ -20,8 +20,7 @@ import { useDelayedLoading } from "@/lib/utils";
 import CreateCategoryDialog from "@/components/category/CreateCategoryDialog";
 import SortPopover from "@/components/category/CategorySortDropdown";
 
-export default function CategoryPage() {
-  const [order, setOrder] = useState("desc");
+export default function CategoriesPage() {
   //Sort state
    const [sort, setSort] = useState({
     value: { column: "name", columnText: "Name", order: "desc", orderIcon:  <SortAscendingIcon size={15} />},

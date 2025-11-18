@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Sun, Moon, Desktop } from "@phosphor-icons/react";
+import { Sun, Moon, Desktop, SunIcon, MoonIcon, DesktopIcon } from "@phosphor-icons/react";
 
 export default function ThemeToggle() {
   const [theme, setTheme] = useState("system"); // 'light' | 'dark' | 'system'
@@ -57,14 +57,14 @@ export default function ThemeToggle() {
           theme === "light" ? active : inactive
         }`}
       >
-        <Sun {...iconProps} />
+        <SunIcon {...iconProps} />
         
       </button>
       <button
         onClick={() => setThemeMode("dark")}
         className={`${baseBtn} ${theme === "dark" ? active : inactive}`}
       >
-        <Moon {...iconProps} />
+        <MoonIcon {...iconProps} />
         
       </button>
       <button
@@ -73,7 +73,7 @@ export default function ThemeToggle() {
           theme === "system" ? active : inactive
         }`}
       >
-        <Desktop {...iconProps} />
+        <DesktopIcon {...iconProps} />
         
       </button>
     </div>

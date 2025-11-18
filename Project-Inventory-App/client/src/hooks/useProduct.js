@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-export const useProductsByCategoryId = (category_id, options = {}) => {
+export const useProductsByCategoryId = (category_id) => {
   return useQuery({
     queryKey: ["products", "category", category_id],
     staleTime: 5 * 60 * 1000,
@@ -11,11 +11,10 @@ export const useProductsByCategoryId = (category_id, options = {}) => {
       );
       return data;
     },
-    ...options,
   });
 };
 
-export const useProducts = (options = {}) => {
+export const useAllProducts = () => {
   return useQuery({
     queryKey: ["products"],
     staleTime: 5 * 60 * 1000,
@@ -25,6 +24,5 @@ export const useProducts = (options = {}) => {
       );
       return data;
     },
-    ...options,
   });
 };
