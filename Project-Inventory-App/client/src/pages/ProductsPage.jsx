@@ -15,7 +15,7 @@ export default function ProductsPage() {
     <div className="max-w-8xl mx-auto min-h-full padding-x py-6">
       {/* Heading */}
       <div className="flex flex-wrap justify-between items-center border-b border-solid-border pb-6 mb-6">
-        <h1 className="text-nowrap">Product list</h1>
+        <h1 className="text-nowrap">Product list release</h1>
         <div className="flex flex-row gap-4 items-center">
           <div>Sort here</div>
         </div>
