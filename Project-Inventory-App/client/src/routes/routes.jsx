@@ -2,7 +2,7 @@ import ProductsPage from "@/pages/ProductsPage";
 import App from "../App";
 import ErrorPage from "../components/ErrorPage";
 import AppLayout from "../layouts/AppLayout";
-import CategoriesPage from "../pages/CategoriesPage";
+import CategoriesPage from "../pages/Category/CategoriesPage";
 
 const routes = [
   {

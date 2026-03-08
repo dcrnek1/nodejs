@@ -280,8 +280,9 @@ export function CategoryDetailsDialog({ children, category, products }) {
                   <PopoverComp
                     align="end"
                     content={({ setOpen }) => (
-                      <div className="flex flex-col gap-4 items-end">
-                        <div className="flex flex-row gap-2 items-end">
+                      <div className="flex flex-col gap-4 items-start">
+                        <span className="text-secondary">Do you want to update category?</span>
+                        <div className="flex flex-row gap-2 justify-end w-full">
                           <button
                             className="secondary w-fit"
                             onClick={() => {

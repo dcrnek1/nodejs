@@ -14,13 +14,21 @@ export const useProductsByCategoryId = (category_id) => {
   });
 };
 
-export const useAllProducts = () => {
+export const useAllProducts = (column, order, page, limit) => {
   return useQuery({
-    queryKey: ["products"],
+    queryKey: ["products", column, order, page, limit],
     staleTime: 5 * 60 * 1000,
     queryFn: async () => {
       const { data } = await axios.get(
-        `${import.meta.env.VITE_API_URL}/products/`
+        `${import.meta.env.VITE_API_URL}/products/`,
+        {
+          params: {
+            orderColumn: column,
+            order: order,
+            page: page,
+            limit: limit
+          },
+        }
       );
       return data;
     },

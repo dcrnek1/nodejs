@@ -6,7 +6,7 @@ export function cn(...inputs) {
   return twMerge(clsx(inputs))
 }
 
-export function useDelayedLoading(isFetching, isPending, delay = 100) {
+export function useDelayedLoading(isFetching, isPending, delay = 50) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {

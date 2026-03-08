@@ -1,15 +1,14 @@
 import {
-  CaretDownIcon,
   FolderSimplePlusIcon,
   SortAscendingIcon,
   SortDescendingIcon,
 } from "@phosphor-icons/react";
-import { useCategories } from "../hooks/useCategory";
+import { useCategories } from "../../hooks/useCategory";
 import { useState } from "react";
 import {
   CategoryCard,
   CategorySkeleton,
-} from "../components/category/CategoryCard";
+} from "../../components/category/CategoryCard";
 import {
   AnimatePresence,
   // eslint-disable-next-line no-unused-vars

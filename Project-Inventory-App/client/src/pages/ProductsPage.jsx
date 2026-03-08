@@ -2,14 +2,57 @@ import Image from "@/components/Image";
 import { useAllProducts } from "@/hooks/useProduct";
 import { useDelayedLoading } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import SortPopover from "@/components/product/ProductSortDropdown";
+import { useState } from "react";
+import { SortAscendingIcon, SortDescendingIcon } from "@phosphor-icons/react";
+import { useSearchParams } from "react-router";
+import PaginationComponent from "@/components/Pagination";
 
 export default function ProductsPage() {
-  const allProducts = useAllProducts();
+  //Sort state
+  const [sort, setSort] = useState({
+    value: {
+      column: "name",
+      columnText: "Name",
+      order: "desc",
+      orderIcon: <SortAscendingIcon size={15} />,
+    },
+    data: {
+      columns: [
+        { value: "name", text: "Name" },
+        { value: "tstamp", text: "Updated" },
+      ],
+      orders: [
+        {
+          value: "desc",
+          text: "Descending",
+          icon: <SortAscendingIcon size={15} />,
+        },
+        {
+          value: "asc",
+          text: "Ascending",
+          icon: <SortDescendingIcon size={15} />,
+        },
+      ],
+    },
+  });
+
+  
+  //Pagination
+  const [params] = useSearchParams();
+  let page = Number(params.get("page") || 1);
+  page = page < 1 ? 1 : page;
+  const limit = 10;
+
+  //Data
+  const allProducts = useAllProducts(sort.value.column, sort.value.order, page, limit);
+  const totalPageCount = Math.ceil((allProducts?.data?.total ?? 0) / limit);
   const showSkeleton = useDelayedLoading(
     allProducts.isFetching,
     allProducts.isPending,
     1000
   );
+
 
   return (
     <div className="max-w-8xl mx-auto min-h-full padding-x py-6">
@@ -17,7 +60,7 @@ export default function ProductsPage() {
       <div className="flex flex-wrap justify-between items-center border-b border-solid-border pb-6 mb-6">
         <h1 className="text-nowrap">Product list release</h1>
         <div className="flex flex-row gap-4 items-center">
-          <div>Sort here</div>
+          <SortPopover sort={sort} setSort={setSort} />
         </div>
       </div>
 
@@ -29,7 +72,7 @@ export default function ProductsPage() {
       {/* Products table */}
       <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(400px,1fr))] pb-6">
         {allProducts.isSuccess &&
-          allProducts.data.map((product) => (
+          allProducts.data.result.map((product) => (
             // {/* Card */}
             <div
               className="rounded-md gap-4 border solid-border cursor-pointer"
@@ -58,7 +101,7 @@ export default function ProductsPage() {
                       {product.name}
                     </h1>
                     {/* Description */}
-                    <p className="text-secondary font-light text-sm h-[calc(1.25rem*4)] leading-base line-clamp-4">
+                    <p className="text-secondary font-light text-sm h-[calc(1.25rem*4)] leading-base tracking-tight text-justify text line-clamp-4">
                       {product.description}
                     </p>
                   </div>
@@ -68,7 +111,9 @@ export default function ProductsPage() {
                     <div className="max-h-[calc(1.50rem*2)] overflow-hidden flex gap-1 flex-wrap">
                       {product.categories &&
                         product.categories.map((category) => (
-                          <Badge key={category.category_id} variant={"outline"}>{category.name}</Badge>
+                          <Badge key={category.category_id} variant={"outline"}>
+                            {category.name}
+                          </Badge>
                         ))}
                     </div>
                     <div className="ml-auto whitespace-nowrap">
@@ -82,6 +127,7 @@ export default function ProductsPage() {
             </div>
           ))}
       </div>
+      <PaginationComponent page={page} total={totalPageCount} />
     </div>
   );
 }

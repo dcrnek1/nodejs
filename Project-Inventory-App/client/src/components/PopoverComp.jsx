@@ -14,7 +14,7 @@ export function PopoverComp({
   const [open, setOpen] = useState(false);
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen} className="mt-2">
       <PopoverTrigger asChild onClick={(e) => e.stopPropagation()}>
         {children}
       </PopoverTrigger>

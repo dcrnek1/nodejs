@@ -21,9 +21,7 @@ export default function Image({
   return (
     <div className={`relative overflow-hidden rounded-md ${className}`}>
       {/* Skeleton */}
-      {!loaded && (
-        <div className="absolute inset-0 animate-pulse bg-primary/10" />
-      )}
+      {}
 
       <img
         ref={imgRef}
@@ -31,7 +29,7 @@ export default function Image({
         alt={alt}
         loading="lazy"
         className={`
-          w-full h-full object-cover transition-opacity duration-300
+          w-full h-full object-cover transition-opacity duration-10
           ${loaded ? "opacity-100" : "opacity-0"}
         `}
         onLoad={() => setLoaded(true)}

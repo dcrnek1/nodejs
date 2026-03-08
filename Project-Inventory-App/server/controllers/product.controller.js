@@ -45,6 +45,10 @@ module.exports = {
 
   getAllProducts: async (req, res) => {
     console.log("Accessing route /products, getAllProducts().");
+    let params = req?.query;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const offset = (page - 1) * limit;
     const { rows } = await db(
       `SELECT
             p.*,
@@ -58,12 +62,15 @@ module.exports = {
         LEFT JOIN category_product cp ON cp.product_id = p.product_id
         LEFT JOIN category c ON c.category_id = cp.category_id
         GROUP BY p.product_id
-        ORDER BY p.product_id`,
-      []
+        ORDER BY p.${params.orderColumn ? params.orderColumn : 'tstamp'} ${params.orderValue ? params.orderValue : 'desc'}
+        LIMIT $1 OFFSET $2`,
+      [limit, offset]
     );
 
+    const total = await db(`select count(*) from product`);
+
     rows?.length > 0
-      ? res.json(rows)
+      ? res.json({result: rows, total: parseInt(total.rows[0].count)})
       : res.status(404).json({ message: "Products not found." });
   },
 
