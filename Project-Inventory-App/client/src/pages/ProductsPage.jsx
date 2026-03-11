@@ -38,41 +38,39 @@ export default function ProductsPage() {
   });
 
   
-  //Pagination
-  const [params] = useSearchParams();
-  let page = Number(params.get("page") || 1);
-  page = page < 1 ? 1 : page;
-  const limit = 10;
+  const limit = 5;
 
   //Data
-  const allProducts = useAllProducts(sort.value.column, sort.value.order, page, limit);
-  const totalPageCount = Math.ceil((allProducts?.data?.total ?? 0) / limit);
+  const productData = useAllProducts(sort.value.column, sort.value.order, limit);
   const showSkeleton = useDelayedLoading(
-    allProducts.isFetching,
-    allProducts.isPending,
-    1000
+    productData.isFetching,
+    productData.isPending,
+    10
   );
+
+  const allProducts = productData.data?.pages.flatMap(p => p.result) || [];
 
 
   return (
     <div className="max-w-8xl mx-auto min-h-full padding-x py-6">
       {/* Heading */}
       <div className="flex flex-wrap justify-between items-center border-b border-solid-border pb-6 mb-6">
-        <h1 className="text-nowrap">Product list release</h1>
+        <h1 className="text-nowrap">Product list</h1>
         <div className="flex flex-row gap-4 items-center">
           <SortPopover sort={sort} setSort={setSort} />
         </div>
       </div>
 
       {/* Products table skeleton */}
-      {allProducts.isPending && showSkeleton && (
+      {productData.isPending && showSkeleton && (
         <div>Loading all products....</div>
       )}
 
       {/* Products table */}
       <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(400px,1fr))] pb-6">
-        {allProducts.isSuccess &&
-          allProducts.data.result.map((product) => (
+        {productData.isSuccess &&
+        
+          allProducts.map((product) => (
             // {/* Card */}
             <div
               className="rounded-md gap-4 border solid-border cursor-pointer"
@@ -127,7 +125,8 @@ export default function ProductsPage() {
             </div>
           ))}
       </div>
-      <PaginationComponent page={page} total={totalPageCount} />
+      <button onClick={() => productData.fetchNextPage()}>Next page</button>
+      {/* <PaginationComponent page={page} total={totalPageCount} /> */}
     </div>
   );
 }

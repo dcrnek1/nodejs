@@ -1,4 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useQuery,
+} from "@tanstack/react-query";
 import axios from "axios";
 
 export const useProductsByCategoryId = (category_id) => {
@@ -14,23 +18,27 @@ export const useProductsByCategoryId = (category_id) => {
   });
 };
 
-export const useAllProducts = (column, order, page, limit) => {
-  return useQuery({
-    queryKey: ["products", column, order, page, limit],
+export const useAllProducts = (column, order, limit) => {
+  return useInfiniteQuery({
+    queryKey: ["products", column, order, limit],
     staleTime: 5 * 60 * 1000,
-    queryFn: async () => {
+    initialPageParam: 1,
+    placeholderData: keepPreviousData,
+    queryFn: async ({ pageParam = 1 }) => {
       const { data } = await axios.get(
         `${import.meta.env.VITE_API_URL}/products/`,
         {
           params: {
             orderColumn: column,
-            order: order,
-            page: page,
-            limit: limit
+            orderValue: order,
+            page: pageParam,
+            limit,
           },
         }
       );
       return data;
     },
+    getNextPageParam: (lastPage) =>
+      lastPage.hasMore ? lastPage.nextPage : undefined,
   });
 };

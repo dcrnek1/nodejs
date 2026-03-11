@@ -68,10 +68,10 @@ module.exports = {
     );
 
     const total = await db(`select count(*) from product`);
-
-    rows?.length > 0
-      ? res.json({result: rows, total: parseInt(total.rows[0].count)})
-      : res.status(404).json({ message: "Products not found." });
+    const totalCount = parseInt(total.rows[0].count);
+    const hasMore = page * limit < totalCount;  
+    
+    res.json({result: rows, total:totalCount, nextPage: hasMore ? page + 1 : null, hasMore})
   },
 
   getAllProductsByCategory: async (req, res) => {

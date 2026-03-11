@@ -5,10 +5,6 @@ export default function PaginationComponent({page, total}) {
   const previousPage = currentPage > 1 && currentPage <= total ? currentPage - 1 : currentPage == 1 ? false : 1;
   const nextPage = currentPage < total ? currentPage + 1 : false;
 
-  console.log("previousPage",previousPage);
-  console.log("currentPage",currentPage);
-  console.log("nextPage",nextPage);
-
   const maxVisible = 3; // number of pages to show around current
   let startPage = Math.max(currentPage - 1, 1);
   let endPage = startPage + maxVisible - 1;
@@ -29,7 +25,6 @@ export default function PaginationComponent({page, total}) {
   pages.forEach(p => {
       paginationItems.push(<PaginationLink key={p} isActive={currentPage === p} to={`?page=${p}`}>{p}</PaginationLink>);
     });
-    console.log(paginationItems)
 
 
   return (
