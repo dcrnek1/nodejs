@@ -64,10 +64,10 @@ export default function CategoriesPage() {
   }, [categories, categories.hasNextPage]);
 
   return (
-    <MotionConfig
-      transition={{ duration: categories.isFetchedAfterMount ? 0.2 : 0 }}
-    >
-      <div className="max-w-8xl mx-auto min-h-full padding-x py-6">
+    <div className="max-w-8xl mx-auto min-h-full padding-x py-6">
+      <MotionConfig
+        transition={{ duration: categories.isFetchedAfterMount ? 0.2 : 0 }}
+      >
         {/* Header */}
         <div className="flex flex-wrap justify-between items-center border-b border-solid-border pb-6 mb-6">
           <h1 className="text-nowrap">Category list</h1>
@@ -116,7 +116,6 @@ export default function CategoriesPage() {
                 </motion.div>
               ))}
 
-              
             {categories.isFetching &&
               Array.from({ length: 9 }).map((_, index) => (
                 <motion.div
@@ -132,7 +131,7 @@ export default function CategoriesPage() {
         </div>
 
         <div ref={loaderRef}></div>
-      </div>
-    </MotionConfig>
+      </MotionConfig>
+    </div>
   );
 }

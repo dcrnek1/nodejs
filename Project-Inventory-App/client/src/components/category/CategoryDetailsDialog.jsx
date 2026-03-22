@@ -94,12 +94,11 @@ export function CategoryDetailsDialog({ children, category, products }) {
   };
 
   return (
-    <MotionConfig transition={{ duration: 0.3 }} className="">
+    <MotionConfig transition={{ duration: 0.3 }}>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent
           className="sm:max-w-xl"
-          onOpenAutoFocus={(e) => e.preventDefault()}
         >
           <LayoutGroup id="CardDetailsDialog">
             <motion.div
