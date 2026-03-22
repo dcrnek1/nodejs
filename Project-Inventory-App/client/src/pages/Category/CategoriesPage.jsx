@@ -15,7 +15,6 @@ import {
   motion,
   MotionConfig,
 } from "motion/react";
-import { useDelayedLoading } from "@/lib/utils";
 import CreateCategoryDialog from "@/components/category/CreateCategoryDialog";
 import SortPopover from "@/components/category/CategorySortDropdown";
 

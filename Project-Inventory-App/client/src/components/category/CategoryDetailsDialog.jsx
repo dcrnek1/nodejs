@@ -38,9 +38,7 @@ export function CategoryDetailsDialog({ children, category, products }) {
     name: category.name,
     product_ids: [],
   });
-  const allProducts = useAllProducts({
-    enabled: isEditing,
-  });
+  const allProducts = useAllProducts('tstamp', 'desc', 500);
   const updateCategory = useUpdateCategory();
   const [isSaving, setIsSaving] = useState(false);
   const showProductsSkeleton = useDelayedLoading(
@@ -48,6 +46,8 @@ export function CategoryDetailsDialog({ children, category, products }) {
     products.isPending,
     1000
   );
+
+  const allProductsData = allProducts.data?.pages.flatMap((p) => p.result) || [];
 
   useEffect(() => {
     setFormData(() => ({
@@ -239,8 +239,8 @@ export function CategoryDetailsDialog({ children, category, products }) {
                             <MultiSelectContent search={true}>
                               <MultiSelectGroup>
                                 {allProducts.isSuccess &&
-                                  allProducts?.data?.length > 0 &&
-                                  allProducts.data.map((product) => (
+                                  allProductsData?.length > 0 &&
+                                  allProductsData.map((product) => (
                                     <MultiSelectItem
                                       key={product.product_id}
                                       value={`${product.product_id}`}
