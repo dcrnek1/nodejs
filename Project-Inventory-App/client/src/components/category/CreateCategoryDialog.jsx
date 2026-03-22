@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -22,7 +22,9 @@ import { useCreateCategory } from "@/hooks/useCategory";
 export default function CreateCategoryDialog({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "" });
-  const allProducts = useAllProducts();
+  const allProducts = useAllProducts("tstamp", "desc", 100);
+  const allProductsData =
+    allProducts.data?.pages.flatMap((p) => p.result) || [];
   const createCategory = useCreateCategory();
 
   const handleSave = async () => {
@@ -30,6 +32,26 @@ export default function CreateCategoryDialog({ children }) {
     setIsOpen(false);
     setFormData({ name: "" });
   };
+
+  const loaderRef = useRef();
+
+  useEffect(() => {
+    if (!loaderRef.current) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (
+        entry.isIntersecting &&
+        allProducts.hasNextPage &&
+        !allProducts.isFetchingNextPage 
+      ) {
+        allProducts.fetchNextPage();
+      }
+    });
+
+      observer.observe(loaderRef.current);
+
+    return () => observer.disconnect();
+  }, [allProducts, allProducts.isFetchingNextPage]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -81,8 +103,8 @@ export default function CreateCategoryDialog({ children }) {
               <MultiSelectContent search={true}>
                 <MultiSelectGroup>
                   {allProducts.isSuccess &&
-                    allProducts?.data?.length > 0 &&
-                    allProducts.data.map((product) => (
+                    allProductsData?.length > 0 &&
+                    allProductsData.map((product) => (
                       <MultiSelectItem
                         key={product.product_id}
                         value={`${product.product_id}`}
@@ -90,6 +112,7 @@ export default function CreateCategoryDialog({ children }) {
                         {product.name}
                       </MultiSelectItem>
                     ))}
+                  <div ref={loaderRef}></div>
                 </MultiSelectGroup>
               </MultiSelectContent>
             </MultiSelect>
@@ -100,7 +123,11 @@ export default function CreateCategoryDialog({ children }) {
           <DialogClose asChild>
             <button className="secondary">Cancel</button>
           </DialogClose>
-          <button className="primary" onClick={handleSave} disabled={createCategory.isPending}>
+          <button
+            className="primary"
+            onClick={handleSave}
+            disabled={createCategory.isPending}
+          >
             Create
           </button>
         </DialogFooter>
