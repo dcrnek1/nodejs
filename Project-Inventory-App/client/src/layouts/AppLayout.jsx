@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Outlet, ScrollRestoration } from "react-router";
 import Navigation from "../components/Navigation";
 import Footer from "../components/Footer";
 import { Toaster } from "../components/ui/Sonner";
@@ -8,6 +8,7 @@ export default function AppLayout() {
     <div className="grid grid-cols-1 grid-rows-[auto_1fr_auto] min-h-svh bg-main text-primary">
       <Navigation />
       <main className="bg-subtle">
+        <ScrollRestoration />
         <Outlet />
         <Toaster
           position="top-center"
