@@ -38,7 +38,7 @@ export function CategoryDetailsDialog({ children, category, products }) {
     name: category.name,
     product_ids: [],
   });
-  const allProducts = useAllProducts('tstamp', 'desc', 500);
+  const allProducts = useAllProducts('tstamp', 'desc', 100);
   const updateCategory = useUpdateCategory();
   const [isSaving, setIsSaving] = useState(false);
   const showProductsSkeleton = useDelayedLoading(

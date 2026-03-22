@@ -47,17 +47,24 @@ export default function CategoriesPage() {
       ],
     },
   });
-  const categories = useCategories(sort.value.column, sort.value.order);
+  const categories = useCategories(sort.value.column, sort.value.order, 20);
   const allCategories = categories.data?.pages.flatMap((p) => p.result) || [];
 
   const loaderRef = useRef();
 
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && categories.hasNextPage) {
-        categories.fetchNextPage();
-      }
-    });
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (
+          entry.isIntersecting &&
+          categories.hasNextPage &&
+          !categories.isFetchingNextPage
+        ) {
+          categories.fetchNextPage();
+        }
+      },
+      { rootMargin: "200px" },
+    );
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
