@@ -8,6 +8,7 @@ import axios from "axios";
 export const useProductsByCategoryId = (category_id) => {
   return useQuery({
     queryKey: ["products", "category", category_id],
+    placeholderData: keepPreviousData,
     staleTime: 5 * 60 * 1000,
     queryFn: async () => {
       const { data } = await axios.get(
