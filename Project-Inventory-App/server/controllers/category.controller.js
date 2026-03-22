@@ -7,6 +7,8 @@ const { match } = require("assert");
 module.exports = {
   getCategoryById: async (req, res) => {
     const category_id = req?.params?.category_id;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
     try {
       const { rows } = await db(
         `select * from category where category_id = $1 limit 1`,
@@ -25,14 +27,27 @@ module.exports = {
   getAllCategories: async (req, res) => {
     const orderColumn = req?.query?.orderColumn;
     const order = req?.query?.order;
+
+    
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const offset = (page - 1) * limit;
   
     try {
       const { rows } = await db(`select c.*, count(cp.*) as product_count
             from category c
             left join category_product cp on cp.category_id = c.category_id
             group by c.category_id
-            ORDER BY ${orderColumn ? orderColumn : 'product_count'} ${order ? order : 'desc'}`);
-      res.json(rows);
+            ORDER BY ${orderColumn ? orderColumn : 'product_count'} ${order ? order : 'desc'}
+            LIMIT $1 OFFSET $2`,
+            [limit, offset]);
+      
+      const total = await db(`select count(*) from category`);
+      const totalCount = parseInt(total.rows[0].count);
+      const hasMore = page * limit < totalCount; 
+
+       res.json({result: rows, total:totalCount, nextPage: hasMore ? page + 1 : null, hasMore})
+
     } catch (error) {
       res.status(400).json({ error: error, message: "Database error." });
     }

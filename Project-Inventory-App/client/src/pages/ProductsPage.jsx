@@ -33,25 +33,30 @@ export default function ProductsPage() {
     },
   });
 
-  
   const limit = 5;
 
   //Data
-  const productData = useAllProducts(sort.value.column, sort.value.order, limit);
+  const productData = useAllProducts(
+    sort.value.column,
+    sort.value.order,
+    limit,
+  );
 
-  const allProducts = productData.data?.pages.flatMap(p => p.result) || [];
+  const allProducts = productData.data?.pages.flatMap((p) => p.result) || [];
 
   const loaderRef = useRef();
 
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && productData.hasNextPage) {
+      if (entry.isIntersecting && productData.hasNextPage && !productData.isFetchingNextPage) {
         productData.fetchNextPage();
       }
     });
-    
+
     observer.observe(loaderRef.current);
-  }, [productData, productData.hasNextPage])
+
+    return () => observer.disconnect();
+  }, [productData, productData.isFetchingNextPage]);
 
   return (
     <div className="max-w-8xl mx-auto min-h-full padding-x py-6">
@@ -66,18 +71,17 @@ export default function ProductsPage() {
       {/* Products table */}
       <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(400px,1fr))] pb-6">
         {productData.isSuccess &&
-        
           allProducts.map((product) => (
-            <ProductCard key={product.product_id} product={product}/>
+            <ProductCard key={product.product_id} product={product} />
           ))}
       </div>
       <div ref={loaderRef}></div>
-      
+
       {/* Products table skeleton */}
       {productData.isFetching && (
         <div className="flex flex-col gap-3">
-          {Array.from({length: 5}).map((_, i) => (
-            <ProductSkeleton key={i}/>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <ProductSkeleton key={i} />
           ))}
         </div>
       )}

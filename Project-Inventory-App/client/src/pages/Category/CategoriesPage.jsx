@@ -4,7 +4,7 @@ import {
   SortDescendingIcon,
 } from "@phosphor-icons/react";
 import { useCategories } from "../../hooks/useCategory";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   CategoryCard,
   CategorySkeleton,
@@ -21,8 +21,13 @@ import SortPopover from "@/components/category/CategorySortDropdown";
 
 export default function CategoriesPage() {
   //Sort state
-   const [sort, setSort] = useState({
-    value: { column: "name", columnText: "Name", order: "desc", orderIcon:  <SortAscendingIcon size={15} />},
+  const [sort, setSort] = useState({
+    value: {
+      column: "name",
+      columnText: "Name",
+      order: "desc",
+      orderIcon: <SortAscendingIcon size={15} />,
+    },
     data: {
       columns: [
         { value: "name", text: "Name" },
@@ -44,11 +49,20 @@ export default function CategoriesPage() {
     },
   });
   const categories = useCategories(sort.value.column, sort.value.order);
-  const showSkeleton = useDelayedLoading(
-    categories.isFetching,
-    categories.isPending,
-    100
-  );
+  const allCategories = categories.data?.pages.flatMap((p) => p.result) || [];
+
+  const loaderRef = useRef();
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && categories.hasNextPage) {
+        categories.fetchNextPage();
+      }
+    });
+
+    observer.observe(loaderRef.current);
+    return () => observer.disconnect();
+  }, [categories, categories.hasNextPage]);
 
   return (
     <MotionConfig
@@ -70,18 +84,6 @@ export default function CategoriesPage() {
           {/* Skeleton */}
 
           <AnimatePresence mode="popLayout">
-            {categories.isPending &&
-              showSkeleton &&
-              Array.from({ length: 9 }).map((_, index) => (
-                <motion.div
-                  key={`skeleton_${index}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <CategorySkeleton />
-                </motion.div>
-              ))}
             {/* Add new button */}
             {categories.isSuccess && (
               <motion.div
@@ -103,7 +105,7 @@ export default function CategoriesPage() {
             {/* Cards */}
 
             {categories.isSuccess &&
-              categories.data.map((category) => (
+              allCategories.map((category) => (
                 <motion.div
                   key={`card_${category.category_id}`}
                   initial={{ opacity: 0 }}
@@ -114,8 +116,23 @@ export default function CategoriesPage() {
                   <CategoryCard category={category} />
                 </motion.div>
               ))}
+
+              
+            {categories.isFetching &&
+              Array.from({ length: 9 }).map((_, index) => (
+                <motion.div
+                  key={`skeleton_${index}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <CategorySkeleton />
+                </motion.div>
+              ))}
           </AnimatePresence>
         </div>
+
+        <div ref={loaderRef}></div>
       </div>
     </MotionConfig>
   );

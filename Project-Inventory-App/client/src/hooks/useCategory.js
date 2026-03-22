@@ -1,27 +1,33 @@
 import {
+  keepPreviousData,
+  useInfiniteQuery,
   useMutation,
-  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
 
-export const useCategories = (column, order) => {
-  return useQuery({
-    queryKey: ["categories", column, order],
+export const useCategories = (column, order, limit) => {
+  return useInfiniteQuery({
+    queryKey: ["categories", column, order, limit],
     staleTime: 1 * 60 * 1000,
-    queryFn: async () => {
+    placeholderData: keepPreviousData,
+    queryFn: async ({ pageParam = 1 }) => {
       const { data } = await axios.get(
         `${import.meta.env.VITE_API_URL}/categories`,
         {
           params: {
             orderColumn: column,
-            order: order
+            order: order,
+            page: pageParam,
+            limit,
           },
         }
       );
       return data;
     },
+    getNextPageParam: (lastPage) =>
+      lastPage.hasMore ? lastPage.nextPage : undefined,
   });
 };
 
