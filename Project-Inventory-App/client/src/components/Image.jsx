@@ -19,7 +19,7 @@ export default function Image({
   const [loaded, setLoaded] = useState(isCached);
 
   return (
-    <div className={`relative overflow-hidden rounded-md ${className}`}>
+    <div className={`relative overflow-hidden ${className}`}>
       {/* Skeleton */}
       {}
 

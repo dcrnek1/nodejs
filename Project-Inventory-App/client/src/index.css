@@ -19,6 +19,19 @@
 }
 
 @layer base {
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+    /* Safari and Chrome */
+  }
+
   .max-w-8xl {
     max-width: 1440px;
   }
@@ -46,13 +59,15 @@
   }
 
   button.primary {
-    @apply px-3 py-2 sm:py-1.5 bg-primary/85 cursor-pointer
-    text-primary-inverted hover:bg-primary/75 active:bg-primary/75 rounded-lg hover:transition active:transition;
+    @apply px-3 py-2 sm:py-1.5 bg-primary/85 cursor-pointer text-primary-inverted hover:bg-primary/75 active:bg-primary/75 rounded-lg hover:transition active:transition;
   }
 
-    button.secondary {
-    @apply px-3 py-2 sm:py-1.5 bg-primary/10 cursor-pointer
-    text-secondary hover:bg-primary/25 active:bg-primary/25 rounded-lg hover:transition active:transition;
+  button.secondary {
+    @apply px-3 py-2 sm:py-1.5 bg-[#E7E8F0] dark:bg-[#E7E8F0]/20 cursor-pointer text-primary/80 hover:bg-primary/25 active:bg-primary/25 rounded-2xl hover:transition active:transition;
+  }
+
+  button.secondary-primary {
+    @apply px-3 py-2 sm:py-1.5 bg-[#616266] dark:bg-primary/85 dark:text-primary-inverted cursor-pointer text-primary-inverted hover:bg-primary/25 active:bg-primary/25 rounded-2xl hover:transition active:transition;
   }
 
   button[disabled] {
@@ -64,7 +79,7 @@
   }
 
   .padding-x {
-    @apply px-2 sm:px-4
+    @apply px-6 sm:px-6
   }
 }
 
@@ -85,10 +100,11 @@
   --color-warning: var(--color-yellow-500);
   --color-info: var(--color-sky-500);
 
-  --color-main: #fafafa;
-  --color-subtle: #fff;
+  --color-main: #FDFEFB;
+  --color-subtle: #f7f6f9;
+  --color-bg-main: #ffffff;
   --color-el-bg: #f9f9f9;
-  --color-el-hover-bg: #f0f0f0;
+  --color-el-hover-bg: #EEF0FA;
   --color-transparent-border: #e0e0e0;
   --color-solid-border: #ebebeb;
   --color-primary: #18181b;
@@ -101,7 +117,7 @@
   --mobile-navbar-height: 3.5rem;
 }
 
-@variant dark {  
+@variant dark {
   /* Links */
   --color-textLink: var(--color-sky-500);
   /* Borders */
@@ -116,8 +132,9 @@
   --color-warning: var(--color-amber-400);
   --color-info: var(--color-sky-500);
 
-  --color-main: #171716;
+  --color-main: #252628;
   --color-subtle: #1a1a19;
+  --color-bg-main: #2a2b2d;
   --color-el-bg: #212121;
   --color-el-hover-bg: #363636;
   --color-transparent-border: #3a3a3a;
@@ -237,6 +254,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

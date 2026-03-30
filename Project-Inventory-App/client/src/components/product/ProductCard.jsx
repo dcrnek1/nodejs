@@ -1,55 +1,48 @@
+import { ArrowArcRightIcon, ArrowRightIcon } from "@phosphor-icons/react";
 import Image from "../Image";
 import { Badge } from "../ui/badge";
 import { Skeleton } from "../ui/Skeleton";
+import { ChevronRight } from "lucide-react";
 
 function ProductCard({ product }) {
-  return (
-    <div className="rounded-md gap-4 border solid-border cursor-pointer">
-      <div className="flex flex-row gap-2">
-        {/* // Image */}
-        <div className="rounded-md">
-          {product.image_path && (
-            <Image
-              src={`${import.meta.env.VITE_IMAGE_URL}${product.image_path}`}
-              alt={product.name}
-              className="rounded-md h-50 w-30"
-            />
-          )}
-          {!product.image_path && (
-            <div className="bg-primary/5 h-15 w-15 rounded-md"></div>
-          )}
-        </div>
-        <div className="flex flex-col justify-between gap-2 p-2 pr-4">
-          {/* Product title */}
-          <div className="flex-1 flex flex-col gap-2">
-            <h1 className="text-lg sm:text-lg text-primary leading-tight line-clamp-2">
-              {product.name}
-            </h1>
-            {/* Description */}
-            <p className="text-secondary font-light text-sm h-[calc(1.25rem*4)] leading-base tracking-tight text-justify text line-clamp-4">
-              {product.description}
-            </p>
-          </div>
 
-          {/* Stock and actions */}
-          <div className="flex flex-row justify-between items-end">
-            <div className="max-h-[calc(1.50rem*2)] overflow-hidden flex gap-1 flex-wrap">
-              {product.categories &&
-                product.categories.map((category) => (
-                  <Badge key={category.category_id} variant={"outline"}>
-                    {category.name}
-                  </Badge>
-                ))}
-            </div>
-            <div className="ml-auto whitespace-nowrap">
-              <span className="font-semibold text-sm text-secondary">
-                Stock: 0
-              </span>
-            </div>
+  console.log(import.meta.env.VITE_IMAGE_URL + "  .  " + product.image_path)
+  return (
+    <>
+      <div className="rounded-md gap-4 cursor-pointer bg-bg-main flex flex-col">
+        <div className="relative">{product.image_path && (
+          <Image
+            src={`${import.meta.env.VITE_IMAGE_URL}${product.image_path}`}
+            alt={product.name}
+            className="rounded-t-xl h-120 w-full"
+          />
+        )}
+          {!product.image_path && (
+            <div className="rounded-t-xl h-120 w-full"></div>
+          )}
+          <div className="absolute right-4 top-4 text-white">
+            <Badge variant={"default"} className="pt-1">
+                  {product.stock} IN STOCK
+                </Badge>
           </div>
+          </div>
+        <div className="px-5 pb-5 pt-2 flex flex-col gap-4">
+          <div className="flex flex-row gap-2 -mr-5 overflow-x-auto pr-2 hide-scrollbar">
+            {product.categories &&
+              product.categories.map((category) => (
+                <Badge key={category.category_id} variant={"secondary"}>
+                  {category.name}
+                </Badge>
+              ))}
+          </div>
+          <div className="text-3xl font-bold sm:text-lg text-primary leading-tight py-2">{product.name}</div>
+          <p className="text-secondary font-light text-sm h-[calc(1.25rem*4)] leading-base tracking-tight text-justify text line-clamp-4">
+            {product.description}
+          </p>
+          <div className="flex w-full justify-end pt-3"><ChevronRight size={30}/></div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -47,7 +47,7 @@ export default function SortPopover({ sort, setSort }) {
           </button>
         </motion.div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" portaled="false" align="end">
+      <DropdownMenuContent className="w-56" portaled="false" align="start">
         <DropdownMenuLabel>Sort by</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={sort.value.column}>

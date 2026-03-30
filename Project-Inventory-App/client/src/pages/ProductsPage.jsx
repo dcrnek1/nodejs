@@ -1,7 +1,7 @@
 import { useAllProducts } from "@/hooks/useProduct";
 import SortPopover from "@/components/product/ProductSortDropdown";
 import { useEffect, useRef, useState } from "react";
-import { SortAscendingIcon, SortDescendingIcon } from "@phosphor-icons/react";
+import { PlusIcon, SortAscendingIcon, SortDescendingIcon } from "@phosphor-icons/react";
 import { ProductCard, ProductSkeleton } from "@/components/product/ProductCard";
 
 export default function ProductsPage() {
@@ -61,15 +61,20 @@ export default function ProductsPage() {
   return (
     <div className="max-w-8xl mx-auto min-h-full padding-x py-6">
       {/* Heading */}
-      <div className="flex flex-wrap justify-between items-center border-b border-solid-border pb-6 mb-6">
-        <h1 className="text-nowrap">Product list</h1>
+      <div className="flex flex-col flex-wrap justify-center gap-6 pb-6 mb-6">
+        <h1 className="text-nowrap font-inter font-semibold text-5xl tracking-wide">Product <br/>list</h1>
+        <div className="text-secondary/80">Curated selection of timeless product masterpieces currently available in our physical archive.</div>
         <div className="flex flex-row gap-4 items-center">
+          <button className="secondary-primary text-sm flex flex-row items-center gap-2">
+            <PlusIcon />
+            <span className="font-semibold">Add Item</span>
+          </button>
           <SortPopover sort={sort} setSort={setSort} />
         </div>
       </div>
 
       {/* Products table */}
-      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(400px,1fr))] pb-6">
+      <div className="grid gap-6 sm:gap-6 grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(400px,1fr))] pb-6">
         {productData.isSuccess &&
           allProducts.map((product) => (
             <ProductCard key={product.product_id} product={product} />

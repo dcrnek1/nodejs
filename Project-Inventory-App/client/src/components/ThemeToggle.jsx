@@ -50,7 +50,7 @@ export default function ThemeToggle() {
     "text-secondary hover:bg-primary/10 dark:ring-1 dark:ring-gray-500/0";
 
   return (
-    <div className="flex items-center bg-primary/5 p-1 gap-1 sm:gap-2 rounded-full">
+    <div className="flex items-center bg-primary/2 p-1.5 gap-1 sm:gap-2 rounded-full">
       <button
         onClick={() => setThemeMode("light")}
         className={`${baseBtn} ${

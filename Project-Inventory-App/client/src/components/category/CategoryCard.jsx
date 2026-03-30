@@ -18,7 +18,7 @@ function CategoryCard({ category }) {
 
   return (
     <div
-      className={`cursor-pointer rounded-md border border-solid-border/50 bg-main p-4 min-h-25 h-full hover:bg-el-hover-bg active:bg-el-bg}`}
+      className={`cursor-pointer rounded-md bg-bg-main p-4 min-h-25 h-full hover:bg-bg-main/90 active:bg-el-bg}`}
     >
       <CategoryDetailsDialog
         key={category.category_id}

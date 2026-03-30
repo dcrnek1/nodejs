@@ -6,14 +6,14 @@ export default function Navigation() {
   return (
     <div className="w-full mx-auto">
       {/* Mobile header */}
-      <div className="padding-x py-3 text-2xl sm:hidden font-bold flex flex-row justify-between border-b border-solid-border items-center">
+      <div className="padding-x py-3 text-2xl sm:hidden font-bold flex flex-row justify-between items-center">
         <div className="text-2xl font-inter font-bold select-none">App. <span className="text-xs font-light">by Dario</span></div>
         <ThemeToggle />
       </div>
       {/* Mobile navigation */}
       <div
         className="fixed z-49 bottom-0 h-(--mobile-navbar-height) sm:hidden 
-      w-full flex flex-row items-center justify-around border-t border-solid-border bg-main/70 backdrop-blur-xs"
+      w-full flex flex-row items-center justify-around bg-main/70 backdrop-blur-xs"
       >
         <NavLink to="/">
           {({ isActive }) => {
@@ -40,7 +40,7 @@ export default function Navigation() {
       </div>
 
       {/* Desktop navigation */}
-      <div className="hidden sm:flex border-b border-solid-border">
+      <div className="hidden sm:flex">
         <div className="hidden sm:flex flex-row padding-x py-3 w-full items-center max-w-8xl mx-auto">
           <div className="sm:flex flex-row flex-1 gap-15 items-center">
             <div className="text-2xl font-inter font-bold select-none">App. <span className="text-xs font-light">by Dario</span></div>
