@@ -3,6 +3,8 @@ import SortPopover from "@/components/product/ProductSortDropdown";
 import { useEffect, useRef, useState } from "react";
 import { PlusIcon, SortAscendingIcon, SortDescendingIcon } from "@phosphor-icons/react";
 import { ProductCard, ProductSkeleton } from "@/components/product/ProductCard";
+import { useAtom } from "jotai";
+import { productsScrollAtom } from "@/state/productsScrollAtom";
 
 export default function ProductsPage() {
   //Sort state
@@ -33,7 +35,7 @@ export default function ProductsPage() {
     },
   });
 
-  const limit = 5;
+  const limit = 6;
 
   //Data
   const productData = useAllProducts(
@@ -58,6 +60,14 @@ export default function ProductsPage() {
     return () => observer.disconnect();
   }, [productData, productData.isFetchingNextPage]);
 
+  const [productsScroll, setProductsScroll] = useAtom(productsScrollAtom);
+  useEffect(() =>{
+    if (productsScroll !== null && productsScroll > 0) {
+      window.scrollTo(0, productsScroll)
+      setProductsScroll(null)
+    }
+  }, [])
+
   return (
     <div className="max-w-8xl mx-auto min-h-full padding-x py-6">
       {/* Heading */}
@@ -74,7 +84,7 @@ export default function ProductsPage() {
       </div>
 
       {/* Products table */}
-      <div className="grid gap-6 sm:gap-6 grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(400px,1fr))] pb-6">
+      <div className="grid gap-3 sm:gap-6 grid-cols-2 sm:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] pb-6">
         {productData.isSuccess &&
           allProducts.map((product) => (
             <ProductCard key={product.product_id} product={product} />

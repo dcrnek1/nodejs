@@ -1,8 +1,10 @@
-import { ArticleIcon, FoldersIcon, HouseIcon, MonitorPlayIcon } from "@phosphor-icons/react";
+import { ArticleIcon, FoldersIcon } from "@phosphor-icons/react";
 import { NavLink } from "react-router";
 import ThemeToggle from "./ThemeToggle";
 
 export default function Navigation() {
+
+
   return (
     <div className="w-full mx-auto">
       {/* Mobile header */}
