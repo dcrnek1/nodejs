@@ -29,7 +29,7 @@ export default function Image({
         alt={alt}
         loading="lazy"
         className={`
-          w-full h-full object-cover transition-opacity duration-10
+          w-full h-full object-cover transition-opacity duration-10 object-cover
           ${loaded ? "opacity-100" : "opacity-0"}
         `}
         onLoad={() => setLoaded(true)}

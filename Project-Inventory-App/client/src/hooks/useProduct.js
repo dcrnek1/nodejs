@@ -43,3 +43,16 @@ export const useAllProducts = (column, order, limit) => {
       lastPage.hasMore ? lastPage.nextPage : undefined,
   });
 };
+
+export const useProductById = (productId) => {
+  return useQuery({
+    queryKey: ["productById", productId],
+    staleTime: 5 * 60 * 1000,
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/products/${productId}`
+      );
+      return data;
+    }
+  });
+};

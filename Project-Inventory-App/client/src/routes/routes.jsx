@@ -11,7 +11,7 @@ const routes = [
     {index: true, Component: ProductsPage},
     {path: "/categories", Component: CategoriesPage},
     {path: "/products", Component: ProductsPage},
-    {path: "/products/:product_id", Component: ProductDetailsPage},
+    {path: "/products/:productId", Component: ProductDetailsPage},
     {path: "*", Component: ErrorPage}
   ]
   }
