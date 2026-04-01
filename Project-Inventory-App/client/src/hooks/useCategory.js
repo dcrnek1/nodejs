@@ -74,7 +74,7 @@ export const useCreateCategory = () => {
       toast.success("Succesfully created category.");
     },
     onError: (error) => {
-      toast.error("Error creating category.", {
+      toast.error("Error creating a category.", {
         description: error?.response?.data?.errors?.[0]?.msg,
       });
     },

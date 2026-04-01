@@ -4,6 +4,7 @@ import { useProductById } from "@/hooks/useProduct";
 import { PencilIcon } from "@phosphor-icons/react";
 import { ChevronLeft } from "lucide-react";
 import { NavLink, useParams } from "react-router";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "motion/react";
 
 export default function ProductDetailsPage() {

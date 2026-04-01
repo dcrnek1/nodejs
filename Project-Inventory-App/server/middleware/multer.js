@@ -1,18 +1,29 @@
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const sharp = require("sharp");
 
+async function compressImage(fileBuffer, mimetype) {
+  // Auto convert everything to JPEG or WebP (best size savings)
+  return sharp(fileBuffer)
+    .resize(500, null, { fit: "inside" }) // maintain aspect ratio
+    .jpeg({
+      quality: 60, // compress heavily
+      chromaSubsampling: "4:2:0", // smaller color data
+      mozjpeg: true, // best JPEG optimizer
+    })
+    .toBuffer();
+}
 
-const saveFileToDisk = async (fileBuffer, originalName, filePath = ["static","uploads"]) => {
+const saveFileToDisk = async (
+  fileBuffer,
+  originalName,
+  filePath = ["static", "uploads"],
+) => {
   const ext = path.extname(originalName);
   const randomName = `${path.basename(originalName, ext)}-${Date.now()}${ext}`;
 
-  const uploadPath = path.join(
-    __dirname,
-    "..",
-    ...filePath,
-    randomName
-  );
+  const uploadPath = path.join(__dirname, "..", ...filePath, randomName);
 
   try {
     await fs.writeFileSync(uploadPath, fileBuffer);
@@ -24,11 +35,13 @@ const saveFileToDisk = async (fileBuffer, originalName, filePath = ["static","up
 
 const deleteFileFromDisk = async (filePath) => {
   try {
-    await fs.promises.unlink(path.join(__dirname, "..", ...filePath.split('/')));
+    await fs.promises.unlink(
+      path.join(__dirname, "..", ...filePath.split("/")),
+    );
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 const storage = multer.memoryStorage();
 // Preventing upload of unsuported fileTypes
@@ -52,20 +65,48 @@ const upload = (fieldsConfig, allowedMimeTypes) => {
     const fileFilter = filter(allowedMimeTypes);
     const multerUpload = multer({ storage, fileFilter });
     const upload = multerUpload.fields(fieldsConfig);
-    upload(req, res, (err) => {
-      if (!err) return next();
+    upload(req, res, async (err) => {
+      if (err) {
+        if (err.code === "INVALID_FILE_TYPE") {
+          return res.status(400).json({
+            errorDetails: err,
+            errors: {
+              0: { path: "image", msg: `Allowed files: ${allowedMimeTypes}` },
+            },
+          });
+        }
 
-      if (err.code === "INVALID_FILE_TYPE") {
-        return res
-          .status(400)
-          .json({ error: err, message: `Allowed files: ${allowedMimeTypes}` });
+        if (err instanceof multer.MulterError) {
+          err.msg = err?.message;
+          return res.status(400).json({
+            errorDetails: err,
+            errors: { 0: { path: "image", msg: `Error with uploading file` } },
+          });
+        }
+
+        return next(err);
       }
 
-      if (err instanceof multer.MulterError) {
-        err.msg = err?.message;
-        return res
-          .status(400)
-          .json({ error: err, message: "Error with uploading file." });
+      // 🔥 COMPRESS FILES HERE (automatic for all fields)
+      if (req.files) {
+        for (const fieldName in req.files) {
+          req.files[fieldName] = await Promise.all(
+            req.files[fieldName].map(async (file) => {
+              // Compress the image buffer
+              const compressedBuffer = await compressImage(
+                file.buffer,
+                file.mimetype,
+              );
+
+              return {
+                ...file,
+                buffer: compressedBuffer, // replace original buffer
+                size: compressedBuffer.length,
+                originalSize: file.size, // optional tracking
+              };
+            }),
+          );
+        }
       }
 
       next();

@@ -113,17 +113,15 @@ export default function ProductsPage() {
           allProducts.map((product) => (
             <ProductCard key={product.product_id} product={product} />
           ))}
+        {productData.isFetching && 
+          Array.from({ length: 6 }).map((_, i) => (
+            <ProductSkeleton key={i} />
+          )
+        
+      )}
       </div>
       <div ref={loaderRef}></div>
 
-      {/* Products table skeleton */}
-      {productData.isFetching && (
-        <div className="grid gap-6 sm:gap-6 grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(400px,1fr))] pb-6">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <ProductSkeleton key={i} />
-          ))}
-        </div>
-      )}
     </div>
     </motion.div>
   );

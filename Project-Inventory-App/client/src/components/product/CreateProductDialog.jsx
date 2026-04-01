@@ -17,21 +17,41 @@ import {
   MultiSelectValue,
 } from "../ui/multi-select";
 import { UploadIcon, X } from "@phosphor-icons/react";
+import { useCreateProduct } from "@/hooks/useProduct";
 
 export default function CreateProductDialog({ children }) {
   const [isOpen, setIsOpen] = useState(false);
-
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     name: "",
     image: "",
+    imageFile: "",
     imageName: "",
     categories: [],
     description: "",
     stock: 0,
-  });
+  };
 
+  const [formData, setFormData] = useState(initialFormData);
+
+  const createProduct = useCreateProduct();
   const handleSave = async () => {
-    console.log("save");
+    const form = new FormData();
+    form.append("name", formData.name);
+    form.append("stock", formData.stock);
+    form.append("description", formData.description);
+    formData.categories.forEach((c) => {
+      form.append("categories[]", c); // <-- key ends with []
+    });
+    if (formData.imageFile) {
+      form.append("image", formData.imageFile);
+    }
+    try {
+      const createdProduct = await createProduct.mutateAsync(form);
+      if (createdProduct) setIsOpen(false);
+      setFormData(initialFormData)
+    // eslint-disable-next-line no-unused-vars
+    } catch (err) { /* empty */ }
+    // setIsOpen(false);
   };
 
   function handleImageChange(event) {
@@ -46,6 +66,7 @@ export default function CreateProductDialog({ children }) {
       setFormData((prev) => ({
         ...prev,
         imageName: event.target.files[0].name,
+        imageFile: file,
       }));
     }
   }
@@ -60,39 +81,6 @@ export default function CreateProductDialog({ children }) {
 
         <div className={`flex flex-row flex-wrap gap-4`}>
           <div className="flex flex-row w-full gap-4">
-            <div className="flex flex-col items-start gap-1 flex-1 w-full">
-              <label className="text-secondary text-xs pl-1">
-                Product image:
-              </label>
-              <div className="w-full h-full">
-                {formData?.image == "" && 
-                  <label
-                    htmlFor="product_image"
-                    className="border w-full h-full flex text-tertiary hover:text-secondary flex-row gap-2 justify-center items-center text-sm text-secondary border-solid-border hover:border-solid-border/30 px-4 py-2 rounded-md bg-subtle placeholder:font-normal placeholder:text-sm"
-                  >
-                    <UploadIcon size={35} className=""/>
-                  </label>
-                }
-                {formData?.image !== "" && 
-                  <div className="h-full relative w-full rounded-xl bg-cover bg-top" style={{backgroundImage: `url("${formData.image}")`}}>
-                    <div className="absolute top-2 right-2 p-1.5 rounded-sm bg-el-bg hover:bg-el-hover-bg"
-                    onClick={() => setFormData((prev) => ({...prev, image: "", imageName: ""}))}>
-                      <X />
-                    </div>
-                  </div>
-                }
-              </div>
-              <input
-                className="primary w-full hidden"
-                name="name"
-                id="product_image"
-                placeholder="Enter new product name..."
-                type="file"
-                value=""
-                onChange={(e) => handleImageChange(e)}
-              />
-            </div>
-
             <div className="flex flex-col flex-2 gap-4 justify-start">
               <div className="flex flex-col gap-1 min-w-40">
                 <label htmlFor="name" className="text-secondary text-xs pl-1">
@@ -160,6 +148,51 @@ export default function CreateProductDialog({ children }) {
                   </MultiSelectContent>
                 </MultiSelect>
               </div>
+            </div>
+
+            <div className="flex flex-col items-start gap-1 flex-1 w-full">
+              <label className="text-secondary text-xs pl-1">
+                <span className="text-error">*</span> Product image:
+              </label>
+              <div className="w-full h-full">
+                {formData?.image == "" && (
+                  <label
+                    htmlFor="product_image"
+                    className="border w-full h-full flex text-tertiary hover:text-secondary flex-row gap-2 justify-center items-center text-sm border-solid-border hover:border-solid-border/30 px-4 py-2 rounded-md bg-subtle placeholder:font-normal placeholder:text-sm"
+                  >
+                    <UploadIcon size={35} className="" />
+                  </label>
+                )}
+                {formData?.image !== "" && (
+                  <div
+                    className="h-full relative w-full rounded-xl bg-cover bg-top"
+                    style={{ backgroundImage: `url("${formData.image}")` }}
+                  >
+                    <div
+                      className="absolute top-2 right-2 p-1.5 rounded-sm bg-el-bg hover:bg-el-hover-bg"
+                      onClick={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          image: "",
+                          imageName: "",
+                          imageFile: "",
+                        }))
+                      }
+                    >
+                      <X />
+                    </div>
+                  </div>
+                )}
+              </div>
+              <input
+                className="primary w-full hidden"
+                name="name"
+                id="product_image"
+                placeholder="Enter new product name..."
+                type="file"
+                value=""
+                onChange={(e) => handleImageChange(e)}
+              />
             </div>
           </div>
 

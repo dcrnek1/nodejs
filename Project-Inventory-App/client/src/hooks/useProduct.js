@@ -1,9 +1,12 @@
 import {
   keepPreviousData,
   useInfiniteQuery,
+  useMutation,
   useQuery,
+  useQueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
+import { toast } from "sonner";
 
 export const useProductsByCategoryId = (category_id) => {
   return useQuery({
@@ -54,5 +57,29 @@ export const useProductById = (productId) => {
       );
       return data;
     }
+  });
+};
+
+export const useCreateProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data) => {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/products`,
+        data
+      );
+      return response.data;
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ["products"]});
+      queryClient.invalidateQueries({ queryKey: ["products", "category"] });
+      toast.success("Succesfully created product.");
+    },
+    onError: (error) => {
+      toast.error("Error creating a product.", {
+        description: error?.response?.data?.errors?.[0]?.msg,
+      });
+    },
   });
 };
