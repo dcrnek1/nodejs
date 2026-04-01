@@ -4,7 +4,6 @@ import ThemeToggle from "./ThemeToggle";
 
 export default function Navigation() {
 
-
   return (
     <div className="w-full mx-auto">
       {/* Mobile header */}

@@ -75,7 +75,7 @@ export default function ProductsPage() {
       window.scrollTo(0, productsScroll);
       setProductsScroll(null);
     }
-  }, [productsScroll, setProductsScroll]);
+  }, []);
 
   return (
     <div className="max-w-8xl mx-auto min-h-full padding-x py-6">

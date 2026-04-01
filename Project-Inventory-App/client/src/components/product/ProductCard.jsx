@@ -1,7 +1,6 @@
 import Image from "../Image";
 import { Badge } from "../ui/badge";
 import { Skeleton } from "../ui/Skeleton";
-import { ChevronRight } from "lucide-react";
 import { NavLink } from "react-router";
 import { useAtom } from "jotai";
 import { productsScrollAtom } from "@/state/productsScrollAtom";
@@ -9,9 +8,8 @@ import { productsScrollAtom } from "@/state/productsScrollAtom";
 function ProductCard({ product }) {
 
   const [_, setProductsScroll] = useAtom(productsScrollAtom);
-
   return (
-    <NavLink to={`/products/${product.product_id}`} onClick={() => setProductsScroll(window.scrollY)}>
+    <NavLink to={`/products/${product.product_id}`} onClick={() => {setProductsScroll(window.scrollY)}}>
       <div className="rounded-md gap-4 cursor-pointer bg-bg-main flex flex-col shadow-lg/1 h-full">
         <div className="relative">
           {product.image_path && (
