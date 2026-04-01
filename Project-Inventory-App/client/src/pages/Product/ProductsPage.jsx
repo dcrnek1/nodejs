@@ -10,6 +10,7 @@ import { ProductCard, ProductSkeleton } from "@/components/product/ProductCard";
 import { useAtom } from "jotai";
 import { productsScrollAtom } from "@/state/productsScrollAtom";
 import CreateProductDialog from "@/components/product/CreateProductDialog";
+import { motion } from "motion/react";
 
 export default function ProductsPage() {
   //Sort state
@@ -78,6 +79,12 @@ export default function ProductsPage() {
   }, []);
 
   return (
+    
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.1 }}
+        >
     <div className="max-w-8xl mx-auto min-h-full padding-x py-6">
       {/* Heading */}
       <div className="flex flex-col flex-wrap justify-center gap-6 pb-6 mb-6">
@@ -118,5 +125,6 @@ export default function ProductsPage() {
         </div>
       )}
     </div>
+    </motion.div>
   );
 }
