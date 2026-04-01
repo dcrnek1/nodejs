@@ -97,7 +97,7 @@ export default function CreateCategoryDialog({ children }) {
                 <MultiSelectValue
                   overflowBehavior="no"
                   className="w-full flex-3"
-                  placeholder="Select frameworks..."
+                  placeholder="Select products..."
                 />
               </MultiSelectTrigger>
               <MultiSelectContent search={true}>

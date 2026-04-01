@@ -70,10 +70,10 @@ function ProductSkeleton() {
         <Skeleton className="w-[45%] h-5" />
       </div>
       <div className="px-6 flex flex-col gap-2">
-        <Skeleton className="w-[100%] h-3" />
-        <Skeleton className="w-[100%] h-3" />
-        <Skeleton className="w-[100%] h-3" />
-        <Skeleton className="w-[100%] h-3" />
+        <Skeleton className="w-full h-3" />
+        <Skeleton className="w-full h-3" />
+        <Skeleton className="w-full h-3" />
+        <Skeleton className="w-full h-3" />
         <Skeleton className="w-[50%] h-3" />
       </div>
       <div className="px-6 flex flex-row justify-end">
