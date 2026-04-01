@@ -26,9 +26,9 @@ export default function ProductDetailsPage() {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 w-full">
-          <div className="w-full h-full flex justify-center">
+          <div className="w-full h-full flex justify-center flex-2">
             {productData.isSuccess && product?.image_path && (
-              <div className="w-[70%] sm:w-120 relative">
+              <div className="w-[70%] sm:w-full relative">
                 <Image
                   src={`${import.meta.env.VITE_IMAGE_URL}${product.image_path}`}
                   alt={product.name}
@@ -42,7 +42,7 @@ export default function ProductDetailsPage() {
               <div className="rounded-xl w-[80%] object-cover"></div>
             )}
           </div>
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-8 flex-4">
             <div className="text-4xl font-bold sm:text-5xl leading-tight">
               {product?.name}
             </div>

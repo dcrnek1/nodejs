@@ -31,21 +31,22 @@ function ProductCard({ product }) {
           </div>
           
         </div>
-        <div className="px-5 pb-5 flex flex-col gap-4 h-full">
-            <div className="flex flex-row gap-1 sm:gap-2 -mr-5 -ml-5 pl-5 overflow-x-auto pr-2 hide-scrollbar h-8 sm:h-10">
-              {product.categories &&
-                product.categories.map((category) => (
-                  <Badge key={category.category_id} variant={"secondary"} className={"text-[0.6rem] sm:text-sm"}>
-                    {category.name}
-                  </Badge>
-                ))}
-            </div>
+        <div className="px-3 pb-5 sm:px-5 sm:pb-5 flex flex-col gap-4 h-full">
 
-          <div className="flex flex-col justify-between h-full">
-            
-            <div className="text-md font-bold sm:text-xl text-primary/95 leading-tight line-clamp-2">
+          <div className="flex flex-col justify-between flex-1">
+            <div className="text-lg font-bold sm:text-xl text-primary/95 leading-tight line-clamp-2">
               {product.name}
             </div>
+          </div>
+
+          
+          <div className="flex flex-row gap-1 sm:gap-2 -mr-3 -ml-3 pl-3 sm:-mr-5 sm:-ml-5 sm:pl-5 overflow-x-auto pr-2 hide-scrollbar h-6">
+            {product.categories &&
+              product.categories.map((category) => (
+                <Badge key={category.category_id} variant={"secondary"} className={"text-[0.7rem] sm:text-xs"}>
+                  {category.name}
+                </Badge>
+              ))}
           </div>
         </div>
       </div>

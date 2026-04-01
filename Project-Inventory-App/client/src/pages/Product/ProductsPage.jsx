@@ -101,7 +101,7 @@ export default function ProductsPage() {
       </div>
 
       {/* Products table */}
-      <div className="grid gap-3 sm:gap-6 grid-cols-2 sm:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] pb-6">
+      <div className="grid gap-3 -mx-3 sm:mx-0 sm:gap-6 grid-cols-2 sm:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] pb-6">
         {productData.isSuccess &&
           allProducts.map((product) => (
             <ProductCard key={product.product_id} product={product} />
