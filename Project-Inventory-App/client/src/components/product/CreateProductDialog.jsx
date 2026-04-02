@@ -52,8 +52,8 @@ export default function CreateProductDialog({ children }) {
     try {
       const createdProduct = await createProduct.mutateAsync(form);
       if (createdProduct) setIsOpen(false);
-      await wait(400);
       setFormData(initialFormData);
+      await wait(400);
       if (createdProduct) navigate(`/products/${createdProduct?.product_id}`);
       // eslint-disable-next-line no-unused-vars
     } catch (err) {
