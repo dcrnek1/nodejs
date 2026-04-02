@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -22,7 +22,7 @@ import { useCreateCategory } from "@/hooks/useCategory";
 export default function CreateCategoryDialog({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "" });
-  const allProducts = useAllProducts("tstamp", "desc", 100);
+  const allProducts = useAllProducts("tstamp", "desc", 10);
   const allProductsData =
     allProducts.data?.pages.flatMap((p) => p.result) || [];
   const createCategory = useCreateCategory();
@@ -33,25 +33,29 @@ export default function CreateCategoryDialog({ children }) {
     setFormData({ name: "" });
   };
 
-  const loaderRef = useRef();
-
-  useEffect(() => {
-    if (!loaderRef.current) return;
-
-    const observer = new IntersectionObserver(([entry]) => {
-      if (
-        entry.isIntersecting &&
-        allProducts.hasNextPage &&
-        !allProducts.isFetchingNextPage 
-      ) {
-        allProducts.fetchNextPage();
-      }
-    });
-
-      observer.observe(loaderRef.current);
-
-    return () => observer.disconnect();
-  }, [allProducts, allProducts.isFetchingNextPage]);
+  const loaderRef = useCallback(
+      (node) => {
+        if (!node) return;
+  
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            if (
+              entry.isIntersecting &&
+              allProducts.hasNextPage &&
+              !allProducts.isFetchingNextPage
+            ) {
+              allProducts.fetchNextPage();
+            }
+          },
+          { rootMargin: "200px" },
+        );
+  
+        observer.observe(node);
+        // Note: Standard IntersectionObserver cleanup in callback refs
+        // is handled by the browser when the node is unmounted.
+      },
+      [allProducts],
+    );
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

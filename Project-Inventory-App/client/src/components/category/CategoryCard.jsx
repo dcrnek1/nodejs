@@ -8,7 +8,6 @@ import { useDeleteCategory } from "@/hooks/useCategory";
 function CategoryCard({ category }) {
   const deleteCategory = useDeleteCategory(category.name);
 
-
   const handleDelete = async (setOpen) => {
     await deleteCategory.mutateAsync(category.category_id);
     setOpen(false);
@@ -34,10 +33,10 @@ function CategoryCard({ category }) {
             <PopoverComp
               align="end"
               content={({ setOpen }) => (
-                <div
-                  className="flex flex-col gap-4"
-                >
-                  <div className="text-primary text-sm">Are you sure you want to delete category?</div>
+                <div className="flex flex-col gap-4">
+                  <div className="text-primary text-sm">
+                    Are you sure you want to delete category?
+                  </div>
                   <div className="flex flex-row gap-2 justify-end">
                     <button
                       className="secondary w-fit"

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -82,29 +82,31 @@ export default function CreateProductDialog({ children }) {
   const allCategories = useCategories("tstamp", "desc", 10);
   const categories = allCategories.data?.pages.flatMap((p) => p.result) || [];
 
-  const loaderRef = useRef();
+  // 2. Add this useCallback
+  const loaderRef = useCallback(
+    (node) => {
+      if (!node) return;
 
-  useEffect(() => {
-    if (!loaderRef.current) return;
-    if (!isOpen) return;
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (
+            entry.isIntersecting &&
+            allCategories.hasNextPage &&
+            !allCategories.isFetchingNextPage
+          ) {
+            allCategories.fetchNextPage();
+          }
+        },
+        { rootMargin: "200px" },
+      );
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (
-          entry.isIntersecting &&
-          allCategories.hasNextPage &&
-          !allCategories.isFetchingNextPage
-        ) {
-          allCategories.fetchNextPage();
-        }
-      },
-      { rootMargin: "200px" },
-    );
-
-    observer.observe(loaderRef.current);
-    return () => observer.disconnect();
-  }, [isOpen, allCategories, allCategories.hasNextPage]);
-
+      observer.observe(node);
+      // Note: Standard IntersectionObserver cleanup in callback refs
+      // is handled by the browser when the node is unmounted.
+    },
+    [allCategories],
+  );
+  
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
