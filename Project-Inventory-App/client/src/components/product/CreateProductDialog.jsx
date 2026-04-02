@@ -38,7 +38,9 @@ export default function CreateProductDialog({ children }) {
   const navigate = useNavigate();
   const createProduct = useCreateProduct();
   const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const [isSaving, setIsSaving] = useState(false)
   const handleSave = async () => {
+    setIsSaving(true);
     const form = new FormData();
     form.append("name", formData.name);
     form.append("stock", formData.stock);
@@ -55,6 +57,7 @@ export default function CreateProductDialog({ children }) {
       setFormData(initialFormData);
       await wait(400);
       if (createdProduct) navigate(`/products/${createdProduct?.product_id}`);
+      setIsSaving(false)
       // eslint-disable-next-line no-unused-vars
     } catch (err) {
       /* empty */
@@ -271,7 +274,7 @@ export default function CreateProductDialog({ children }) {
           <DialogClose asChild>
             <button className="secondary">Cancel</button>
           </DialogClose>
-          <button className="primary" onClick={handleSave} disabled={""}>
+          <button className="primary disabled:bg-secondary/20" onClick={handleSave} disabled={isSaving ? true : false}>
             Create
           </button>
         </DialogFooter>
