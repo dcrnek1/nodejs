@@ -83,3 +83,26 @@ export const useCreateProduct = () => {
     },
   });
 };
+
+export const useDeleteProduct = (name) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (product_id) => {
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/products/${product_id}`,
+      );
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ["categories"]});
+      queryClient.invalidateQueries({ queryKey: ["products", "category"] });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success(`Succesfully deleted product ${name}.`);
+    },
+    onError: (error) => {
+      toast.error("Error deleting a product.", {
+        description: error?.response?.data?.errors?.[0]?.msg,
+      });
+    },
+  });
+};

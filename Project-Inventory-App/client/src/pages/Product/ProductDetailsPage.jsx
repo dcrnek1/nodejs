@@ -1,17 +1,27 @@
 import Image from "@/components/Image";
 import { Badge } from "@/components/ui/badge";
-import { useProductById } from "@/hooks/useProduct";
-import { PencilIcon } from "@phosphor-icons/react";
+import { useDeleteProduct, useProductById } from "@/hooks/useProduct";
+import { PencilIcon, TrashSimpleIcon } from "@phosphor-icons/react";
 import { ChevronLeft } from "lucide-react";
-import { NavLink, useParams } from "react-router";
+import { NavLink, useNavigate, useParams } from "react-router";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "motion/react";
+import { PopoverComp } from "@/components/PopoverComp";
 
 export default function ProductDetailsPage() {
   const { productId } = useParams();
 
   const productData = useProductById(productId);
   const product = productData?.data;
+
+  const deleteProduct = useDeleteProduct(product?.name);
+
+  const navigate = useNavigate();
+  const handleDelete = async (setOpen) => {
+    await deleteProduct.mutateAsync(product?.product_id);
+    setOpen(false);
+    navigate("/");
+  };
 
   return (
     <div className="max-w-8xl mx-auto min-h-full padding-x py-6">
@@ -31,10 +41,51 @@ export default function ProductDetailsPage() {
               >
                 <ChevronLeft size={25} /> <div>Back</div>
               </NavLink>
-              <button className="secondary text-sm flex flex-row items-center gap-2">
-                <PencilIcon />
-                <span className="font-semibold">Edit Product</span>
-              </button>
+              <div className="flex flex-row items-center gap-3">
+                <PopoverComp
+                  align="end"
+                  content={({ setOpen }) => (
+                    <div className="flex flex-col gap-4">
+                      <div className="text-primary text-sm">
+                        Are you sure you want to delete this product?
+                      </div>
+                      <div className="flex flex-row gap-2 justify-end">
+                        <button
+                          className="secondary w-fit"
+                          onClick={() => {
+                            setOpen(false);
+                          }}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          className="primary w-fit"
+                          onClick={() => {
+                            handleDelete(setOpen);
+                          }}
+                          disabled={deleteProduct.isPending}
+                        >
+                          Confirm
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                >
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                    className="p-1.5 p-2 secondary no-scale rounded-full hover:transition active:transition hover:bg-primary/10 active:bg-primary/10 text-secondary"
+                  >
+                    <TrashSimpleIcon className="text-red-700" />
+                  </button>
+                </PopoverComp>
+
+                <button className="secondary text-sm flex flex-row items-center gap-2">
+                  <PencilIcon />
+                  <span className="font-semibold">Edit Product</span>
+                </button>
+              </div>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 w-full">

@@ -19,6 +19,7 @@ import {
 import { UploadIcon, X } from "@phosphor-icons/react";
 import { useCreateProduct } from "@/hooks/useProduct";
 import { useCategories } from "@/hooks/useCategory";
+import { useNavigate } from "react-router";
 
 export default function CreateProductDialog({ children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,7 +35,9 @@ export default function CreateProductDialog({ children }) {
 
   const [formData, setFormData] = useState(initialFormData);
 
+  const navigate = useNavigate();
   const createProduct = useCreateProduct();
+  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const handleSave = async () => {
     const form = new FormData();
     form.append("name", formData.name);
@@ -49,7 +52,9 @@ export default function CreateProductDialog({ children }) {
     try {
       const createdProduct = await createProduct.mutateAsync(form);
       if (createdProduct) setIsOpen(false);
+      await wait(400);
       setFormData(initialFormData);
+      if (createdProduct) navigate(`/products/${createdProduct?.product_id}`);
       // eslint-disable-next-line no-unused-vars
     } catch (err) {
       /* empty */
@@ -99,8 +104,6 @@ export default function CreateProductDialog({ children }) {
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
   }, [isOpen, allCategories, allCategories.hasNextPage]);
-
-  console.log(categories);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
