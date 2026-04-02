@@ -8,7 +8,7 @@ export default function Navigation() {
     <div className="w-full mx-auto">
       {/* Mobile header */}
       <div className="padding-x py-3 text-2xl sm:hidden font-bold flex flex-row justify-between items-center">
-        <div className="text-2xl font-inter font-bold select-none">App. <span className="text-xs font-light">by Dario</span></div>
+        <div className="text-2xl font-inter font-bold select-none">App. <span className="text-xs font-light"></span></div>
         <ThemeToggle />
       </div>
       {/* Mobile navigation */}
@@ -44,7 +44,7 @@ export default function Navigation() {
       <div className="hidden sm:flex">
         <div className="hidden sm:flex flex-row padding-x py-3 w-full items-center max-w-8xl mx-auto">
           <div className="sm:flex flex-row flex-1 gap-15 items-center">
-            <div className="text-2xl font-inter font-bold select-none">App. <span className="text-xs font-light">by Dario</span></div>
+            <div className="text-2xl font-inter font-bold select-none">App. <span className="text-xs font-light"></span></div>
             <div></div>
             <div className="flex gap-3 text-sm">
               <NavLink to="/">
