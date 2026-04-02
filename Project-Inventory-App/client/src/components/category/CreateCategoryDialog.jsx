@@ -112,8 +112,8 @@ export default function CreateCategoryDialog({ children }) {
                         {product.name}
                       </MultiSelectItem>
                     ))}
-                  <div ref={loaderRef}></div>
                 </MultiSelectGroup>
+                  <div ref={loaderRef}></div>
               </MultiSelectContent>
             </MultiSelect>
           </div>

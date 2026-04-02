@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -18,6 +18,7 @@ import {
 } from "../ui/multi-select";
 import { UploadIcon, X } from "@phosphor-icons/react";
 import { useCreateProduct } from "@/hooks/useProduct";
+import { useCategories } from "@/hooks/useCategory";
 
 export default function CreateProductDialog({ children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -48,9 +49,11 @@ export default function CreateProductDialog({ children }) {
     try {
       const createdProduct = await createProduct.mutateAsync(form);
       if (createdProduct) setIsOpen(false);
-      setFormData(initialFormData)
-    // eslint-disable-next-line no-unused-vars
-    } catch (err) { /* empty */ }
+      setFormData(initialFormData);
+      // eslint-disable-next-line no-unused-vars
+    } catch (err) {
+      /* empty */
+    }
     // setIsOpen(false);
   };
 
@@ -71,6 +74,34 @@ export default function CreateProductDialog({ children }) {
     }
   }
 
+  const allCategories = useCategories("tstamp", "desc", 10);
+  const categories = allCategories.data?.pages.flatMap((p) => p.result) || [];
+
+  const loaderRef = useRef();
+
+  useEffect(() => {
+    if (!loaderRef.current) return;
+    if (!isOpen) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (
+          entry.isIntersecting &&
+          allCategories.hasNextPage &&
+          !allCategories.isFetchingNextPage
+        ) {
+          allCategories.fetchNextPage();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+
+    observer.observe(loaderRef.current);
+    return () => observer.disconnect();
+  }, [isOpen, allCategories, allCategories.hasNextPage]);
+
+  console.log(categories);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -81,7 +112,7 @@ export default function CreateProductDialog({ children }) {
 
         <div className={`flex flex-row flex-wrap gap-4`}>
           <div className="flex flex-row w-full gap-4">
-            <div className="flex flex-col flex-2 gap-4 justify-start">
+            <div className="flex flex-col flex-3 gap-4 justify-start">
               <div className="flex flex-col gap-1 min-w-40">
                 <label htmlFor="name" className="text-secondary text-xs pl-1">
                   <span className="text-error">*</span> Product name:
@@ -128,9 +159,14 @@ export default function CreateProductDialog({ children }) {
                   Linked categories:
                 </label>
                 <MultiSelect
-                  value={"Test 1"}
+                  value={formData?.categories?.map(String)}
+                  onValuesChange={(values) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      categories: values,
+                    }))
+                  }
                   id="categories"
-                  onValuesChange={() => console.log("Values changed")}
                 >
                   <MultiSelectTrigger className="w-full flex-3 flex-wrap bg-subtle!">
                     <MultiSelectValue
@@ -139,18 +175,25 @@ export default function CreateProductDialog({ children }) {
                       placeholder="Select categories..."
                     />
                   </MultiSelectTrigger>
-                  <MultiSelectContent search={true}>
+                  <MultiSelectContent search={true} className="">
                     <MultiSelectGroup>
-                      <MultiSelectItem key={"1"} value={`Test 1`}>
-                        Test 1
-                      </MultiSelectItem>
+                      {allCategories.isSuccess &&
+                        categories.map((category) => (
+                          <MultiSelectItem
+                            key={category.category_id}
+                            value={category.category_id}
+                          >
+                            {category.name}
+                          </MultiSelectItem>
+                        ))}
                     </MultiSelectGroup>
+                    <div ref={loaderRef}></div>
                   </MultiSelectContent>
                 </MultiSelect>
               </div>
             </div>
 
-            <div className="flex flex-col items-start gap-1 flex-1 w-full">
+            <div className="flex flex-col items-start gap-1 flex-2 w-full">
               <label className="text-secondary text-xs pl-1">
                 <span className="text-error">*</span> Product image:
               </label>
