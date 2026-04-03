@@ -1,12 +1,12 @@
 import Image from "@/components/Image";
 import { Badge } from "@/components/ui/badge";
+import { PopoverComp } from "@/components/PopoverComp";
 import { useDeleteProduct, useProductById } from "@/hooks/useProduct";
-import { PencilIcon, TrashSimpleIcon } from "@phosphor-icons/react";
-import { ChevronLeft } from "lucide-react";
 import { NavLink, useNavigate, useParams } from "react-router";
+import { ChevronLeft } from "lucide-react";
+import { PencilIcon, TrashSimpleIcon } from "@phosphor-icons/react";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "motion/react";
-import { PopoverComp } from "@/components/PopoverComp";
 
 export default function ProductDetailsPage() {
   const { productId } = useParams();
@@ -14,9 +14,8 @@ export default function ProductDetailsPage() {
   const productData = useProductById(productId);
   const product = productData?.data;
 
-  const deleteProduct = useDeleteProduct(product?.name);
-
   const navigate = useNavigate();
+  const deleteProduct = useDeleteProduct(product?.name);
   const handleDelete = async (setOpen) => {
     await deleteProduct.mutateAsync(product?.product_id);
     setOpen(false);
@@ -75,7 +74,7 @@ export default function ProductDetailsPage() {
                     onClick={(e) => {
                       e.stopPropagation();
                     }}
-                    className="p-1.5 p-2 secondary no-scale rounded-full hover:transition active:transition hover:bg-primary/10 active:bg-primary/10 text-secondary"
+                    className="p-1.5 secondary no-scale rounded-full hover:transition active:transition hover:bg-primary/10 active:bg-primary/10 text-secondary"
                   >
                     <TrashSimpleIcon className="text-red-700" />
                   </button>

@@ -1,31 +1,27 @@
-import {
-  PlusIcon,
-} from "@phosphor-icons/react";
-import { useCategories } from "../../hooks/useCategory";
 import { useEffect, useRef } from "react";
+import { useCategories } from "../../hooks/useCategory";
 import {
   CategoryCard,
   CategorySkeleton,
 } from "../../components/category/CategoryCard";
-import {
-  AnimatePresence,
-  // eslint-disable-next-line no-unused-vars
-  motion,
-  MotionConfig,
-} from "motion/react";
 import CreateCategoryDialog from "@/components/category/CreateCategoryDialog";
 import SortPopover from "@/components/category/CategorySortDropdown";
 import { useAtom } from "jotai";
 import { categorySortAtom } from "@/state/categorySortAtom";
+import { PlusIcon } from "@phosphor-icons/react";
+  // eslint-disable-next-line no-unused-vars
+import { AnimatePresence, motion, MotionConfig } from "motion/react";
 
 export default function CategoriesPage() {
   //Sort state
   const [sort, setSort] = useAtom(categorySortAtom);
+
+  //Fetching data
   const categories = useCategories(sort.value.column, sort.value.order, 20);
   const allCategories = categories.data?.pages.flatMap((p) => p.result) || [];
 
+  //Infinite scroll
   const loaderRef = useRef();
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {

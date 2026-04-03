@@ -8,10 +8,8 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { SortAscendingIcon, SortDescendingIcon } from "@phosphor-icons/react";
-import {
-  // eslint-disable-next-line no-unused-vars
-  motion,
-} from "motion/react";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "motion/react";
 
 export default function SortPopover({ sort, setSort }) {
   const handleOrderClick = (e, value) => {
@@ -20,8 +18,7 @@ export default function SortPopover({ sort, setSort }) {
       value: {
         ...prev.value,
         order: value,
-        orderIcon:
-          value === "asc" ? "SortDescendingIcon" : "SortAscendingIcon",
+        orderIcon: value === "asc" ? "SortDescendingIcon" : "SortAscendingIcon",
       },
     }));
   };
@@ -32,8 +29,10 @@ export default function SortPopover({ sort, setSort }) {
       value: { ...prev.value, column: value, columnText: text },
     }));
   };
-  const iconMap = {SortAscendingIcon, SortDescendingIcon};
+  
+  const iconMap = { SortAscendingIcon, SortDescendingIcon };
   const Icon = iconMap[sort.value.orderIcon];
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -44,7 +43,7 @@ export default function SortPopover({ sort, setSort }) {
           </button>
         </motion.div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" portaled="false" align="start">
+      <DropdownMenuContent className="w-56" portaled="false" align="end">
         <DropdownMenuLabel>Sort by</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={sort.value.column}>
@@ -72,7 +71,7 @@ export default function SortPopover({ sort, setSort }) {
                 onClick={(e) => handleOrderClick(e, value)}
               >
                 <Icon />
-                 {text}
+                {text}
               </DropdownMenuRadioItem>
             );
           })}
