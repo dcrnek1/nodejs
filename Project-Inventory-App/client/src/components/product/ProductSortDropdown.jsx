@@ -21,11 +21,7 @@ export default function SortPopover({ sort, setSort }) {
         ...prev.value,
         order: value,
         orderIcon:
-          value === "asc" ? (
-            <SortDescendingIcon size={15} />
-          ) : (
-            <SortAscendingIcon size={15} />
-          ),
+          value === "asc" ? "SortDescendingIcon" : "SortAscendingIcon",
       },
     }));
   };
@@ -36,13 +32,14 @@ export default function SortPopover({ sort, setSort }) {
       value: { ...prev.value, column: value, columnText: text },
     }));
   };
-
+  const iconMap = {SortAscendingIcon, SortDescendingIcon};
+  const Icon = iconMap[sort.value.orderIcon];
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <motion.div layout transition={{ duration: 0.1 }}>
           <button className="secondary text-sm flex flex-row items-center gap-2">
-            {sort.value.orderIcon}
+            <Icon />
             <span>{sort.value.columnText}</span>
           </button>
         </motion.div>
@@ -66,15 +63,19 @@ export default function SortPopover({ sort, setSort }) {
           <DropdownMenuSeparator />
           <DropdownMenuLabel>Sort order</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {sort?.data?.orders.map(({ value, text, icon }) => (
-            <DropdownMenuRadioItem
-              key={value}
-              value={value}
-              onClick={(e) => handleOrderClick(e, value)}
-            >
-              {icon} {text}
-            </DropdownMenuRadioItem>
-          ))}
+          {sort?.data?.orders.map(({ value, text, icon }) => {
+            const Icon = iconMap[icon];
+            return (
+              <DropdownMenuRadioItem
+                key={value}
+                value={value}
+                onClick={(e) => handleOrderClick(e, value)}
+              >
+                <Icon />
+                 {text}
+              </DropdownMenuRadioItem>
+            );
+          })}
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

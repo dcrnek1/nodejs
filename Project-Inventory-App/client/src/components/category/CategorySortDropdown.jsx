@@ -22,9 +22,9 @@ export default function SortPopover({ sort, setSort }) {
         order: value,
         orderIcon:
           value === "asc" ? (
-            <SortDescendingIcon size={15} />
+            "SortDescendingIcon"
           ) : (
-            <SortAscendingIcon size={15} />
+            "SortAscendingIcon"
           ),
       },
     }));
@@ -37,12 +37,14 @@ export default function SortPopover({ sort, setSort }) {
     }));
   };
 
+  const iconMap = {SortAscendingIcon, SortDescendingIcon};
+  const Icon = iconMap[sort.value.orderIcon];
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <motion.div layout transition={{ duration: 0.1 }}>
           <button className="secondary text-sm flex flex-row items-center gap-2">
-            {sort.value.orderIcon}
+            <Icon />
             <span>{sort.value.columnText}</span>
           </button>
         </motion.div>
@@ -66,15 +68,17 @@ export default function SortPopover({ sort, setSort }) {
           <DropdownMenuSeparator />
           <DropdownMenuLabel>Sort order</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {sort?.data?.orders.map(({ value, text, icon }) => (
+          {sort?.data?.orders.map(({ value, text, icon }) => {
+            const Icon = iconMap[icon]
+            return(
             <DropdownMenuRadioItem
               key={value}
               value={value}
               onClick={(e) => handleOrderClick(e, value)}
             >
-              {icon} {text}
+              <Icon /> {text}
             </DropdownMenuRadioItem>
-          ))}
+          )})}
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

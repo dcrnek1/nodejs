@@ -1,45 +1,19 @@
 import { useAllProducts } from "@/hooks/useProduct";
 import SortPopover from "@/components/product/ProductSortDropdown";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   PlusIcon,
-  SortAscendingIcon,
-  SortDescendingIcon,
 } from "@phosphor-icons/react";
 import { ProductCard, ProductSkeleton } from "@/components/product/ProductCard";
 import { useAtom } from "jotai";
 import { productsScrollAtom } from "@/state/productsScrollAtom";
 import CreateProductDialog from "@/components/product/CreateProductDialog";
 import { motion } from "motion/react";
+import { productSortAtom } from "@/state/productSortAtom";
 
 export default function ProductsPage() {
   //Sort state
-  const [sort, setSort] = useState({
-    value: {
-      column: "name",
-      columnText: "Name",
-      order: "desc",
-      orderIcon: <SortAscendingIcon size={15} />,
-    },
-    data: {
-      columns: [
-        { value: "name", text: "Name" },
-        { value: "tstamp", text: "Updated" },
-      ],
-      orders: [
-        {
-          value: "desc",
-          text: "Descending",
-          icon: <SortAscendingIcon size={15} />,
-        },
-        {
-          value: "asc",
-          text: "Ascending",
-          icon: <SortDescendingIcon size={15} />,
-        },
-      ],
-    },
-  });
+  const [sort, setSort] = useAtom(productSortAtom)
 
   const limit = 6;
 

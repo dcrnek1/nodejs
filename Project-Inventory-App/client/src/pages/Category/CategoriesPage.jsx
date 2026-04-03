@@ -1,11 +1,8 @@
 import {
-  FolderSimplePlusIcon,
   PlusIcon,
-  SortAscendingIcon,
-  SortDescendingIcon,
 } from "@phosphor-icons/react";
 import { useCategories } from "../../hooks/useCategory";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   CategoryCard,
   CategorySkeleton,
@@ -18,36 +15,12 @@ import {
 } from "motion/react";
 import CreateCategoryDialog from "@/components/category/CreateCategoryDialog";
 import SortPopover from "@/components/category/CategorySortDropdown";
+import { useAtom } from "jotai";
+import { categorySortAtom } from "@/state/categorySortAtom";
 
 export default function CategoriesPage() {
   //Sort state
-  const [sort, setSort] = useState({
-    value: {
-      column: "name",
-      columnText: "Name",
-      order: "desc",
-      orderIcon: <SortAscendingIcon size={15} />,
-    },
-    data: {
-      columns: [
-        { value: "name", text: "Name" },
-        { value: "product_count", text: "Product count" },
-        { value: "tstamp", text: "Updated" },
-      ],
-      orders: [
-        {
-          value: "desc",
-          text: "Descending",
-          icon: <SortAscendingIcon size={15} />,
-        },
-        {
-          value: "asc",
-          text: "Ascending",
-          icon: <SortDescendingIcon size={15} />,
-        },
-      ],
-    },
-  });
+  const [sort, setSort] = useAtom(categorySortAtom);
   const categories = useCategories(sort.value.column, sort.value.order, 20);
   const allCategories = categories.data?.pages.flatMap((p) => p.result) || [];
 
