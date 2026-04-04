@@ -77,8 +77,7 @@ export default function CategoriesPage() {
           <div className="grid gap-4 grid-cols-2 sm:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] pb-6">
             {/* Skeleton */}
 
-            <AnimatePresence mode="popLayout">
-              {/* Cards */}
+            {/* Cards */}
 
               {categories.isSuccess &&
                 allCategories.map((category) => (
@@ -104,7 +103,6 @@ export default function CategoriesPage() {
                     <CategorySkeleton />
                   </motion.div>
                 ))}
-            </AnimatePresence>
           </div>
 
           <div ref={loaderRef}></div>

@@ -4,6 +4,8 @@ import { CategoryDetailsDialog } from "./CategoryDetailsDialog";
 import { useProductsByCategoryId } from "@/hooks/useProduct";
 import { PopoverComp } from "../PopoverComp";
 import { useDeleteCategory } from "@/hooks/useCategory";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "motion/react";
 
 function CategoryCard({ category }) {
   const deleteCategory = useDeleteCategory(category.name);
@@ -16,7 +18,10 @@ function CategoryCard({ category }) {
   const products = useProductsByCategoryId(category.category_id);
 
   return (
-    <div
+    <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.2 }}
       className={`cursor-pointer rounded-md bg-bg-main p-4 min-h-25 h-full hover:bg-bg-main/90 active:bg-el-bg}`}
     >
       <CategoryDetailsDialog
@@ -71,7 +76,7 @@ function CategoryCard({ category }) {
           </div>
         </div>
       </CategoryDetailsDialog>
-    </div>
+    </motion.div>
   );
 }
 
