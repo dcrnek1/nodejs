@@ -60,7 +60,7 @@ export default function CategoriesPage() {
               Curated selection of timeless product masterpieces currently
               available in our physical archive.
             </div>
-            <div className="flex flex-row gap-4 items-center">
+            <div className="flex flex-row gap-4 items-center justify-end">
               <CreateCategoryDialog>
                 <button className="secondary-primary text-sm flex flex-row items-center gap-2">
                   <PlusIcon />
