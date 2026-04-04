@@ -1,4 +1,6 @@
 import { useMemo, useRef, useState } from "react";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "motion/react";
 
 export default function Image({
   src,
@@ -23,7 +25,11 @@ export default function Image({
       {/* Skeleton */}
       {}
 
-      <img
+      
+    <motion.img
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.2 }}
         ref={imgRef}
         src={failed ? fallback : src}
         alt={alt}

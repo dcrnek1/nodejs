@@ -36,7 +36,7 @@ module.exports = {
             GROUP BY p.product_id
             ORDER BY p.product_id`,
       [product_id],
-      res
+      res,
     );
     rows.length > 0
       ? res.json(rows?.[0])
@@ -46,8 +46,17 @@ module.exports = {
   getAllProducts: async (req, res) => {
     console.log("Accessing route /products, getAllProducts().");
     let params = req?.query;
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 5;
+    const allowedOrderValues = ["tstamp", "name", "asc", "desc"];
+    const orderData = {
+      column: allowedOrderValues.includes(params.orderColumn)
+        ? params.orderColumn
+        : "tstamp",
+      sort: allowedOrderValues.includes(params.orderValue)
+        ? params.orderValue
+        : 'desc'
+    };
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 1));
+    const page = Math.max(1, parseInt(req.query.page) || 5);
     const offset = (page - 1) * limit;
     const { rows } = await db(
       `SELECT
@@ -62,16 +71,21 @@ module.exports = {
         LEFT JOIN category_product cp ON cp.product_id = p.product_id
         LEFT JOIN category c ON c.category_id = cp.category_id
         GROUP BY p.product_id
-        ORDER BY p.${params.orderColumn ? params.orderColumn : 'tstamp'} ${params.orderValue ? params.orderValue : 'desc'}
+        ORDER BY p.${orderData.column} ${orderData.sort}
         LIMIT $1 OFFSET $2`,
-      [limit, offset]
+      [limit, offset],
     );
 
     const total = await db(`select count(*) from product`);
     const totalCount = parseInt(total.rows[0].count);
-    const hasMore = page * limit < totalCount;  
-    
-    res.json({result: rows, total:totalCount, nextPage: hasMore ? page + 1 : null, hasMore})
+    const hasMore = page * limit < totalCount;
+
+    res.json({
+      result: rows,
+      total: totalCount,
+      nextPage: hasMore ? page + 1 : null,
+      hasMore,
+    });
   },
 
   getAllProductsByCategory: async (req, res) => {
@@ -96,12 +110,12 @@ module.exports = {
         )
         GROUP BY p.product_id
         ORDER BY p.product_id`,
-      [category_id]
+      [category_id],
     );
 
     rows?.length > 0
       ? res.json(rows)
-      : res.status(204).json({message: "No products found."});
+      : res.status(204).json({ message: "No products found." });
   },
 
   createProduct: async (req, res) => {
@@ -131,7 +145,7 @@ module.exports = {
     try {
       image_path = await saveFileToDisk(
         req.files.image[0].buffer,
-        req.files.image[0].originalname
+        req.files.image[0].originalname,
       );
       columns.push("image_path");
       values.push(image_path);
@@ -146,9 +160,9 @@ module.exports = {
     try {
       const createdProduct = await db(
         `INSERT INTO product (${columns.join(", ")}) VALUES (${parameters.join(
-          ", "
+          ", ",
         )}) RETURNING *`,
-        values
+        values,
       );
       //Insert categories into category_product
       let categoriesInsertError = false;
@@ -156,14 +170,14 @@ module.exports = {
         const { categoryParams, categoryValues } =
           buildCategoryProductInsertValues(
             createdProduct.rows[0].product_id,
-            validatedData.categories
+            validatedData.categories,
           );
 
         try {
           await db(
             `INSERT INTO category_product (product_id, category_id)
             VALUES ${categoryParams.join(", ")} RETURNING *`,
-            categoryValues
+            categoryValues,
           );
         } catch (error) {
           console.log(error);
@@ -206,9 +220,9 @@ module.exports = {
         where p.product_id = $1
         GROUP BY p.product_id
         ORDER BY p.product_id desc`,
-      [product_id]
+      [product_id],
     ).catch((err) =>
-      res.status(500).json({ error: err, message: "Internal server error" })
+      res.status(500).json({ error: err, message: "Internal server error" }),
     );
     existingProduct = existingProduct?.rows?.[0];
     if (!existingProduct)
@@ -218,7 +232,7 @@ module.exports = {
     const newImagePath = req?.files?.image?.[0]
       ? await saveFileToDisk(
           req?.files?.image?.[0].buffer,
-          req?.files?.image?.[0].originalname
+          req?.files?.image?.[0].originalname,
         ).catch((err) => {
           console.log(err);
           res
@@ -253,7 +267,7 @@ module.exports = {
       try {
         updatedProduct = await db(
           `UPDATE product SET ${parameters} WHERE product_id = $1 RETURNING *`,
-          values
+          values,
         ).then(({ rows }) => rows?.[0]);
         //If succeeds then
         // remove from disk existingProduct.image_path if newimage exists
@@ -282,7 +296,7 @@ module.exports = {
       const { categoryParams, categoryValues } =
         buildCategoryProductInsertValues(
           existingProduct.product_id,
-          newCategories
+          newCategories,
         );
       try {
         // execute new categories
@@ -295,7 +309,7 @@ module.exports = {
             SELECT c.*
             FROM category c
             JOIN inserted i ON c.category_id = i.category_id`,
-          categoryValues
+          categoryValues,
         ).then(({ rows }) => rows);
       } catch (error) {
         console.log(error);
@@ -310,8 +324,8 @@ module.exports = {
         categories: insertedCategories
           ? insertedCategories
           : categoriesInsertError
-          ? []
-          : existingProduct.categories,
+            ? []
+            : existingProduct.categories,
         warning: categoriesInsertError
           ? "Product updated, but saving of categories failed."
           : null,
@@ -322,8 +336,8 @@ module.exports = {
         categories: insertedCategories
           ? insertedCategories
           : categoriesInsertError
-          ? []
-          : existingProduct.categories,
+            ? []
+            : existingProduct.categories,
         warning: categoriesInsertError
           ? "Product updated, but saving of categories failed."
           : null,
@@ -340,15 +354,15 @@ module.exports = {
           rows: [{ image_path: existingImagePath } = { image_path: null }],
         } = await client.query(
           `SELECT image_path FROM product WHERE product_id = $1`,
-          [product_id]
+          [product_id],
         );
         const deletedProductResult = await client.query(
           `DELETE FROM product where product_id = $1`,
-          [product_id]
+          [product_id],
         );
         await client.query(
           `DELETE FROM category_product where product_id = $1`,
-          [product_id]
+          [product_id],
         );
 
         if (existingImagePath) await deleteFileFromDisk(existingImagePath);

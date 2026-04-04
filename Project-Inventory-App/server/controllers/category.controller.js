@@ -28,9 +28,18 @@ module.exports = {
     const orderColumn = req?.query?.orderColumn;
     const order = req?.query?.order;
 
+    const allowedOrderValues = ["tstamp", "name","product_count", "asc", "desc"];
+    const orderData = {
+      column: allowedOrderValues.includes(orderColumn)
+        ? orderColumn
+        : "tstamp",
+      sort: allowedOrderValues.includes(order)
+        ? order
+        : 'desc'
+    };
     
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 5;
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 5));
     const offset = (page - 1) * limit;
   
     try {
@@ -38,7 +47,7 @@ module.exports = {
             from category c
             left join category_product cp on cp.category_id = c.category_id
             group by c.category_id
-            ORDER BY ${orderColumn ? orderColumn : 'product_count'} ${order ? order : 'desc'}
+            ORDER BY ${orderData.column} ${orderData.sort}
             LIMIT $1 OFFSET $2`,
             [limit, offset]);
       

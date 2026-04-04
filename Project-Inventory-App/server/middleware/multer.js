@@ -26,7 +26,7 @@ const saveFileToDisk = async (
   const uploadPath = path.join(__dirname, "..", ...filePath, randomName);
 
   try {
-    await fs.writeFileSync(uploadPath, fileBuffer);
+    await fs.promises.writeFile(uploadPath, fileBuffer);
     return `${path.posix.join(...filePath, randomName)}`;
   } catch (error) {
     throw error;
