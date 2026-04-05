@@ -19,20 +19,24 @@ function CategoryCard({ category }) {
 
   return (
     <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.2 }}
-      className={`cursor-pointer rounded-md bg-bg-main p-4 min-h-25 h-full hover:bg-bg-main/90 active:bg-el-bg}`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2 }}
+      className={`cursor-pointer rounded-md bg-bg-main p-4 min-h-25 h-full mb-10 hover:bg-bg-main/90 active:bg-el-bg}`}
     >
       <CategoryDetailsDialog
         key={category.category_id}
         category={category}
         products={products}
       >
-        <div className="flex flex-col gap-2 h-full justify-between relative">
-          <h1 className="text-lg text-primary line-clamp-2">{category.name}</h1>
-          <div className="text-secondary">
-            {category.product_count} products
+        <div className="flex flex-col gap-1 h-full justify-between relative">
+          <div className="relative h-full w-full">
+            <h1 className="text-2xl z-2 absolute top-0 left-0 font-semibold text-primary line-clamp-2">
+              {category.name}
+            </h1>
+            <div className="text-secondary z-0 text-9xl tracking-tighter font-mono font-bold absolute -bottom-11 -left-6 overflow-hidden text-subtle">
+              {category.product_count}
+            </div>
           </div>
           <div className="absolute bottom-0 right-0 flex flex-row gap-1">
             <PopoverComp
