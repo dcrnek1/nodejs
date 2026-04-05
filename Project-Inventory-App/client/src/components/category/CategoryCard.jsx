@@ -22,14 +22,14 @@ function CategoryCard({ category }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2 }}
-      className={`cursor-pointer rounded-md bg-bg-main p-4 min-h-25 h-full mb-10 hover:bg-bg-main/90 active:bg-el-bg}`}
+      className={`cursor-pointer rounded-md bg-bg-main min-h-25 h-full mb-10 hover:bg-bg-main/90 active:bg-el-bg}`}
     >
       <CategoryDetailsDialog
         key={category.category_id}
         category={category}
         products={products}
       >
-        <div className="flex flex-col gap-1 h-full justify-between relative">
+        <div className="flex flex-col gap-1 p-4 h-full justify-between relative">
           <div className="relative h-full w-full">
             <h1 className="text-2xl z-2 absolute top-0 left-0 font-semibold text-primary line-clamp-2">
               {category.name}
@@ -38,7 +38,7 @@ function CategoryCard({ category }) {
               {category.product_count}
             </div>
           </div>
-          <div className="absolute bottom-0 right-0 flex flex-row gap-1">
+          <div className="absolute bottom-4 right-4 flex flex-row gap-1">
             <PopoverComp
               align="end"
               content={({ setOpen }) => (

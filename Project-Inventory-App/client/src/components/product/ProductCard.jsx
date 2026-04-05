@@ -10,7 +10,7 @@ function ProductCard({ product }) {
   const [_, setProductsScroll] = useAtom(productsScrollAtom);
   return (
     <NavLink to={`/products/${product.product_id}`} onClick={() => {setProductsScroll(window.scrollY)}}>
-      <div className="rounded-md gap-4 cursor-pointer bg-bg-main flex flex-col shadow-lg/1 h-full">
+      <div className="rounded-xl gap-4 cursor-pointer bg-bg-main flex flex-col shadow-lg/1 h-full">
         <div className="relative">
           {product.image_path && (
             <Image
