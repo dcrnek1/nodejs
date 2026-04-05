@@ -7,6 +7,7 @@ import { ChevronLeft } from "lucide-react";
 import { PencilIcon, TrashSimpleIcon } from "@phosphor-icons/react";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "motion/react";
+import { toast } from "sonner";
 
 export default function ProductDetailsPage() {
   const { productId } = useParams();
@@ -60,7 +61,7 @@ export default function ProductDetailsPage() {
                         <button
                           className="primary w-fit"
                           onClick={() => {
-                            handleDelete(setOpen);
+                            //handleDelete(setOpen);
                           }}
                           disabled={deleteProduct.isPending}
                         >
@@ -73,6 +74,9 @@ export default function ProductDetailsPage() {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
+                      toast.error("Deletion of product disabled.", {
+                        description: "Head over to categories page to check delete functionality.",
+                      })
                     }}
                     className="p-1.5 secondary no-scale rounded-full hover:transition active:transition hover:bg-primary/10 active:bg-primary/10 text-secondary"
                   >
@@ -80,7 +84,15 @@ export default function ProductDetailsPage() {
                   </button>
                 </PopoverComp>
 
-                <button className="secondary text-sm flex flex-row items-center gap-2">
+                <button
+                  onClick={() =>
+                    toast.error("Product editing not implemented.", {
+                      description:
+                        "Head over to categories page to check edit functionality.",
+                    })
+                  }
+                  className="secondary text-sm flex flex-row items-center gap-2"
+                >
                   <PencilIcon />
                   <span className="font-semibold">Edit Product</span>
                 </button>
