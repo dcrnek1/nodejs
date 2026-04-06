@@ -3,13 +3,22 @@ import { NavLink } from "react-router";
 import ThemeToggle from "./ThemeToggle";
 
 export default function Navigation() {
-
   return (
     <div className="w-full mx-auto">
       {/* Mobile header */}
-      <div className="padding-x py-3 text-2xl sm:hidden font-bold flex flex-row justify-between items-center">
-        <div className="text-2xl font-inter font-bold select-none">App. <span className="text-xs font-light"></span></div>
-        <ThemeToggle />
+      <div className="padding-x py-3 sm:hidden flex flex-row justify-between items-center">
+        <div className="text-2xl font-inter font-bold select-none">
+          App. <span className="text-xs font-light"></span>
+        </div>
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+
+          <NavLink to="/signin">
+            <button className="secondary-primary text-xs py-1.5 font-semibold">
+              Sign in
+            </button>
+          </NavLink>
+        </div>
       </div>
       {/* Mobile navigation */}
       <div
@@ -44,7 +53,9 @@ export default function Navigation() {
       <div className="hidden sm:flex">
         <div className="hidden sm:flex flex-row padding-x py-3 w-full items-center max-w-8xl mx-auto">
           <div className="sm:flex flex-row flex-1 gap-15 items-center">
-            <div className="text-2xl font-inter font-bold select-none">App. <span className="text-xs font-light"></span></div>
+            <div className="text-2xl font-inter font-bold select-none">
+              App. <span className="text-xs font-light"></span>
+            </div>
             <div></div>
             <div className="flex gap-3 text-sm">
               <NavLink to="/">
@@ -60,9 +71,7 @@ export default function Navigation() {
                   </span>
                 )}
               </NavLink>
-              <NavLink
-                to="/categories"
-              >
+              <NavLink to="/categories">
                 {({ isActive }) => (
                   <span
                     className={
@@ -77,8 +86,14 @@ export default function Navigation() {
               </NavLink>
             </div>
           </div>
-          <div>
+          <div className="flex items-center gap-4">
             <ThemeToggle />
+
+            <NavLink to="/signin">
+              <button className="secondary-primary text-xs py-1.5 font-semibold">
+                Sign in
+              </button>
+            </NavLink>
           </div>
         </div>
       </div>

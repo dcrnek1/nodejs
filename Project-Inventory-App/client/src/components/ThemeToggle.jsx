@@ -1,9 +1,19 @@
 import { useState, useEffect } from "react";
-import { Sun, Moon, Desktop, SunIcon, MoonIcon, DesktopIcon } from "@phosphor-icons/react";
+import {
+  Sun,
+  Moon,
+  Desktop,
+  SunIcon,
+  MoonIcon,
+  DesktopIcon,
+} from "@phosphor-icons/react";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "motion/react";
 
 export default function ThemeToggle() {
   const [theme, setTheme] = useState("system"); // 'light' | 'dark' | 'system'
   const [mounted, setMounted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "system";
@@ -44,38 +54,41 @@ export default function ThemeToggle() {
   const iconProps = { size: 15, weight: "regular" };
   const baseBtn =
     "flex items-center gap-2 p-1 sm:p-1 rounded-full text-sm font-medium";
-  const active =
-    "bg-primary-inverted/40 ring-1 ring-primary/30 text-primary";
+  const active = "bg-primary-inverted/40 ring-1 ring-primary/30 text-primary";
   const inactive =
     "text-secondary hover:bg-primary/10 dark:ring-1 dark:ring-gray-500/0";
 
   return (
-    <div className="flex items-center bg-primary/2 p-1.5 gap-1 sm:gap-2 rounded-full">
-      <button
-        onClick={() => setThemeMode("light")}
-        className={`${baseBtn} ${
-          theme === "light" ? active : inactive
-        }`}
-      >
-        <SunIcon {...iconProps} />
-        
-      </button>
-      <button
-        onClick={() => setThemeMode("dark")}
-        className={`${baseBtn} ${theme === "dark" ? active : inactive}`}
-      >
-        <MoonIcon {...iconProps} />
-        
-      </button>
-      <button
-        onClick={() => setThemeMode("system")}
-        className={`${baseBtn} ${
-          theme === "system" ? active : inactive
-        }`}
-      >
-        <DesktopIcon {...iconProps} />
-        
-      </button>
-    </div>
+        <motion.div
+          layout
+          transition={{
+            type: "spring",
+            duration: 0.1,
+          }}
+          className="flex items-center bg-primary/2 p-1.5 gap-1 sm:gap-2 rounded-full"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <button
+            onClick={() => setThemeMode("light")}
+            className={`${baseBtn} ${theme === "light" ? active : inactive}`}
+            hidden={!isOpen && theme !== "light" ? "hidden" : ""}
+          >
+            <SunIcon {...iconProps} />
+          </button>
+          <button
+            onClick={() => setThemeMode("dark")}
+            className={`${baseBtn} ${theme === "dark" ? active : inactive}`}
+            hidden={!isOpen && theme !== "dark" ? "hidden" : ""}
+          >
+            <MoonIcon {...iconProps} />
+          </button>
+          <button
+            onClick={() => setThemeMode("system")}
+            className={`${baseBtn} ${theme === "system" ? active : inactive}`}
+            hidden={!isOpen && theme !== "system" ? "hidden" : ""}
+          >
+            <DesktopIcon {...iconProps} />
+          </button>
+        </motion.div>
   );
 }

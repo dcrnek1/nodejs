@@ -9,6 +9,7 @@ import CreateProductDialog from "@/components/product/CreateProductDialog";
 import { PlusIcon } from "@phosphor-icons/react";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "motion/react";
+import { userAtom } from "@/state/authAtom";
 
 export default function ProductsPage() {
   //Sort state
@@ -51,6 +52,8 @@ export default function ProductsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const [userData, _] = useAtom(userAtom);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -67,6 +70,7 @@ export default function ProductsPage() {
           <div className="text-secondary/80">
             Curated selection of timeless product masterpieces currently
             available in our physical archive.
+            {JSON.stringify(userData)}
           </div>
           <div className="flex flex-row gap-4 items-center justify-end">
             <CreateProductDialog>
