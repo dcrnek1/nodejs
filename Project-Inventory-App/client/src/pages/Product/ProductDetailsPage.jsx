@@ -61,7 +61,7 @@ export default function ProductDetailsPage() {
                         <button
                           className="primary w-fit"
                           onClick={() => {
-                            //handleDelete(setOpen);
+                            handleDelete(setOpen);
                           }}
                           disabled={deleteProduct.isPending}
                         >
@@ -72,12 +72,6 @@ export default function ProductDetailsPage() {
                   )}
                 >
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toast.error("Deletion of product disabled.", {
-                        description: "Head over to categories page to check delete functionality.",
-                      })
-                    }}
                     className="p-1.5 secondary no-scale rounded-full hover:transition active:transition hover:bg-primary/10 active:bg-primary/10 text-secondary"
                   >
                     <TrashSimpleIcon className="text-red-700" />

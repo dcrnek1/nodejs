@@ -2,6 +2,7 @@ const express = require('express');
 const productController = require('../controllers/product.controller');
 const {body, validationResult} = require('express-validator');
 const { upload } = require('../middleware/multer');
+const authenticateToken = require('../middleware/auth');
 const router = express.Router();
 
 const validationErrorCheck = (req, res, next) => {
@@ -37,6 +38,6 @@ router.get('/category/:category_id', productController.getAllProductsByCategory)
 router.get('/:product_id', productController.getProductById)
 router.post('/', upload([{name: 'image', maxCount: 1}], ['image/jpeg', 'image/png']), validateCreate, productController.createProduct)
 router.put('/:product_id', upload([{name: 'image', maxCount: 1}], ['image/jpeg', 'image/png']), validateUpdate, productController.updateProduct)
-router.delete('/:product_id', productController.deleteProduct)
+router.delete('/:product_id', authenticateToken, productController.deleteProduct)
 
 module.exports = router;

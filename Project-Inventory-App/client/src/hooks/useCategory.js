@@ -1,10 +1,10 @@
+import api from "@/api/axios";
 import {
   keepPreviousData,
   useInfiniteQuery,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import axios from "axios";
 import { toast } from "sonner";
 
 export const useCategories = (column, order, limit) => {
@@ -13,7 +13,7 @@ export const useCategories = (column, order, limit) => {
     staleTime: 1 * 60 * 1000,
     placeholderData: keepPreviousData,
     queryFn: async ({ pageParam = 1 }) => {
-      const { data } = await axios.get(
+      const { data } = await api.get(
         `${import.meta.env.VITE_API_URL}/categories`,
         {
           params: {
@@ -35,7 +35,7 @@ export const useUpdateCategory = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ category_id, data }) => {
-      const response = await axios.put(
+      const response = await api.put(
         `${import.meta.env.VITE_API_URL}/categories/update/${category_id}`,
         data
       );
@@ -60,7 +60,7 @@ export const useCreateCategory = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(
+      const response = await api.post(
         `${import.meta.env.VITE_API_URL}/categories`,
         data
       );
@@ -85,7 +85,7 @@ export const useDeleteCategory = (name) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (category_id) => {
-      await axios.delete(
+      await api.delete(
         `${import.meta.env.VITE_API_URL}/categories/${category_id}`,
       );
     },
