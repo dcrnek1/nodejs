@@ -16,12 +16,12 @@ export default function UserInfoCircle() {
       <PopoverComp content={
         <div className="text-primary text-sm -m-4 flex flex-col gap-0 text-secondary">
           <div className="px-4 py-2 text-secondary flex flex-col gap-0.5">
-            <div className="font-semibold">{user.name}</div>
+            <div className="font-semibold text-sm">{user.name}</div>
             <div className="text-xs font-light">{user.email}</div>
             </div>
           <hr></hr>
-          <div className="cursor-pointer flex gap-2 items-center hover:bg-accent px-4 py-2 text-xs"><UserIcon size={12}/><div>Profile</div></div>
-          <div className="cursor-pointer flex gap-2 items-center hover:bg-accent px-4 py-2 text-xs" onClick={logout}><LogOutIcon size={12} /><div>Log out</div></div>
+          <div className="cursor-pointer flex gap-2 items-center hover:bg-accent px-4 py-2 text-sm"><UserIcon size={12}/><div>Profile</div></div>
+          <div className="cursor-pointer flex gap-2 items-center hover:bg-accent px-4 py-2 text-sm" onClick={logout}><LogOutIcon size={12} /><div>Log out</div></div>
         </div>
         }>
         <div className="p-0.5 border-2 rounded-full">

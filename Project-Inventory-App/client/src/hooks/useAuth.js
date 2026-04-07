@@ -3,6 +3,7 @@ import { useSetAtom } from "jotai";
 import { accessTokenAtom } from "@/state/authAtom";
 import { logoutApi, refreshAuthApi } from "@/api/auth";
 import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 export function useAuthRefresh() {
   const setAccessToken = useSetAtom(accessTokenAtom);
@@ -42,6 +43,7 @@ export function useAuthLogout() {
         if (error) console.log("Logout on server failed");
       } finally {
         setAccessToken(null);
+        toast.success("Succesfully signed out.", {duration: 1000});
       }
     };
 

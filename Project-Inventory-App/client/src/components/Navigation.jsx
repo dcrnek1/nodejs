@@ -19,7 +19,7 @@ export default function Navigation() {
 
           {!isAuth && (
             <NavLink to="/signin">
-              <button className="secondary-primary text-xs py-1.5 font-semibold">
+              <button className="secondary-primary text-xs py-2 font-semibold">
                 Sign in
               </button>
             </NavLink>
@@ -100,7 +100,7 @@ export default function Navigation() {
 
             {!isAuth && (
             <NavLink to="/signin">
-              <button className="secondary-primary text-xs py-1.5 font-semibold">
+              <button className="secondary-primary text-xs py-2 font-semibold">
                 Sign in
               </button>
             </NavLink>
