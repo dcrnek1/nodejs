@@ -15,17 +15,14 @@ export function PopoverComp({
 
   return (
     <Popover open={open} onOpenChange={setOpen} className="mt-2">
-      <PopoverTrigger asChild onClick={(e) => e.stopPropagation()}>
+      <PopoverTrigger asChild onClick={() => { setOpen(!open)}}>
         {children}
       </PopoverTrigger>
       <PopoverContent
-        className="w-full"
+        className="w-full shadow-white/5"
         side={side}
         align={align}
-        onInteractOutside={(e) => e.preventDefault()}
-        onPointerDownOutside={(e) => e.preventDefault()}
-        onFocusOutside={(e) => e.preventDefault()}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => {e.stopPropagation();}}
       >
         {typeof content === "function" ? content({ setOpen }) : content}
       </PopoverContent>

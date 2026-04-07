@@ -1,12 +1,18 @@
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "motion/react";
+import { useAtomValue } from "jotai";
+import { isAuthenticatedAtom } from "@/state/authAtom";
 
 export default function SignInPage() {
   const redirectToLogin = () => {
     window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`
   }
+
+  const isloggedIn = useAtomValue(isAuthenticatedAtom)
+  const navigate = useNavigate();
+  if (isloggedIn) navigate("/")
 
   return (
     <div className="max-w-8xl mx-auto min-h-full padding-x py-6">

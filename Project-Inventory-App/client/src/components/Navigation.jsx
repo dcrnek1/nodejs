@@ -1,8 +1,12 @@
 import { ArticleIcon, FoldersIcon } from "@phosphor-icons/react";
 import { NavLink } from "react-router";
 import ThemeToggle from "./ThemeToggle";
+import { isAuthenticatedAtom } from "@/state/authAtom";
+import { useAtomValue } from "jotai";
+import UserInfoCircle from "./user/UserInfoCircle";
 
 export default function Navigation() {
+  const isAuth = useAtomValue(isAuthenticatedAtom);
   return (
     <div className="w-full mx-auto">
       {/* Mobile header */}
@@ -13,11 +17,16 @@ export default function Navigation() {
         <div className="flex items-center gap-4">
           <ThemeToggle />
 
-          <NavLink to="/signin">
-            <button className="secondary-primary text-xs py-1.5 font-semibold">
-              Sign in
-            </button>
-          </NavLink>
+          {!isAuth && (
+            <NavLink to="/signin">
+              <button className="secondary-primary text-xs py-1.5 font-semibold">
+                Sign in
+              </button>
+            </NavLink>
+          )}
+          {isAuth && (
+            <UserInfoCircle />
+          )}
         </div>
       </div>
       {/* Mobile navigation */}
@@ -89,11 +98,16 @@ export default function Navigation() {
           <div className="flex items-center gap-4">
             <ThemeToggle />
 
+            {!isAuth && (
             <NavLink to="/signin">
               <button className="secondary-primary text-xs py-1.5 font-semibold">
                 Sign in
               </button>
             </NavLink>
+          )}
+          {isAuth && (
+            <UserInfoCircle />
+          )}
           </div>
         </div>
       </div>

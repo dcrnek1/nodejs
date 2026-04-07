@@ -9,7 +9,10 @@ const passport = require("./middleware/passport.js");
 const cookieParser = require("cookie-parser");
 
 // Enable CORS and JSON parsing
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

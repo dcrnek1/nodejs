@@ -33,6 +33,8 @@ export default function Image({
         ref={imgRef}
         src={failed ? fallback : src}
         alt={alt}
+        referrerPolicy="no-referrer"
+        crossOrigin="anonymous"
         loading="lazy"
         className={`
           w-full h-full object-cover transition-opacity duration-10 object-cover
