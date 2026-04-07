@@ -115,7 +115,7 @@ router.get("/refresh", async (req, res) => {
         name: user.display_name,
         avatar_url: user.avatar_url,
       },
-      process.env.jwt_access_secret,
+      process.env.JWT_ACCESS_SECRET,
       { expiresIn: "15m" },
     );
     res.json({ accessToken: newAccessToken });
