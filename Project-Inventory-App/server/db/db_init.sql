@@ -20,6 +20,32 @@ CREATE TABLE IF NOT EXISTS "category" (
 );
 
 
+CREATE TABLE public.users (
+	id serial4 NOT NULL,
+	google_id varchar(255) NOT NULL,
+	email varchar(255) NOT NULL,
+	display_name varchar(255) NULL,
+	avatar_url text NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT users_email_key UNIQUE (email),
+	CONSTRAINT users_google_id_key UNIQUE (google_id),
+	CONSTRAINT users_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE public.refresh_tokens (
+	id serial4 NOT NULL,
+	user_id int4 NULL,
+	"token" text NOT NULL,
+	device_info varchar(255) NULL,
+	expires_at timestamp NOT NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT refresh_tokens_pkey PRIMARY KEY (id),
+	CONSTRAINT refresh_tokens_token_key UNIQUE (token),
+	CONSTRAINT refresh_tokens_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE
+);
+
+
+
 CREATE INDEX "category_index_0"
 ON "category" ("category_id");
 
