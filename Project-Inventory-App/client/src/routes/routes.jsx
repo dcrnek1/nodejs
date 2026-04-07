@@ -5,6 +5,7 @@ import CategoriesPage from "../pages/Category/CategoriesPage";
 import ProductDetailsPage from "@/pages/Product/ProductDetailsPage";
 import SignInPage from "@/pages/Auth/SignInPage";
 import AuthSuccessPage from "@/pages/Auth/AuthSuccessPage";
+import Dashboard from "@/pages/Dashboard/Dashboard";
 
 const routes = [
   {
@@ -16,6 +17,7 @@ const routes = [
     {path: "/products/:productId", Component: ProductDetailsPage},
     {path: "/signin", Component: SignInPage},
     {path: "/signinsuccess", Component: AuthSuccessPage},
+    {path: "/dashboard", Component: Dashboard},
     {path: "*", Component: ErrorPage}
   ]
   }

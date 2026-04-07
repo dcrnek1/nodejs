@@ -32,6 +32,7 @@ router.get(
         {
           id: user.id,
           email: user.email,
+          role: user.role,
           name: user.display_name,
           avatar_url: user.avatar_url,
           created_at: user.created_at,
@@ -112,8 +113,10 @@ router.get("/refresh", async (req, res) => {
       {
         id: user.id,
         email: user.email,
+        role: user.role,
         name: user.display_name,
         avatar_url: user.avatar_url,
+        created_at: user.created_at,
       },
       process.env.JWT_ACCESS_SECRET,
       { expiresIn: "15m" },
@@ -134,11 +137,10 @@ router.get("/logout", async (req, res) => {
   try {
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
 
-    await db("DELETE FROM REFRESH_TOKENS WHERE token = $1 OR (user_id = $2 AND expires_at < NOW())", [
-      refreshToken,
-      decoded.id,
-    ]);
-
+    await db(
+      "DELETE FROM REFRESH_TOKENS WHERE token = $1 OR (user_id = $2 AND expires_at < NOW())",
+      [refreshToken, decoded.id],
+    );
   } catch (error) {
     console.error("Refresh error: ", error);
   } finally {

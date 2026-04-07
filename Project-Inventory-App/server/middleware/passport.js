@@ -21,8 +21,8 @@ passport.use(new GoogleStrategy({
     // 2. If not, create them
     if (!user) {
       const newUser = await db(
-        'INSERT INTO users (google_id, email, display_name, avatar_url) VALUES ($1, $2, $3, $4) RETURNING *',
-        [googleId, email, profile.displayName, profile.photos[0]?.value]
+        'INSERT INTO users (google_id, email, display_name, avatar_url, role) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+        [googleId, email, profile.displayName, profile.photos[0]?.value, 'user']
       );
       user = newUser.rows[0];
     }
