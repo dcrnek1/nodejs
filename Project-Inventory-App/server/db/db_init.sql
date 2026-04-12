@@ -27,6 +27,7 @@ CREATE TABLE public.users (
 	display_name varchar(255) NULL,
 	avatar_url text NULL,
 	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	"role" varchar NULL,
 	CONSTRAINT users_email_key UNIQUE (email),
 	CONSTRAINT users_google_id_key UNIQUE (google_id),
 	CONSTRAINT users_pkey PRIMARY KEY (id)
